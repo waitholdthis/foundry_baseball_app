@@ -402,6 +402,33 @@
         <div class="dj-od-song" id="djOnDeckSong">—</div>
       </div>
 
+      <!-- BETWEEN-INNINGS PLAYLIST -->
+      <div class="dj-playlist">
+        <div class="dj-playlist-head">
+          <span class="dj-label" style="margin-bottom:0">BETWEEN INNINGS</span>
+          <div class="dj-playlist-controls">
+            <label class="pl-pill-label" aria-label="Auto-play between innings">
+              <input type="checkbox" id="plAutoPlay" checked role="switch">
+              <span class="pl-pill" aria-hidden="true"></span>
+              <span class="pl-pill-text">Auto</span>
+            </label>
+            <label class="pl-pill-label" aria-label="Shuffle playlist">
+              <input type="checkbox" id="plShuffle" role="switch">
+              <span class="pl-pill" aria-hidden="true"></span>
+              <span class="pl-pill-text">Shuffle</span>
+            </label>
+          </div>
+        </div>
+        <div id="plNowPlaying" class="pl-now-playing" hidden aria-live="polite">
+          <span class="pl-playing-icon">▶</span>
+          <span class="pl-playing-name" id="plPlayingName">—</span>
+          <button class="pl-stop-btn" id="plStop" aria-label="Stop playlist">■</button>
+        </div>
+        <div id="plTrackList" class="pl-track-list"></div>
+        <button class="btn-secondary btn-full" id="plAddBtn" style="font-size:13px;padding:10px 16px" aria-label="Add tracks to playlist">+ Add Track</button>
+        <input id="plFileInput" type="file" accept="audio/*" multiple class="sr-only" aria-label="Choose audio files for playlist">
+      </div>
+
       <div class="dj-tts">
         <!-- SuperVoice header row -->
         <div class="sv-header">

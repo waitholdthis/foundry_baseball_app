@@ -30,6 +30,11 @@ const DEFAULT_STATE = {
     pitch: 0.9,
     beforeSong: true,
   },
+  playlist: {
+    tracks: [],    // [{key, name}] — keys are IndexedDB blob keys
+    shuffle: false,
+    autoPlay: true,
+  },
 };
 
 let S = loadState();
@@ -43,6 +48,11 @@ function loadState() {
       ...DEFAULT_STATE,
       ...saved,
       superVoice: { ...DEFAULT_STATE.superVoice, ...(saved.superVoice || {}) },
+      playlist: {
+        ...DEFAULT_STATE.playlist,
+        ...(saved.playlist || {}),
+        tracks: saved.playlist?.tracks || [],
+      },
     };
   } catch {
     return { ...DEFAULT_STATE };
@@ -850,6 +860,7 @@ function endHalfInning() {
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
   showToast(`${g.half === 'bottom' ? 'Bottom' : 'Top'} of inning ${g.inning}`);
+  startInningPlaylist();
 }
 
 /* ─── Count buttons ─── */
@@ -978,6 +989,7 @@ document.getElementById('exportDuringBtn').addEventListener('click', () => {
 document.getElementById('abandonGameBtn').addEventListener('click', () => {
   if (!confirm('Abandon this game? All data will be lost.')) return;
   stopWalkUp();
+  stopPlaylist();
   S.game = null;
   saveState();
   gameMenuOverlay.classList.add('hidden');
@@ -1181,6 +1193,8 @@ function renderSprayCharts(containerId) {
    AUDIO — WALK-UP & SOUNDBOARD
 ───────────────────────────────────────────── */
 let walkUpAudio  = null;
+let playlistAudio = null;
+let plCurrentIdx  = -1;
 let soundCtx     = null;
 let masterGain   = null;
 let currentWalkUpPid = null;
@@ -1197,6 +1211,7 @@ function getAudioCtx() {
 function setVolume(v) {
   if (masterGain) masterGain.gain.setTargetAtTime(v, soundCtx.currentTime, 0.05);
   if (walkUpAudio) walkUpAudio.volume = v;
+  if (playlistAudio) playlistAudio.volume = v;
 }
 
 document.getElementById('masterVolume').addEventListener('input', e => {
@@ -1207,6 +1222,7 @@ document.getElementById('masterVolume').addEventListener('input', e => {
 async function handleBatterChange(player) {
   if (currentWalkUpPid === player.id) return;
   currentWalkUpPid = player.id;
+  stopPlaylist(); // batter is up — stop between-innings music
 
   const sv = S.superVoice || {};
   const hasSong = !!player.walkUpKey;
@@ -1406,6 +1422,135 @@ document.getElementById('announceBtn').addEventListener('click', () => {
 
 syncSVUI();
 
+/* ─────────────────────────────────────────────
+   BETWEEN-INNINGS PLAYLIST
+───────────────────────────────────────────── */
+function stopPlaylist() {
+  if (!playlistAudio) return;
+  playlistAudio.pause();
+  playlistAudio.src = '';
+  playlistAudio = null;
+  const el = document.getElementById('plNowPlaying');
+  if (el) el.hidden = true;
+}
+
+async function playPlaylistTrack(track, idx) {
+  const blob = await loadAudioBlob(track.key).catch(() => null);
+  if (!blob) return;
+  stopPlaylist();
+  const url = URL.createObjectURL(blob);
+  playlistAudio = new Audio(url);
+  playlistAudio.volume = parseFloat(document.getElementById('masterVolume').value);
+  plCurrentIdx = idx;
+  const nowPlaying = document.getElementById('plNowPlaying');
+  const nameEl = document.getElementById('plPlayingName');
+  if (nameEl) nameEl.textContent = track.name;
+  if (nowPlaying) nowPlaying.hidden = false;
+  playlistAudio.play().catch(() => {});
+  const thisAudio = playlistAudio;
+  playlistAudio.addEventListener('ended', () => {
+    if (playlistAudio !== thisAudio) return; // superseded
+    playlistAudio = null;
+    if (nowPlaying) nowPlaying.hidden = true;
+    playNextPlaylistTrack();
+  });
+}
+
+async function playNextPlaylistTrack() {
+  const pl = S.playlist;
+  if (!pl?.tracks.length) return;
+  let nextIdx;
+  if (pl.shuffle) {
+    nextIdx = Math.floor(Math.random() * pl.tracks.length);
+  } else {
+    nextIdx = (plCurrentIdx + 1) % pl.tracks.length;
+  }
+  await playPlaylistTrack(pl.tracks[nextIdx], nextIdx);
+}
+
+async function startInningPlaylist() {
+  const pl = S.playlist;
+  if (!pl?.autoPlay || !pl.tracks.length) return;
+  let idx;
+  if (pl.shuffle) {
+    idx = Math.floor(Math.random() * pl.tracks.length);
+  } else {
+    plCurrentIdx = (plCurrentIdx + 1) % pl.tracks.length;
+    idx = plCurrentIdx;
+  }
+  await playPlaylistTrack(pl.tracks[idx], idx);
+}
+
+function renderPlaylistUI() {
+  const list = document.getElementById('plTrackList');
+  if (!list) return;
+  const tracks = S.playlist?.tracks || [];
+  if (!tracks.length) {
+    list.innerHTML = '<p class="pl-empty">No tracks yet — add MP3s to play between innings.</p>';
+    return;
+  }
+  list.innerHTML = tracks.map((t, i) => `
+    <div class="pl-track-item">
+      <span class="pl-track-icon">♫</span>
+      <span class="pl-track-name">${esc(t.name)}</span>
+      <button class="pl-track-remove" data-idx="${i}" aria-label="Remove ${esc(t.name)}">✕</button>
+    </div>
+  `).join('');
+  list.querySelectorAll('.pl-track-remove').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const track = S.playlist.tracks[idx];
+      await deleteAudioBlob(track.key).catch(() => {});
+      S.playlist.tracks.splice(idx, 1);
+      saveState();
+      renderPlaylistUI();
+    });
+  });
+}
+
+function syncPlaylistUI() {
+  const pl = S.playlist || { tracks: [], shuffle: false, autoPlay: true };
+  const auto = document.getElementById('plAutoPlay');
+  const shuf = document.getElementById('plShuffle');
+  if (auto) auto.checked = !!pl.autoPlay;
+  if (shuf) shuf.checked = !!pl.shuffle;
+  renderPlaylistUI();
+}
+
+document.getElementById('plAutoPlay')?.addEventListener('change', e => {
+  S.playlist = { ...S.playlist, autoPlay: e.target.checked };
+  saveState();
+});
+
+document.getElementById('plShuffle')?.addEventListener('change', e => {
+  S.playlist = { ...S.playlist, shuffle: e.target.checked };
+  saveState();
+});
+
+document.getElementById('plStop')?.addEventListener('click', stopPlaylist);
+
+document.getElementById('plAddBtn')?.addEventListener('click', () => {
+  document.getElementById('plFileInput').click();
+});
+
+document.getElementById('plFileInput')?.addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+  for (const file of files) {
+    const key = `pl_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    await saveAudioBlob(key, file);
+    const rawName = file.name.replace(/\.[^.]+$/, '');
+    const name = rawName.length > 40 ? rawName.slice(0, 37) + '…' : rawName;
+    S.playlist.tracks.push({ key, name });
+  }
+  saveState();
+  renderPlaylistUI();
+  showToast(`${files.length} track${files.length > 1 ? 's' : ''} added to playlist`);
+  e.target.value = '';
+});
+
+syncPlaylistUI();
+
 /* Soundboard — Web Audio API generated sounds */
 document.querySelectorAll('.sound-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1532,6 +1677,7 @@ function playKRiff(ctx, dest) {
 ───────────────────────────────────────────── */
 function showSummary() {
   stopWalkUp();
+  stopPlaylist();
   const g = S.game;
   if (!g) return;
 
@@ -1554,6 +1700,7 @@ function showSummary() {
 document.getElementById('summaryExportBtn').addEventListener('click', exportPDF);
 document.getElementById('newGameBtn').addEventListener('click', () => {
   stopWalkUp();
+  stopPlaylist();
   S.game = null;
   saveState();
   navigate('lineup');
