@@ -251,7 +251,8 @@ h3 {
 .hero {
   position: relative;
   display: grid;
-  min-height: 100svh;
+  height: 100svh;
+  min-height: 600px;
   place-items: center;
   padding: calc(var(--header-height) + 54px) clamp(20px, 5vw, 72px) 72px;
   overflow: hidden;
@@ -263,30 +264,28 @@ h3 {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background:
-    linear-gradient(180deg, rgba(5, 6, 8, 0.35), rgba(5, 6, 8, 0.94) 80%),
-    radial-gradient(circle at 50% 44%, rgba(245, 158, 11, 0.14), transparent 30%),
-    radial-gradient(circle at 18% 76%, rgba(247, 247, 244, 0.07), transparent 24%),
-    linear-gradient(145deg, #14202a, #050608 58%);
+  background: #050608;
 }
 
-/* Field silhouette — replaces the mountain from Elevation 168 */
-.hero-field {
+.hero-video {
   position: absolute;
-  right: 50%;
-  bottom: -2vw;
-  transform: translateX(50%);
-  width: min(96vw, 1100px);
-  height: min(44vw, 560px);
-  opacity: 0.52;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  object-position: center center;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
   background:
-    /* Outfield wall arc */
-    radial-gradient(ellipse 94% 54% at 50% 100%, rgba(30, 41, 51, 0.9) 0%, transparent 100%),
-    /* Foul lines */
-    linear-gradient(135deg, transparent 0 40%, rgba(245, 158, 11, 0.22) 40% 41%, transparent 41%),
-    linear-gradient(45deg, transparent 0 40%, rgba(245, 158, 11, 0.22) 40% 41%, transparent 41%);
-  clip-path: polygon(0% 100%, 8% 68%, 24% 38%, 50% 0%, 76% 38%, 92% 68%, 100% 100%);
+    linear-gradient(180deg, rgba(5, 6, 8, 0.38) 0%, rgba(5, 6, 8, 0.92) 88%),
+    radial-gradient(circle at 50% 44%, rgba(245, 158, 11, 0.10), transparent 30%);
 }
 
 /* Diamond silhouette — replaces the runner from Elevation 168 */
@@ -1414,7 +1413,7 @@ h3 {
   .brand { min-width: auto; }
   .game-meter { width: 120px; }
 
-  .hero { min-height: 900px; }
+  .hero { height: 100svh; min-height: 600px; }
   .hero-heading-row { flex-direction: column; }
   .hero-badge::before, .hero-badge::after { width: 24px; }
   .stat-panel { display: none; }
@@ -1441,7 +1440,8 @@ h3 {
   .brand-word span { font-size: 0.72rem; }
 
   .hero {
-    min-height: min(860px, 100svh);
+    height: 100svh;
+    min-height: 600px;
     padding: calc(var(--header-height) + 38px) 16px 34px;
   }
 
