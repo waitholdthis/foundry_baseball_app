@@ -22,6 +22,14 @@ const DEFAULT_STATE = {
   lineup: [],          // [playerId, ...] — current batting order
   game: null,          // see newGameState()
   completedGames: [],  // archived game summaries
+  superVoice: {
+    enabled: false,
+    template: 'Now batting, number {number}, {name}',
+    voiceURI: '',
+    rate: 0.9,
+    pitch: 0.9,
+    beforeSong: true,
+  },
 };
 
 let S = loadState();
@@ -29,7 +37,13 @@ let S = loadState();
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? { ...DEFAULT_STATE, ...JSON.parse(raw) } : { ...DEFAULT_STATE };
+    if (!raw) return { ...DEFAULT_STATE };
+    const saved = JSON.parse(raw);
+    return {
+      ...DEFAULT_STATE,
+      ...saved,
+      superVoice: { ...DEFAULT_STATE.superVoice, ...(saved.superVoice || {}) },
+    };
   } catch {
     return { ...DEFAULT_STATE };
   }
@@ -613,9 +627,9 @@ function updateAtBatCard() {
   document.getElementById('djOnDeckName').textContent = onDeckP ? onDeckP.name : '—';
   document.getElementById('djOnDeckSong').textContent = onDeckP?.walkUpKey ? '♪ Walk-up loaded' : 'No walk-up';
 
-  // Auto-play walk-up when batter changes
-  if (p?.walkUpKey) {
-    setTimeout(() => autoPlayWalkUp(p), 200);
+  // SuperVoice + walk-up on batter change
+  if (p) {
+    setTimeout(() => handleBatterChange(p), 200);
   }
 }
 
@@ -728,6 +742,7 @@ function recordPlay(result) {
   updateAtBatCard();
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
+  if (isHit) openSprayModal(ab.id);
 }
 
 function advanceRunners(bases, prev) {
@@ -875,6 +890,7 @@ function undoLastPlay() {
   g.balls   = snap.balls;
   g.strikes = snap.strikes;
   g.atBats  = g.atBats.slice(0, snap.atBatsLen);
+  closeSprayModal();
   saveState();
   updateScoreBar();
   renderLineupRail();
@@ -961,6 +977,7 @@ document.getElementById('exportDuringBtn').addEventListener('click', () => {
 
 document.getElementById('abandonGameBtn').addEventListener('click', () => {
   if (!confirm('Abandon this game? All data will be lost.')) return;
+  stopWalkUp();
   S.game = null;
   saveState();
   gameMenuOverlay.classList.add('hidden');
@@ -1049,6 +1066,118 @@ function renderBattingStats(bodyId) {
 }
 
 /* ─────────────────────────────────────────────
+   SPRAY CHARTS
+───────────────────────────────────────────── */
+const SPRAY_COLORS = { '1B': '#22C55E', '2B': '#3B82F6', '3B': '#F59E0B', 'HR': '#EF4444' };
+const SPRAY_W = 200, SPRAY_H = 190;
+
+const FIELD_PATHS = `
+  <rect width="200" height="190" fill="#0d1a0d"/>
+  <polygon points="100,174 7,7 193,7" fill="#1a3d1a"/>
+  <path d="M 7,7 Q 100,2 193,7" fill="none" stroke="#5a3e1e" stroke-width="12" stroke-linecap="butt"/>
+  <path d="M 13,9 Q 100,5 187,9" fill="none" stroke="#1a3d1a" stroke-width="6" stroke-linecap="butt"/>
+  <path d="M 7,7 Q 100,2 193,7" fill="none" stroke="#2a5c2a" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="100" cy="126" r="48" fill="#6b4826"/>
+  <polygon points="100,158 138,120 100,82 62,120" fill="#1a3d1a"/>
+  <circle cx="100" cy="137" r="5.5" fill="#7d5830"/>
+  <line x1="100" y1="168" x2="7" y2="7" stroke="white" stroke-width="1" opacity="0.3"/>
+  <line x1="100" y1="168" x2="193" y2="7" stroke="white" stroke-width="1" opacity="0.3"/>
+  <line x1="100" y1="158" x2="138" y2="120" stroke="#c8a040" stroke-width="1.5"/>
+  <line x1="138" y1="120" x2="100" y2="82" stroke="#c8a040" stroke-width="1.5"/>
+  <line x1="100" y1="82" x2="62" y2="120" stroke="#c8a040" stroke-width="1.5"/>
+  <line x1="62" y1="120" x2="100" y2="158" stroke="#c8a040" stroke-width="1.5"/>
+  <rect x="96" y="79" width="8" height="8" fill="white" rx="1"/>
+  <rect x="134" y="117" width="8" height="8" fill="white" rx="1"/>
+  <rect x="58" y="117" width="8" height="8" fill="white" rx="1"/>
+  <polygon points="100,156 96,161 96,166 104,166 104,161" fill="white"/>
+`;
+
+let pendingSprayAbId = null;
+
+function openSprayModal(abId) {
+  const ab = S.game?.atBats.find(a => a.id === abId);
+  if (!ab) return;
+  pendingSprayAbId = abId;
+  const badge = document.getElementById('sprayResultBadge');
+  badge.textContent = ab.result;
+  badge.style.background = SPRAY_COLORS[ab.result] || '#fff';
+  document.getElementById('sprayPreviewDot')?.remove();
+  document.getElementById('sprayModal').hidden = false;
+}
+
+function closeSprayModal() {
+  document.getElementById('sprayModal').hidden = true;
+  pendingSprayAbId = null;
+}
+
+document.getElementById('spraySkip').addEventListener('click', closeSprayModal);
+
+document.getElementById('sprayFieldSvg').addEventListener('click', e => {
+  if (!pendingSprayAbId) return;
+  const svg = document.getElementById('sprayFieldSvg');
+  const pt = svg.createSVGPoint();
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+  const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+  const x = Math.max(0, Math.min(1, svgP.x / SPRAY_W));
+  const y = Math.max(0, Math.min(1, svgP.y / SPRAY_H));
+
+  const ab = S.game?.atBats.find(a => a.id === pendingSprayAbId);
+  if (ab) {
+    ab.spray = { x: parseFloat(x.toFixed(4)), y: parseFloat(y.toFixed(4)) };
+    saveState();
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('id', 'sprayPreviewDot');
+    dot.setAttribute('cx', svgP.x.toFixed(1));
+    dot.setAttribute('cy', svgP.y.toFixed(1));
+    dot.setAttribute('r', '7');
+    dot.setAttribute('fill', SPRAY_COLORS[ab.result] || '#fff');
+    dot.setAttribute('stroke', 'white');
+    dot.setAttribute('stroke-width', '2');
+    svg.appendChild(dot);
+  }
+  setTimeout(closeSprayModal, 500);
+});
+
+function renderSprayCharts(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const g = S.game;
+  if (!g) { container.innerHTML = ''; return; }
+
+  const cards = S.lineup.map(pid => {
+    const p = playerById(pid);
+    const hits = g.atBats.filter(ab => ab.playerId === pid && ab.spray && SPRAY_COLORS[ab.result]);
+    if (!hits.length) return null;
+
+    const dots = hits.map(ab => {
+      const cx = (ab.spray.x * SPRAY_W).toFixed(1);
+      const cy = (ab.spray.y * SPRAY_H).toFixed(1);
+      const col = SPRAY_COLORS[ab.result];
+      const star = ab.result === 'HR'
+        ? `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="white" font-weight="900">★</text>`
+        : '';
+      return `<circle cx="${cx}" cy="${cy}" r="7" fill="${col}" stroke="white" stroke-width="1.5" opacity="0.92"/>${star}`;
+    }).join('');
+
+    const legend = Object.entries(SPRAY_COLORS).map(([r, col]) => {
+      const n = hits.filter(ab => ab.result === r).length;
+      return n ? `<span class="spray-legend-item"><span class="spray-legend-dot" style="background:${col}"></span>${r} ×${n}</span>` : '';
+    }).join('');
+
+    return `<div class="spray-card">
+      <div class="spray-card-name">${esc(p?.name || '—')}</div>
+      <svg viewBox="0 0 ${SPRAY_W} ${SPRAY_H}" class="spray-mini-field" aria-hidden="true">${FIELD_PATHS}${dots}</svg>
+      <div class="spray-card-legend">${legend}</div>
+    </div>`;
+  }).filter(Boolean);
+
+  container.innerHTML = cards.length
+    ? cards.join('')
+    : '<p class="spray-empty">No spray data recorded — tap a hit location next time.</p>';
+}
+
+/* ─────────────────────────────────────────────
    AUDIO — WALK-UP & SOUNDBOARD
 ───────────────────────────────────────────── */
 let walkUpAudio  = null;
@@ -1074,13 +1203,47 @@ document.getElementById('masterVolume').addEventListener('input', e => {
   setVolume(parseFloat(e.target.value));
 });
 
-async function autoPlayWalkUp(player) {
+/* Central batter-change handler — fires TTS and/or walk-up once per batter */
+async function handleBatterChange(player) {
   if (currentWalkUpPid === player.id) return;
-  if (!player.walkUpKey) return;
   currentWalkUpPid = player.id;
-  const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
-  if (!blob) return;
-  playWalkUpBlob(blob, player);
+
+  const sv = S.superVoice || {};
+  const hasSong = !!player.walkUpKey;
+
+  if (sv.enabled) {
+    if (sv.beforeSong) {
+      await announcePlayer(player);
+    } else {
+      announcePlayer(player); // simultaneous — don't await
+    }
+  }
+
+  if (hasSong) {
+    const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
+    if (blob && currentWalkUpPid === player.id) playWalkUpBlob(blob, player);
+  }
+}
+
+function announcePlayer(player) {
+  return new Promise(resolve => {
+    if (!('speechSynthesis' in window)) { resolve(); return; }
+    const sv = S.superVoice || {};
+    const text = (sv.template || 'Now batting, number {number}, {name}')
+      .replace('{name}', player.name)
+      .replace('{number}', player.number);
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate  = sv.rate  ?? 0.9;
+    utter.pitch = sv.pitch ?? 0.9;
+    if (sv.voiceURI) {
+      const v = window.speechSynthesis.getVoices().find(v => v.voiceURI === sv.voiceURI);
+      if (v) utter.voice = v;
+    }
+    utter.onend  = () => resolve();
+    utter.onerror = () => resolve();
+    window.speechSynthesis.speak(utter);
+  });
 }
 
 function playWalkUpBlob(blob, player) {
@@ -1136,7 +1299,7 @@ document.getElementById('djPlayPause').addEventListener('click', () => {
     if (!g) return;
     const pid = S.lineup[g.lineupIndex % S.lineup.length];
     const p   = playerById(pid);
-    if (p?.walkUpKey) autoPlayWalkUp(p);
+    if (p) handleBatterChange(p);
     return;
   }
   if (walkUpAudio.paused) {
@@ -1166,7 +1329,71 @@ document.getElementById('djFade').addEventListener('click', () => {
   }, 100);
 });
 
-/* TTS Announcement */
+/* ─── SuperVoice UI wiring ─── */
+
+function populateVoiceSelector() {
+  const sel = document.getElementById('svVoice');
+  if (!sel) return;
+  const voices = window.speechSynthesis.getVoices();
+  sel.innerHTML = '<option value="">Default voice</option>' +
+    voices.map(v => `<option value="${v.voiceURI}"${v.voiceURI === (S.superVoice?.voiceURI || '') ? ' selected' : ''}>${v.name} (${v.lang})</option>`).join('');
+}
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = populateVoiceSelector;
+  populateVoiceSelector();
+}
+
+function syncSVUI() {
+  const sv = S.superVoice || {};
+  const toggle = document.getElementById('svToggle');
+  const panel  = document.getElementById('svPanel');
+  if (toggle) toggle.checked = !!sv.enabled;
+  if (panel)  panel.hidden   = !sv.enabled;
+  const tmpl = document.getElementById('svTemplate');
+  if (tmpl) tmpl.value = sv.template || 'Now batting, number {number}, {name}';
+  const rate = document.getElementById('svRate');
+  if (rate) { rate.value = sv.rate ?? 0.9; document.getElementById('svRateVal').textContent = rate.value; }
+  const pitch = document.getElementById('svPitch');
+  if (pitch) { pitch.value = sv.pitch ?? 0.9; document.getElementById('svPitchVal').textContent = pitch.value; }
+  const before = document.getElementById('svBeforeSong');
+  if (before) before.checked = sv.beforeSong !== false;
+}
+
+document.getElementById('svToggle')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, enabled: e.target.checked };
+  document.getElementById('svPanel').hidden = !e.target.checked;
+  saveState();
+});
+
+document.getElementById('svTemplate')?.addEventListener('input', e => {
+  S.superVoice = { ...S.superVoice, template: e.target.value };
+  saveState();
+});
+
+document.getElementById('svVoice')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, voiceURI: e.target.value };
+  saveState();
+});
+
+document.getElementById('svRate')?.addEventListener('input', e => {
+  document.getElementById('svRateVal').textContent = e.target.value;
+  S.superVoice = { ...S.superVoice, rate: parseFloat(e.target.value) };
+  saveState();
+});
+
+document.getElementById('svPitch')?.addEventListener('input', e => {
+  document.getElementById('svPitchVal').textContent = e.target.value;
+  S.superVoice = { ...S.superVoice, pitch: parseFloat(e.target.value) };
+  saveState();
+});
+
+document.getElementById('svBeforeSong')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, beforeSong: e.target.checked };
+  saveState();
+});
+
+/* Manual announce button */
 document.getElementById('announceBtn').addEventListener('click', () => {
   if (!('speechSynthesis' in window)) { showToast('TTS not supported on this device'); return; }
   const g = S.game;
@@ -1174,12 +1401,10 @@ document.getElementById('announceBtn').addEventListener('click', () => {
   const pid = S.lineup[g.lineupIndex % S.lineup.length];
   const p   = playerById(pid);
   if (!p) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(`Now batting, number ${p.number}, ${p.name}`);
-  utter.rate  = 0.9;
-  utter.pitch = 0.9;
-  window.speechSynthesis.speak(utter);
+  announcePlayer(p);
 });
+
+syncSVUI();
 
 /* Soundboard — Web Audio API generated sounds */
 document.querySelectorAll('.sound-btn').forEach(btn => {
@@ -1321,12 +1546,14 @@ function showSummary() {
 
   renderBoxScore('summaryBoxscore', 'summaryBoxHead', 'summaryBoxBody');
   renderBattingStats('summaryBattingBody');
+  renderSprayCharts('summarySprayContainer');
 
   navigate('summary');
 }
 
 document.getElementById('summaryExportBtn').addEventListener('click', exportPDF);
 document.getElementById('newGameBtn').addEventListener('click', () => {
+  stopWalkUp();
   S.game = null;
   saveState();
   navigate('lineup');
@@ -1381,13 +1608,16 @@ function buildExportData() {
     })
   );
 
+  const weAreHome = g.homeAway === 'home';
   const innings = Array.from({ length: g.totalInnings }, (_, i) => {
     const log = g.inningLog[i];
-    return log ? (log.bottom || 0) : 0;
+    // home team runs per inning
+    return log ? ((weAreHome ? log.us : log.them) || 0) : 0;
   });
   const awayInnings = Array.from({ length: g.totalInnings }, (_, i) => {
     const log = g.inningLog[i];
-    return log ? (log.top || 0) : 0;
+    // away team runs per inning
+    return log ? ((weAreHome ? log.them : log.us) || 0) : 0;
   });
 
   return {
@@ -1400,7 +1630,8 @@ function buildExportData() {
 }
 
 function weAreAtBat(g, inning) {
-  return g.homeAway === 'home';
+  // g.atBats only contains our plate appearances (opponent plays via recordOpponentPlay)
+  return true;
 }
 
 /* ─────────────────────────────────────────────

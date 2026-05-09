@@ -1020,7 +1020,164 @@ html, body {
 .dj-od-name { font-size: 14px; font-weight: 600; }
 .dj-od-song { font-size: 12px; color: var(--text-2); }
 
-.dj-tts {}
+.dj-tts {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Header row: label + toggle ── */
+.sv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── iOS-style pill toggle ── */
+.sv-toggle-wrap {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.sv-toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+.sv-pill {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 11px;
+  transition: background 200ms;
+}
+.sv-pill::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 200ms;
+}
+.sv-toggle-wrap input:checked + .sv-pill { background: var(--purple); }
+.sv-toggle-wrap input:checked + .sv-pill::after { transform: translateX(18px); }
+.sv-toggle-wrap input:focus-visible + .sv-pill { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+/* ── Settings fields ── */
+.sv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sv-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sv-val {
+  font-variant-numeric: tabular-nums;
+  color: var(--purple);
+}
+.sv-hint {
+  font-size: 10px;
+  color: var(--text-2);
+}
+.sv-hint code {
+  background: var(--bg-elevated);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: var(--mono, monospace);
+  color: var(--amber);
+}
+.sv-input {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text-1);
+  font-size: 13px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 150ms;
+}
+.sv-input:focus {
+  outline: none;
+  border-color: var(--purple);
+}
+.sv-select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text-1);
+  font-size: 12px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 150ms;
+}
+.sv-select:focus { outline: none; border-color: var(--purple); }
+.sv-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.sv-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--purple);
+  cursor: pointer;
+}
+.sv-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--purple);
+  border: none;
+  cursor: pointer;
+}
+.sv-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.sv-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.sv-check-row input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--purple);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.sv-check-label {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.4;
+}
 
 .soundboard-grid {
   display: grid;
@@ -1221,6 +1378,143 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* ═══════════════════════════════════════
+   SPRAY CHART MODAL
+═══════════════════════════════════════ */
+.spray-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+}
+.spray-modal[hidden] { display: none; }
+
+.spray-modal-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+
+.spray-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.spray-result-badge {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 6px;
+  color: #020617;
+  flex-shrink: 0;
+}
+
+.spray-instr {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.spray-skip-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 150ms, color 150ms;
+}
+.spray-skip-btn:hover { background: var(--bg-elevated); color: var(--text-1); }
+
+.spray-field {
+  display: block;
+  width: 100%;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+/* ═══════════════════════════════════════
+   SPRAY CHART SUMMARY GRID
+═══════════════════════════════════════ */
+.spray-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.spray-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spray-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spray-mini-field {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.spray-card-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.spray-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+.spray-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.spray-empty {
+  color: var(--text-2);
+  font-size: 13px;
+  text-align: center;
+  padding: 16px 0;
+  margin: 0;
 }
 
 /* Animations */

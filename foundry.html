@@ -403,9 +403,51 @@
       </div>
 
       <div class="dj-tts">
-        <button class="btn-secondary btn-full" id="announceBtn">
+        <!-- SuperVoice header row -->
+        <div class="sv-header">
+          <span class="dj-label" style="margin-bottom:0">SUPERVOICE</span>
+          <label class="sv-toggle-wrap" aria-label="Enable SuperVoice auto-announce">
+            <input type="checkbox" id="svToggle" role="switch">
+            <span class="sv-pill" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <!-- Collapsible settings panel -->
+        <div id="svPanel" hidden>
+          <div class="sv-field">
+            <label class="sv-label" for="svTemplate">Announcement template</label>
+            <input type="text" id="svTemplate" class="sv-input" value="Now batting, number {number}, {name}" placeholder="Use {name} and {number}" aria-describedby="svTemplateHint">
+            <span id="svTemplateHint" class="sv-hint">Use <code>{name}</code> and <code>{number}</code></span>
+          </div>
+
+          <div class="sv-field">
+            <label class="sv-label" for="svVoice">Voice</label>
+            <select id="svVoice" class="sv-select">
+              <option value="">Default voice</option>
+            </select>
+          </div>
+
+          <div class="sv-two-col">
+            <div class="sv-field">
+              <label class="sv-label" for="svRate">Speed <span id="svRateVal" class="sv-val">0.9</span></label>
+              <input type="range" id="svRate" class="sv-range" min="0.5" max="1.5" step="0.1" value="0.9" aria-label="Speech rate">
+            </div>
+            <div class="sv-field">
+              <label class="sv-label" for="svPitch">Pitch <span id="svPitchVal" class="sv-val">0.9</span></label>
+              <input type="range" id="svPitch" class="sv-range" min="0.5" max="1.5" step="0.1" value="0.9" aria-label="Speech pitch">
+            </div>
+          </div>
+
+          <label class="sv-check-row">
+            <input type="checkbox" id="svBeforeSong" checked>
+            <span class="sv-check-label">Announce before walk-up song</span>
+          </label>
+        </div>
+
+        <!-- Manual trigger always visible -->
+        <button class="btn-secondary btn-full" id="announceBtn" style="margin-top:8px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          Announce Batter
+          Announce Now
         </button>
       </div>
 
@@ -562,6 +604,12 @@
       </div>
     </div>
 
+    <!-- Spray Charts -->
+    <div class="summary-section" id="sprayChartsSection">
+      <div class="summary-section-title">Spray Charts</div>
+      <div id="summarySprayContainer" class="spray-grid"></div>
+    </div>
+
     <!-- Export actions -->
     <div class="summary-actions">
       <button class="btn-primary btn-full" id="summaryExportBtn">
@@ -571,6 +619,38 @@
       <button class="btn-secondary btn-full" id="newGameBtn">New Game</button>
       <button class="btn-ghost btn-full" id="backToRosterBtn">Back to Roster</button>
     </div>
+  </div>
+</div>
+
+<!-- SPRAY CHART MODAL -->
+<div id="sprayModal" class="spray-modal" hidden role="dialog" aria-modal="true" aria-labelledby="sprayTitle">
+  <div class="spray-modal-card">
+    <div class="spray-modal-header">
+      <span class="spray-result-badge" id="sprayResultBadge">1B</span>
+      <span id="sprayTitle" class="spray-instr">Tap where the ball landed</span>
+      <button class="spray-skip-btn" id="spraySkip">Skip</button>
+    </div>
+    <svg id="sprayFieldSvg" class="spray-field" viewBox="0 0 200 190"
+         role="img" aria-label="Baseball field — tap to mark ball location">
+      <rect width="200" height="190" fill="#0d1a0d"/>
+      <polygon points="100,174 7,7 193,7" fill="#1a3d1a"/>
+      <path d="M 7,7 Q 100,2 193,7" fill="none" stroke="#5a3e1e" stroke-width="12" stroke-linecap="butt"/>
+      <path d="M 13,9 Q 100,5 187,9" fill="none" stroke="#1a3d1a" stroke-width="6" stroke-linecap="butt"/>
+      <path d="M 7,7 Q 100,2 193,7" fill="none" stroke="#2a5c2a" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="100" cy="126" r="48" fill="#6b4826"/>
+      <polygon points="100,158 138,120 100,82 62,120" fill="#1a3d1a"/>
+      <circle cx="100" cy="137" r="5.5" fill="#7d5830"/>
+      <line x1="100" y1="168" x2="7" y2="7" stroke="white" stroke-width="1" opacity="0.3"/>
+      <line x1="100" y1="168" x2="193" y2="7" stroke="white" stroke-width="1" opacity="0.3"/>
+      <line x1="100" y1="158" x2="138" y2="120" stroke="#c8a040" stroke-width="1.5"/>
+      <line x1="138" y1="120" x2="100" y2="82" stroke="#c8a040" stroke-width="1.5"/>
+      <line x1="100" y1="82" x2="62" y2="120" stroke="#c8a040" stroke-width="1.5"/>
+      <line x1="62" y1="120" x2="100" y2="158" stroke="#c8a040" stroke-width="1.5"/>
+      <rect x="96" y="79" width="8" height="8" fill="white" rx="1"/>
+      <rect x="134" y="117" width="8" height="8" fill="white" rx="1"/>
+      <rect x="58" y="117" width="8" height="8" fill="white" rx="1"/>
+      <polygon points="100,156 96,161 96,166 104,166 104,161" fill="white"/>
+    </svg>
   </div>
 </div>
 
