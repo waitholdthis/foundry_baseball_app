@@ -291,6 +291,31 @@ const walkUpNameEl= document.getElementById('walkUpFileName');
 let pendingAudioBlob = null;
 let pendingAudioName = '';
 
+/* ── Walk-up song library (add entries here as you drop files in /walkupsongs/) ── */
+const WALKUP_LIBRARY = [
+  { name: 'Centerfield',  file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
+];
+
+(function buildWalkUpLibrary() {
+  const container = document.getElementById('walkUpLibrary');
+  if (!WALKUP_LIBRARY.length) {
+    document.getElementById('walkUpLibraryGroup').classList.add('hidden');
+    return;
+  }
+  WALKUP_LIBRARY.forEach(song => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'walkup-lib-btn';
+    btn.textContent = song.name;
+    btn.addEventListener('click', () => {
+      document.getElementById('walkUpUrl').value = song.file;
+      container.querySelectorAll('.walkup-lib-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+    container.appendChild(btn);
+  });
+})();
+
 document.getElementById('addPlayerBtn').addEventListener('click', () => openPlayerSheet(null));
 document.getElementById('cancelPlayer').addEventListener('click', closePlayerSheet);
 playerSheetOverlay.addEventListener('click', e => { if (e.target === playerSheetOverlay) closePlayerSheet(); });
@@ -326,6 +351,10 @@ function openPlayerSheet(player) {
     walkUpNameEl.textContent = 'No file';
     document.getElementById('walkUpUrl').value = '';
   }
+  const currentUrl = player?.walkUpUrl || '';
+  document.querySelectorAll('.walkup-lib-btn').forEach(b => {
+    b.classList.toggle('active', b.closest && WALKUP_LIBRARY.find(s => s.file === currentUrl && b.textContent === s.name) != null);
+  });
   playerSheetOverlay.classList.remove('hidden');
   setTimeout(() => playerNameEl.focus(), 100);
 }
