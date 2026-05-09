@@ -477,6 +477,31 @@
             <input type="checkbox" id="svBeforeSong" checked>
             <span class="sv-check-label">Announce before walk-up song</span>
           </label>
+
+          <!-- PA Announcer sub-section -->
+          <div class="sv-divider"></div>
+          <div class="sv-pa-header">
+            <span class="sv-label" style="margin-bottom:0">PA Announcer Mode</span>
+            <label class="sv-toggle-wrap" aria-label="Enable PA announcer mode">
+              <input type="checkbox" id="svPaToggle" role="switch">
+              <span class="sv-pill" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div id="svPaPanel" hidden>
+            <div class="sv-field">
+              <label class="sv-label" for="svPaTemplate">PA Template</label>
+              <input type="text" id="svPaTemplate" class="sv-input" value="Now batting... number {number}... {name}!" placeholder="Use {name} and {number}">
+            </div>
+            <div class="sv-field">
+              <label class="sv-label">Chime</label>
+              <div class="sv-chime-row">
+                <button type="button" class="sv-chime-btn active" data-chime="classic">Classic</button>
+                <button type="button" class="sv-chime-btn" data-chime="single">Single</button>
+                <button type="button" class="sv-chime-btn" data-chime="none">None</button>
+              </div>
+            </div>
+            <button type="button" class="btn-secondary btn-full" id="svPaPreset" style="margin-top:4px">Apply Announcer Preset (rate 0.75 · pitch 0.65)</button>
+          </div>
         </div>
 
         <!-- Manual trigger always visible -->

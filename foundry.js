@@ -30,6 +30,9 @@ const DEFAULT_STATE = {
     rate: 0.9,
     pitch: 0.9,
     beforeSong: true,
+    paMode: false,
+    paTemplate: 'Now batting... number {number}... {name}!',
+    paChime: 'classic',
   },
   playlist: {
     tracks: [],    // [{key, name}] — keys are IndexedDB blob keys
@@ -1375,11 +1378,57 @@ async function handleBatterChange(player) {
   }
 }
 
-function announcePlayer(player) {
+function playPaChime(style) {
   return new Promise(resolve => {
-    if (!('speechSynthesis' in window)) { resolve(); return; }
-    const sv = S.superVoice || {};
-    const text = (sv.template || 'Now batting, number {number}, {name}')
+    if (style === 'none') { resolve(); return; }
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const dest = masterGain || ctx.destination;
+
+    if (style === 'single') {
+      // Single resonant ding — E5
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 659.25;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, ctx.currentTime);
+      env.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.015);
+      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
+      osc.connect(env); env.connect(dest);
+      osc.start(); osc.stop(ctx.currentTime + 1.4);
+      setTimeout(resolve, 1500);
+    } else {
+      // Classic two-note PA bing-bong: F5 then D5
+      [[698.46, 0], [587.33, 0.5]].forEach(([freq, delay]) => {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        const env = ctx.createGain();
+        const t = ctx.currentTime + delay;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(0.4, t + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+        osc.connect(env); env.connect(dest);
+        osc.start(t); osc.stop(t + 1.6);
+      });
+      setTimeout(resolve, 1300);
+    }
+  });
+}
+
+async function announcePlayer(player) {
+  if (!('speechSynthesis' in window)) return;
+  const sv = S.superVoice || {};
+
+  if (sv.paMode) {
+    await playPaChime(sv.paChime || 'classic');
+  }
+
+  return new Promise(resolve => {
+    const template = sv.paMode
+      ? (sv.paTemplate || 'Now batting... number {number}... {name}!')
+      : (sv.template   || 'Now batting, number {number}, {name}');
+    const text = template
       .replace('{name}', player.name)
       .replace('{number}', player.number);
     window.speechSynthesis.cancel();
@@ -1507,6 +1556,16 @@ function syncSVUI() {
   if (pitch) { pitch.value = sv.pitch ?? 0.9; document.getElementById('svPitchVal').textContent = pitch.value; }
   const before = document.getElementById('svBeforeSong');
   if (before) before.checked = sv.beforeSong !== false;
+  // PA mode
+  const paToggle = document.getElementById('svPaToggle');
+  const paPanel  = document.getElementById('svPaPanel');
+  if (paToggle) paToggle.checked = !!sv.paMode;
+  if (paPanel)  paPanel.hidden   = !sv.paMode;
+  const paTmpl = document.getElementById('svPaTemplate');
+  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting... number {number}... {name}!';
+  document.querySelectorAll('.sv-chime-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.chime === (sv.paChime || 'classic'))
+  );
 }
 
 document.getElementById('svToggle')?.addEventListener('change', e => {
@@ -1540,6 +1599,38 @@ document.getElementById('svPitch')?.addEventListener('input', e => {
 document.getElementById('svBeforeSong')?.addEventListener('change', e => {
   S.superVoice = { ...S.superVoice, beforeSong: e.target.checked };
   saveState();
+});
+
+/* PA Announcer mode wiring */
+document.getElementById('svPaToggle')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, paMode: e.target.checked };
+  document.getElementById('svPaPanel').hidden = !e.target.checked;
+  saveState();
+});
+
+document.getElementById('svPaTemplate')?.addEventListener('input', e => {
+  S.superVoice = { ...S.superVoice, paTemplate: e.target.value };
+  saveState();
+});
+
+document.getElementById('svPaPreset')?.addEventListener('click', () => {
+  S.superVoice = { ...S.superVoice, rate: 0.75, pitch: 0.65 };
+  const rate  = document.getElementById('svRate');
+  const pitch = document.getElementById('svPitch');
+  if (rate)  { rate.value  = 0.75; document.getElementById('svRateVal').textContent  = '0.75'; }
+  if (pitch) { pitch.value = 0.65; document.getElementById('svPitchVal').textContent = '0.65'; }
+  saveState();
+  showToast('Rate 0.75 · Pitch 0.65 applied');
+});
+
+document.querySelectorAll('.sv-chime-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    S.superVoice = { ...S.superVoice, paChime: btn.dataset.chime };
+    document.querySelectorAll('.sv-chime-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    saveState();
+    if (btn.dataset.chime !== 'none') playPaChime(btn.dataset.chime);
+  });
 });
 
 /* Manual announce button */

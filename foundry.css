@@ -1200,6 +1200,40 @@ html, body {
   line-height: 1.4;
 }
 
+/* ── PA Announcer Mode ── */
+.sv-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+.sv-pa-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.sv-chime-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.sv-chime-btn {
+  flex: 1;
+  padding: 7px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.sv-chime-btn.active {
+  border-color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 15%, transparent);
+  color: var(--amber);
+}
+
 /* ── Between-Innings Playlist ── */
 .dj-playlist {
   background: var(--bg-surface);
