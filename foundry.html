@@ -489,8 +489,25 @@
           </div>
           <div id="svPaPanel" hidden>
             <div class="sv-field">
+              <label class="sv-label" for="svElKey">ElevenLabs API Key <span class="field-optional">(free at elevenlabs.io)</span></label>
+              <div class="sv-el-key-row">
+                <input type="password" id="svElKey" class="sv-input" placeholder="sk_…" autocomplete="off" spellcheck="false">
+                <button type="button" class="btn-secondary" id="svElTest">Test</button>
+              </div>
+            </div>
+            <div class="sv-field">
+              <label class="sv-label" for="svElVoice">Announcer Voice</label>
+              <select id="svElVoice" class="sv-select">
+                <option value="pNInz6obpgDQGcFmaJgB">Adam — Deep &amp; Clear</option>
+                <option value="nPczCjzI2devNBz1zQrb">Brian — Authoritative</option>
+                <option value="VR6AewLTigWG4xSOukaG">Arnold — Strong</option>
+                <option value="TX3LPaxmHKxFdv7VOQHJ">Liam — Energetic</option>
+                <option value="onwK4e9ZLuTAKqWW03F9">Daniel — Rich</option>
+              </select>
+            </div>
+            <div class="sv-field">
               <label class="sv-label" for="svPaTemplate">PA Template</label>
-              <input type="text" id="svPaTemplate" class="sv-input" value="Now batting... number {number}... {name}!" placeholder="Use {name} and {number}">
+              <input type="text" id="svPaTemplate" class="sv-input" value="Now batting. Number {number}. {name}!" placeholder="Use {name} and {number}">
             </div>
             <div class="sv-field">
               <label class="sv-label">Chime</label>

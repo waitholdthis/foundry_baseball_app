@@ -31,8 +31,10 @@ const DEFAULT_STATE = {
     pitch: 0.9,
     beforeSong: true,
     paMode: false,
-    paTemplate: 'Now batting... number {number}... {name}!',
+    paTemplate: 'Now batting. Number {number}. {name}!',
     paChime: 'classic',
+    elKey: '',
+    elVoiceId: 'pNInz6obpgDQGcFmaJgB',
   },
   playlist: {
     tracks: [],    // [{key, name}] — keys are IndexedDB blob keys
@@ -1416,21 +1418,71 @@ function playPaChime(style) {
   });
 }
 
+/* ElevenLabs — session cache so the same line isn't re-generated mid-game */
+const elCache = new Map();
+
+async function generateElevenLabsAudio(text, apiKey, voiceId) {
+  const cacheKey = `${voiceId}:${text}`;
+  if (elCache.has(cacheKey)) return elCache.get(cacheKey);
+
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg',
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.35, use_speaker_boost: true },
+    }),
+  });
+  if (!res.ok) throw new Error(`ElevenLabs ${res.status}`);
+  const blob = await res.blob();
+  const url  = URL.createObjectURL(blob);
+  elCache.set(cacheKey, url);
+  return url;
+}
+
+function playAudioAndWait(src) {
+  return new Promise(resolve => {
+    const audio = new Audio(src);
+    audio.volume = parseFloat(document.getElementById('masterVolume').value);
+    audio.onended = resolve;
+    audio.onerror = resolve;
+    audio.play().catch(resolve);
+  });
+}
+
 async function announcePlayer(player) {
-  if (!('speechSynthesis' in window)) return;
   const sv = S.superVoice || {};
 
   if (sv.paMode) {
     await playPaChime(sv.paChime || 'classic');
   }
 
+  const template = sv.paMode
+    ? (sv.paTemplate || 'Now batting. Number {number}. {name}!')
+    : (sv.template   || 'Now batting, number {number}, {name}');
+  const text = template
+    .replace('{name}', player.name)
+    .replace('{number}', player.number);
+
+  // ElevenLabs path
+  if (sv.paMode && sv.elKey) {
+    try {
+      const src = await generateElevenLabsAudio(text, sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
+      await playAudioAndWait(src);
+      return;
+    } catch (err) {
+      showToast(`ElevenLabs error — falling back to TTS`);
+    }
+  }
+
+  // Web Speech fallback
+  if (!('speechSynthesis' in window)) return;
   return new Promise(resolve => {
-    const template = sv.paMode
-      ? (sv.paTemplate || 'Now batting... number {number}... {name}!')
-      : (sv.template   || 'Now batting, number {number}, {name}');
-    const text = template
-      .replace('{name}', player.name)
-      .replace('{number}', player.number);
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.rate  = sv.rate  ?? 0.9;
@@ -1562,10 +1614,14 @@ function syncSVUI() {
   if (paToggle) paToggle.checked = !!sv.paMode;
   if (paPanel)  paPanel.hidden   = !sv.paMode;
   const paTmpl = document.getElementById('svPaTemplate');
-  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting... number {number}... {name}!';
+  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting. Number {number}. {name}!';
   document.querySelectorAll('.sv-chime-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.chime === (sv.paChime || 'classic'))
   );
+  const elKey = document.getElementById('svElKey');
+  if (elKey) elKey.value = sv.elKey || '';
+  const elVoice = document.getElementById('svElVoice');
+  if (elVoice) elVoice.value = sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB';
 }
 
 document.getElementById('svToggle')?.addEventListener('change', e => {
@@ -1599,6 +1655,32 @@ document.getElementById('svPitch')?.addEventListener('input', e => {
 document.getElementById('svBeforeSong')?.addEventListener('change', e => {
   S.superVoice = { ...S.superVoice, beforeSong: e.target.checked };
   saveState();
+});
+
+/* ElevenLabs key + voice wiring */
+document.getElementById('svElKey')?.addEventListener('input', e => {
+  S.superVoice = { ...S.superVoice, elKey: e.target.value.trim() };
+  elCache.clear();
+  saveState();
+});
+
+document.getElementById('svElVoice')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, elVoiceId: e.target.value };
+  elCache.clear();
+  saveState();
+});
+
+document.getElementById('svElTest')?.addEventListener('click', async () => {
+  const sv = S.superVoice || {};
+  if (!sv.elKey) { showToast('Enter your ElevenLabs API key first'); return; }
+  showToast('Testing ElevenLabs…');
+  try {
+    const src = await generateElevenLabsAudio('Testing. One. Two. Three.', sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
+    await playAudioAndWait(src);
+    showToast('ElevenLabs connected!');
+  } catch {
+    showToast('ElevenLabs test failed — check your API key');
+  }
 });
 
 /* PA Announcer mode wiring */

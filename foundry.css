@@ -1233,6 +1233,19 @@ html, body {
   background: color-mix(in srgb, var(--amber) 15%, transparent);
   color: var(--amber);
 }
+.sv-el-key-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.sv-el-key-row .sv-input {
+  flex: 1;
+}
+.sv-el-key-row .btn-secondary {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 13px;
+}
 
 /* ── Between-Innings Playlist ── */
 .dj-playlist {
