@@ -1,0 +1,40 @@
+{
+  "name": "Foundry — Dugout Command Center",
+  "short_name": "Foundry",
+  "description": "Lineup builder, digital scorebook, and Ballpark DJ in one.",
+  "start_url": "/foundry.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "categories": ["sports", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "New Game",
+      "url": "/foundry.html?start=game",
+      "description": "Jump straight to game setup"
+    }
+  ]
+}

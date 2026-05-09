@@ -67,21 +67,17 @@
             Your lineup, your scorebook, and your Ballpark DJ — synced as one system. Tap a play result and three things happen simultaneously.
           </p>
           <div class="store-buttons" role="list" id="download">
-            <a href="#download" class="store-btn border-glow" role="listitem" aria-label="Download on the App Store">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <span><small>Download on the</small>App Store</span>
+            <a href="foundry.html" class="store-btn border-glow" role="listitem" aria-label="Open the Foundry web app">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+              <span><small>Launch in browser —</small>Open App</span>
             </a>
-            <a href="#download" class="store-btn border-glow" role="listitem" aria-label="Get it on Google Play">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M3.18 23.76c.3.17.64.19.96.07l12.43-7.19-2.63-2.64-10.76 9.76zM.56 1.6C.21 1.98 0 2.56 0 3.29v17.42c0 .73.21 1.31.57 1.69l.09.08 9.75-9.75v-.23L.65 1.52.56 1.6zM20.44 10.7l-2.6-1.5-2.93 2.93 2.93 2.93 2.62-1.52c.75-.43.75-1.41-.02-1.84zM3.18.24l10.76 9.76 2.63-2.63L4.14.17C3.82.05 3.48.07 3.18.24z"/>
-              </svg>
-              <span><small>Get it on</small>Google Play</span>
+            <a href="foundry.html" class="store-btn border-glow" role="listitem" aria-label="Install as app on your phone">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="3"/></svg>
+              <span><small>iOS &amp; Android —</small>Install Free</span>
             </a>
           </div>
           <p class="app-launch-note">
-            Launching Q4 2026 — <a href="#notify">join the early access list</a>
+            Free web app — works offline · installable on any device
           </p>
         </div>
 
@@ -352,6 +348,94 @@
         </ol>
       </section>
 
+      <!-- ═══ POST-GAME EXPORT ═══ -->
+      <section id="export" class="export-section section" aria-labelledby="exportTitle">
+        <div class="export-inner">
+
+          <div class="export-content reveal">
+            <p class="section-label">Post-Game Reports</p>
+            <h2 id="exportTitle" class="section-title">Full game summary.<br><em>One tap.</em></h2>
+            <p class="export-copy">After the final out, Foundry generates a complete PDF — scorebook, box score, batting stats, and pitching summary — ready to print or share with parents and players.</p>
+
+            <ul class="export-features" aria-label="PDF includes">
+              <li><span class="export-check" aria-hidden="true"></span>Traditional scorebook grid with play-by-play results</li>
+              <li><span class="export-check" aria-hidden="true"></span>Inning-by-inning box score (R · H · E)</li>
+              <li><span class="export-check" aria-hidden="true"></span>Full batting stats — AB, H, R, RBI, BB, K, AVG</li>
+              <li><span class="export-check" aria-hidden="true"></span>Pitching summary — IP, H, R, ER, BB, K, ERA</li>
+            </ul>
+
+            <div class="export-actions">
+              <button id="downloadScorebookBtn" class="button primary border-glow">Download Sample Scorebook</button>
+              <p class="export-disclaimer">Sample: Foundry Ballers 7, River Dogs 4 — May 9, 2026</p>
+            </div>
+          </div>
+
+          <!-- HTML preview of the PDF layout -->
+          <div class="export-preview reveal reveal-delay-1" aria-hidden="true">
+            <div class="epdf-card">
+              <div class="epdf-header">
+                <span class="epdf-home">FOUNDRY BALLERS</span>
+                <div class="epdf-score-block">
+                  <span class="epdf-score-home">7</span>
+                  <span class="epdf-score-sep">—</span>
+                  <span class="epdf-score-away">4</span>
+                </div>
+                <span class="epdf-badge">FINAL</span>
+              </div>
+
+              <div class="epdf-boxscore">
+                <div class="epdf-bs-labels">
+                  <span></span>
+                  <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                  <span>R</span><span>H</span>
+                </div>
+                <div class="epdf-bs-row">
+                  <span class="epdf-bs-team">River Dogs</span>
+                  <span>1</span><span>0</span><span class="epdf-runs">2</span><span>0</span><span class="epdf-runs">1</span><span>0</span><span>0</span><span>0</span><span>0</span>
+                  <span class="epdf-total-away">4</span><span class="epdf-rhe">7</span>
+                </div>
+                <div class="epdf-bs-row epdf-home-row">
+                  <span class="epdf-bs-team">Foundry</span>
+                  <span>0</span><span class="epdf-runs-home">3</span><span>0</span><span class="epdf-runs-home">1</span><span>0</span><span class="epdf-runs-home">2</span><span class="epdf-runs-home">1</span><span>0</span><span>0</span>
+                  <span class="epdf-total-home">7</span><span class="epdf-rhe">11</span>
+                </div>
+              </div>
+
+              <div class="epdf-grid">
+                <div class="epdf-grid-hdr">
+                  <span class="epdf-gc-name"># BATTER</span>
+                  <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                  <span class="epdf-gc-stat">H</span><span class="epdf-gc-stat">R</span>
+                </div>
+                <div class="epdf-grid-row">
+                  <span class="epdf-gc-name"><b>1 M. Cole CF</b></span>
+                  <span class="epdf-ab epdf-out">K</span><span class="epdf-ab epdf-hit">1B</span><span class="epdf-ab"></span><span class="epdf-ab epdf-hit">1B</span><span class="epdf-ab"></span><span class="epdf-ab epdf-hit">BB</span><span class="epdf-ab"></span><span class="epdf-ab epdf-out">F8</span><span class="epdf-ab"></span>
+                  <span class="epdf-gc-stat epdf-hit">2</span><span class="epdf-gc-stat">2</span>
+                </div>
+                <div class="epdf-grid-row epdf-alt">
+                  <span class="epdf-gc-name"><b>2 D. Reyes SS</b></span>
+                  <span class="epdf-ab epdf-out">G6</span><span class="epdf-ab epdf-out">G4</span><span class="epdf-ab"></span><span class="epdf-ab"></span><span class="epdf-ab epdf-out">K</span><span class="epdf-ab"></span><span class="epdf-ab epdf-hit">2B</span><span class="epdf-ab"></span><span class="epdf-ab epdf-out">K</span>
+                  <span class="epdf-gc-stat epdf-hit">1</span><span class="epdf-gc-stat">1</span>
+                </div>
+                <div class="epdf-grid-row">
+                  <span class="epdf-gc-name"><b>3 J. Rivera 1B</b></span>
+                  <span class="epdf-ab epdf-hit">BB</span><span class="epdf-ab epdf-hit">2B</span><span class="epdf-ab"></span><span class="epdf-ab"></span><span class="epdf-ab epdf-hit">1B</span><span class="epdf-ab"></span><span class="epdf-ab epdf-hr">HR</span><span class="epdf-ab"></span><span class="epdf-ab epdf-out">G4</span>
+                  <span class="epdf-gc-stat epdf-hit">3</span><span class="epdf-gc-stat">1</span>
+                </div>
+                <div class="epdf-grid-row epdf-alt">
+                  <span class="epdf-gc-name"><b>4 T. Washington C</b></span>
+                  <span class="epdf-ab epdf-out">F8</span><span class="epdf-ab epdf-out">K</span><span class="epdf-ab epdf-hit">1B</span><span class="epdf-ab"></span><span class="epdf-ab epdf-out">G5</span><span class="epdf-ab"></span><span class="epdf-ab"></span><span class="epdf-ab epdf-hit">1B</span><span class="epdf-ab"></span>
+                  <span class="epdf-gc-stat epdf-hit">1</span><span class="epdf-gc-stat">0</span>
+                </div>
+                <div class="epdf-grid-more">+ 5 more batters · batting stats · pitching summary →</div>
+              </div>
+            </div>
+            <div class="epdf-shadow" aria-hidden="true"></div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- ═══ FINAL CTA ═══ -->
       <section id="notify" class="app-cta-section section" aria-labelledby="ctaTitle">
         <div class="app-cta-inner reveal">
@@ -386,5 +470,8 @@
 
     <script src="script.js"></script>
     <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="scorebook-export.js"></script>
   </body>
 </html>

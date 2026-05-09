@@ -621,6 +621,253 @@
    RESPONSIVE
 ══════════════════════════════════════ */
 
+/* ══════════════════════════════════════
+   POST-GAME EXPORT SECTION
+══════════════════════════════════════ */
+
+.export-section {
+  background: var(--ink);
+  border-top: 1px solid var(--line);
+}
+
+.export-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 1160px;
+  margin-inline: auto;
+}
+
+.export-content { max-width: 480px; }
+
+.export-copy {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-block: 20px 28px;
+}
+
+.export-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.export-check {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-top: 2px;
+  position: relative;
+}
+
+.export-check::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--hot-amber);
+}
+
+.export-actions { display: flex; flex-direction: column; gap: 10px; }
+
+.export-disclaimer {
+  font-size: 0.78rem;
+  color: var(--steel);
+  margin: 0;
+  font-family: var(--mono);
+}
+
+/* ── PDF Preview Card ── */
+.export-preview { position: relative; }
+
+.epdf-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+  transform: perspective(1000px) rotateY(-4deg) rotateX(2deg);
+  transition: transform 400ms ease;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.export-preview:hover .epdf-card {
+  transform: perspective(1000px) rotateY(-1deg) rotateX(1deg);
+}
+
+.epdf-header {
+  background: #101820;
+  padding: 10px 14px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px solid #f59e0b;
+}
+
+.epdf-home {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #f59e0b;
+  letter-spacing: 0.06em;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-score-block {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.epdf-score-home {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f7f7f4;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-score-sep {
+  font-size: 0.75rem;
+  color: #8a929b;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-score-away {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #8a929b;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-badge {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #f59e0b;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(245,158,11,0.4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-boxscore {
+  background: #f8f9fa;
+  border-bottom: 1px solid #dce0e4;
+  padding: 6px 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+}
+
+.epdf-bs-labels, .epdf-bs-row {
+  display: grid;
+  grid-template-columns: 60px repeat(9, 1fr) 18px 18px;
+  align-items: center;
+}
+
+.epdf-bs-labels span {
+  text-align: center;
+  color: #8a929b;
+  font-weight: 700;
+  padding: 2px 0;
+}
+
+.epdf-bs-row {
+  padding: 3px 0;
+  border-top: 1px solid #dce0e4;
+}
+
+.epdf-bs-row span { text-align: center; color: #101820; }
+
+.epdf-bs-team { text-align: left !important; color: #8a929b !important; font-size: 0.58rem; }
+.epdf-runs      { color: #ef4444 !important; font-weight: 700; }
+.epdf-runs-home { color: #f59e0b !important; font-weight: 700; }
+.epdf-total-away{ color: #101820 !important; font-weight: 700; }
+.epdf-total-home{ color: #f59e0b !important; font-weight: 700; }
+.epdf-rhe       { color: #8a929b !important; }
+
+.epdf-grid { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; }
+
+.epdf-grid-hdr, .epdf-grid-row {
+  display: grid;
+  grid-template-columns: 92px repeat(9, 1fr) 20px 20px;
+  align-items: center;
+}
+
+.epdf-grid-hdr {
+  background: #1e2933;
+  padding: 4px 8px;
+  color: #c7ccd1;
+  font-weight: 700;
+  font-size: 0.56rem;
+}
+
+.epdf-grid-row {
+  padding: 3px 8px;
+  border-top: 1px solid #dce0e4;
+  background: #fff;
+}
+
+.epdf-grid-row.epdf-alt { background: #f8f9fa; }
+
+.epdf-gc-name {
+  font-size: 0.56rem;
+  color: #101820;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.epdf-ab {
+  text-align: center;
+  padding: 2px 1px;
+  font-size: 0.56rem;
+  color: #c7ccd1;
+}
+
+.epdf-ab.epdf-hit { color: #101820; font-weight: 700; }
+.epdf-ab.epdf-hr  { color: #f59e0b; font-weight: 700; }
+.epdf-ab.epdf-out { color: #ef4444; }
+
+.epdf-gc-stat { text-align: center; font-size: 0.58rem; color: #101820; font-weight: 700; }
+.epdf-gc-stat.epdf-hit { color: #22c55e; }
+
+.epdf-grid-more {
+  padding: 5px 8px;
+  font-size: 0.56rem;
+  color: #8a929b;
+  border-top: 1px solid #dce0e4;
+  background: #f0f2f4;
+  text-align: center;
+  font-style: italic;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.epdf-shadow {
+  position: absolute;
+  inset: 8px -8px -8px 8px;
+  background: rgba(245,158,11,0.12);
+  border-radius: 8px;
+  z-index: -1;
+}
+
+/* ══════════════════════════════════════ */
+
 @media (max-width: 920px) {
   .app-hero {
     grid-template-columns: 1fr;
@@ -630,6 +877,8 @@
   .features-grid { grid-template-columns: 1fr; }
   .feature-card-wide { grid-column: 1; }
   .feat-specs-row { grid-template-columns: 1fr; }
+  .export-inner { grid-template-columns: 1fr; gap: 40px; }
+  .epdf-card { transform: none; }
 }
 
 @media (max-width: 760px) {

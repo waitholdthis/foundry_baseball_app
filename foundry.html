@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Foundry">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <title>Foundry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="foundry.css">
+</head>
+<body>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<!-- ═══ INSTALL BANNER ═══ -->
+<div id="installBanner" class="install-banner hidden">
+  <span>Add Foundry to your home screen for the full experience.</span>
+  <button id="installBtn" class="install-btn">Install</button>
+  <button id="installDismiss" class="install-dismiss" aria-label="Dismiss">✕</button>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 1 — SETUP
+════════════════════════════════════ -->
+<div id="screen-setup" class="screen active" role="main" aria-label="Team setup">
+  <div class="setup-wrap">
+    <div class="setup-logo" aria-hidden="true">
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="22" y="4" width="15" height="15" rx="1" transform="rotate(45 22 4)" fill="#f59e0b" opacity="0.9"/>
+        <circle cx="22" cy="22" r="3" fill="#f7f7f4"/>
+        <circle cx="22" cy="6"  r="1.8" fill="#f7f7f4"/>
+        <circle cx="38" cy="22" r="1.8" fill="#f7f7f4"/>
+        <circle cx="22" cy="38" r="1.8" fill="#f7f7f4"/>
+        <circle cx="6"  cy="22" r="1.8" fill="#f7f7f4"/>
+        <line x1="22" y1="38" x2="6"  y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+        <line x1="22" y1="38" x2="38" y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+    </div>
+    <h1 class="setup-title">Foundry</h1>
+    <p class="setup-sub">Set up your team to get started.</p>
+
+    <form id="setupForm" class="setup-form" novalidate>
+      <div class="field-group">
+        <label for="teamName">Team Name</label>
+        <input id="teamName" type="text" placeholder="e.g. River Dogs" autocomplete="organization" required maxlength="40">
+      </div>
+      <div class="field-group">
+        <label>Sport</label>
+        <div class="seg-control" role="group" aria-label="Sport">
+          <button type="button" class="seg-btn active" data-sport="baseball">Baseball</button>
+          <button type="button" class="seg-btn" data-sport="softball">Softball</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="homeField">Home Field <span class="field-optional">(optional)</span></label>
+        <input id="homeField" type="text" placeholder="e.g. Memorial Park" maxlength="60">
+      </div>
+      <button type="submit" class="btn-primary btn-full">Create Team →</button>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 2 — ROSTER
+════════════════════════════════════ -->
+<div id="screen-roster" class="screen" role="main" aria-label="Roster management">
+
+  <header class="app-bar">
+    <button class="app-bar-back hidden" id="rosterBack" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="app-bar-title">
+      <span id="rosterTeamName">Roster</span>
+      <span class="app-bar-sub" id="rosterCount">0 players</span>
+    </div>
+    <button class="app-bar-action" id="addPlayerBtn" aria-label="Add player">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </header>
+
+  <div class="roster-list" id="rosterList" role="list" aria-label="Players"></div>
+
+  <div class="roster-empty hidden" id="rosterEmpty">
+    <p>No players yet. Tap <strong>+</strong> to add your first player.</p>
+  </div>
+
+  <div class="screen-footer">
+    <button class="btn-primary btn-full" id="rosterDone" disabled>Build Lineup →</button>
+  </div>
+
+  <!-- Add/Edit Player Sheet -->
+  <div class="sheet-overlay hidden" id="playerSheetOverlay" role="dialog" aria-modal="true" aria-labelledby="playerSheetTitle">
+    <div class="sheet" id="playerSheet">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title" id="playerSheetTitle">Add Player</h2>
+      <form id="playerForm" novalidate>
+        <input type="hidden" id="playerId">
+        <div class="form-row">
+          <div class="field-group field-sm">
+            <label for="playerNumber">#</label>
+            <input id="playerNumber" type="number" min="0" max="99" placeholder="7" required>
+          </div>
+          <div class="field-group field-grow">
+            <label for="playerName">Name</label>
+            <input id="playerName" type="text" placeholder="First Last" required maxlength="30" autocomplete="name">
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="playerPos">Primary Position</label>
+          <select id="playerPos">
+            <option value="P">P — Pitcher</option>
+            <option value="C">C — Catcher</option>
+            <option value="1B">1B — First Base</option>
+            <option value="2B">2B — Second Base</option>
+            <option value="3B">3B — Third Base</option>
+            <option value="SS">SS — Shortstop</option>
+            <option value="LF">LF — Left Field</option>
+            <option value="CF">CF — Center Field</option>
+            <option value="RF">RF — Right Field</option>
+            <option value="DH">DH — Designated Hitter</option>
+            <option value="UT">UT — Utility</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="field-group field-half">
+            <label for="playerBats">Bats</label>
+            <select id="playerBats">
+              <option value="R">R</option>
+              <option value="L">L</option>
+              <option value="S">S</option>
+            </select>
+          </div>
+          <div class="field-group field-half">
+            <label for="playerThrows">Throws</label>
+            <select id="playerThrows">
+              <option value="R">R</option>
+              <option value="L">L</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="walkUpFile">Walk-Up Song <span class="field-optional">(MP3/M4A)</span></label>
+          <div class="file-pick-row">
+            <button type="button" class="btn-secondary" id="pickWalkUp">Choose File</button>
+            <span class="file-pick-name" id="walkUpFileName">No file</span>
+            <input id="walkUpFile" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/*" class="sr-only" aria-label="Walk-up audio file">
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <button type="button" class="btn-ghost" id="cancelPlayer">Cancel</button>
+          <button type="submit" class="btn-primary">Save Player</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 3 — LINEUP BUILDER
+════════════════════════════════════ -->
+<div id="screen-lineup" class="screen" role="main" aria-label="Lineup builder">
+
+  <header class="app-bar">
+    <button class="app-bar-back" id="lineupBack" aria-label="Back to roster">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="app-bar-title">
+      <span>Lineup</span>
+      <span class="app-bar-sub">Drag to reorder</span>
+    </div>
+    <button class="app-bar-action" id="lineupReset" aria-label="Reset order" title="Reset to roster order">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+    </button>
+  </header>
+
+  <div class="lineup-instructions">
+    <span>Set batting order. All players bat.</span>
+  </div>
+
+  <ol id="lineupList" class="lineup-list" aria-label="Batting order"></ol>
+
+  <div class="screen-footer">
+    <button class="btn-secondary" id="lineupBackBtn">← Roster</button>
+    <button class="btn-primary" id="startGameBtn">Start Game →</button>
+  </div>
+
+  <!-- Game Setup Sheet -->
+  <div class="sheet-overlay hidden" id="gameSetupOverlay" role="dialog" aria-modal="true" aria-labelledby="gameSetupTitle">
+    <div class="sheet" id="gameSetupSheet">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title" id="gameSetupTitle">Game Setup</h2>
+      <form id="gameSetupForm" novalidate>
+        <div class="field-group">
+          <label for="gameOpponent">Opponent</label>
+          <input id="gameOpponent" type="text" placeholder="e.g. Tigers" required maxlength="40">
+        </div>
+        <div class="form-row">
+          <div class="field-group field-half">
+            <label for="gameDate">Date</label>
+            <input id="gameDate" type="date" required>
+          </div>
+          <div class="field-group field-half">
+            <label>Home / Away</label>
+            <div class="seg-control seg-sm" role="group" aria-label="Home or Away">
+              <button type="button" class="seg-btn active" data-ha="home">Home</button>
+              <button type="button" class="seg-btn" data-ha="away">Away</button>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="gameField">Field <span class="field-optional">(optional)</span></label>
+          <input id="gameField" type="text" placeholder="Field name" maxlength="60">
+        </div>
+        <div class="field-group">
+          <label for="gameInnings">Innings</label>
+          <select id="gameInnings">
+            <option value="7">7 Innings</option>
+            <option value="9" selected>9 Innings</option>
+          </select>
+        </div>
+        <div class="sheet-actions">
+          <button type="button" class="btn-ghost" id="cancelGameSetup">Cancel</button>
+          <button type="submit" class="btn-primary">Play Ball →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 4 — GAME DAY
+════════════════════════════════════ -->
+<div id="screen-game" class="screen" role="main" aria-label="Game day command center">
+
+  <!-- Score Bar (always visible) -->
+  <div class="score-bar" id="scoreBar">
+    <div class="score-bar-inner">
+      <button class="score-team-block us" id="scoreUs" aria-label="Our score" aria-haspopup="dialog">
+        <span class="score-team-name" id="scoreOurName">HOME</span>
+        <span class="score-runs" id="scoreOurRuns">0</span>
+      </button>
+      <div class="score-inning-block">
+        <button class="score-half-btn" id="halfTopBtn" aria-label="Top of inning" aria-pressed="true">▲</button>
+        <span class="score-inning-num" id="scoreInning">1</span>
+        <button class="score-half-btn" id="halfBotBtn" aria-label="Bottom of inning" aria-pressed="false">▼</button>
+      </div>
+      <button class="score-team-block them" id="scoreThem" aria-label="Opponent score" aria-haspopup="dialog">
+        <span class="score-team-name" id="scoreTheirName">AWAY</span>
+        <span class="score-runs" id="scoreTheirRuns">0</span>
+      </button>
+    </div>
+    <!-- Outs dots -->
+    <div class="outs-row" aria-label="Outs" role="status">
+      <span class="out-dot" id="out1" aria-label="Out 1"></span>
+      <span class="out-dot" id="out2" aria-label="Out 2"></span>
+      <span class="out-dot" id="out3" aria-label="Out 3"></span>
+    </div>
+  </div>
+
+  <!-- Tab Bar (phone) -->
+  <nav class="tab-bar" aria-label="Main navigation" role="tablist">
+    <button class="tab-btn active" data-tab="lineup" role="tab" aria-selected="true" aria-controls="panel-lineup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Lineup
+    </button>
+    <button class="tab-btn" data-tab="scorebook" role="tab" aria-selected="false" aria-controls="panel-scorebook">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Scorebook
+    </button>
+    <button class="tab-btn" data-tab="dj" role="tab" aria-selected="false" aria-controls="panel-dj">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+      DJ
+    </button>
+    <button class="tab-btn" data-tab="score" role="tab" aria-selected="false" aria-controls="panel-score">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg>
+      Box Score
+    </button>
+  </nav>
+
+  <!-- Three-column game layout -->
+  <div class="game-columns">
+
+    <!-- LEFT — Lineup Rail -->
+    <div class="game-panel panel-lineup" id="panel-lineup" role="tabpanel">
+      <div class="rail-header">
+        <span class="rail-label">BATTING ORDER</span>
+        <button class="rail-sub-btn" id="subBtn" aria-label="Make substitution">SUB</button>
+      </div>
+      <ol class="lineup-rail" id="gameLineupRail" aria-label="Batting order" aria-live="polite"></ol>
+    </div>
+
+    <!-- CENTER — Scorebook / Play Recorder -->
+    <div class="game-panel panel-scorebook" id="panel-scorebook" role="tabpanel" aria-hidden="true">
+      <div class="at-bat-card" id="atBatCard">
+        <div class="at-bat-header">
+          <span class="at-bat-slot" id="atBatSlot">#1</span>
+          <div class="at-bat-count" aria-label="Count">
+            <span class="count-dot ball" id="b1" aria-label="Ball 1"></span>
+            <span class="count-dot ball" id="b2" aria-label="Ball 2"></span>
+            <span class="count-dot ball" id="b3" aria-label="Ball 3"></span>
+            <span class="count-dot strike" id="s1" aria-label="Strike 1"></span>
+            <span class="count-dot strike" id="s2" aria-label="Strike 2"></span>
+          </div>
+          <button class="undo-btn" id="undoBtn" aria-label="Undo last play">↩ UNDO</button>
+        </div>
+        <div class="at-bat-name" id="atBatName">—</div>
+        <div class="at-bat-meta" id="atBatMeta">— · —</div>
+
+        <!-- Diamond -->
+        <div class="diamond-wrap" aria-label="Bases">
+          <svg class="diamond-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <!-- Base paths (colored when runners on) -->
+            <line id="path12" x1="60" y1="60" x2="60" y2="16" stroke="#334155" stroke-width="3"/>
+            <line id="path23" x1="60" y1="60" x2="104" y2="60" stroke="#334155" stroke-width="3"/>
+            <line id="path34" x1="60" y1="60" x2="60" y2="104" stroke="#334155" stroke-width="3"/>
+            <line id="path41" x1="60" y1="60" x2="16" y2="60" stroke="#334155" stroke-width="3"/>
+            <!-- Diamond outline -->
+            <polygon points="60,8 104,60 60,112 16,60" fill="none" stroke="#334155" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- Bases -->
+            <rect id="base2" x="52" y="4"  width="16" height="16" rx="2" fill="#1B2336" stroke="#334155" stroke-width="1.5"/>
+            <rect id="base1" x="96" y="52" width="16" height="16" rx="2" fill="#1B2336" stroke="#334155" stroke-width="1.5"/>
+            <rect id="base4" x="52" y="100" width="16" height="16" rx="2" fill="#1B2336" stroke="#334155" stroke-width="1.5"/>
+            <rect id="base3" x="4"  y="52" width="16" height="16" rx="2" fill="#1B2336" stroke="#334155" stroke-width="1.5"/>
+            <!-- Home plate -->
+            <polygon id="baseHome" points="60,100 68,108 60,116 52,108" fill="#1B2336" stroke="#334155" stroke-width="1.5"/>
+          </svg>
+          <!-- Touch targets for base toggles -->
+          <button class="base-btn base-2b" id="baseBtn2" aria-label="Toggle runner on 2nd base" aria-pressed="false">2B</button>
+          <button class="base-btn base-3b" id="baseBtn3" aria-label="Toggle runner on 3rd base" aria-pressed="false">3B</button>
+          <button class="base-btn base-home" id="baseBtnHome" aria-label="Score runner from home" aria-pressed="false">H</button>
+          <button class="base-btn base-1b" id="baseBtn1" aria-label="Toggle runner on 1st base" aria-pressed="false">1B</button>
+        </div>
+
+        <!-- Outcome Buttons -->
+        <div class="outcome-strip" role="group" aria-label="Plate appearance outcome">
+          <button class="outcome-btn out" data-result="K">K</button>
+          <button class="outcome-btn out" data-result="Kl">K̲</button>
+          <button class="outcome-btn out" data-result="GO">GO</button>
+          <button class="outcome-btn out" data-result="FO">FO</button>
+          <button class="outcome-btn out" data-result="DP">DP</button>
+          <button class="outcome-btn obp" data-result="BB">BB</button>
+          <button class="outcome-btn obp" data-result="HBP">HBP</button>
+          <button class="outcome-btn hit" data-result="1B">1B</button>
+          <button class="outcome-btn hit" data-result="2B">2B</button>
+          <button class="outcome-btn hit" data-result="3B">3B</button>
+          <button class="outcome-btn hr"  data-result="HR">HR</button>
+          <button class="outcome-btn obp" data-result="E">E</button>
+          <button class="outcome-btn obp" data-result="FC">FC</button>
+          <button class="outcome-btn obp" data-result="SAC">SAC</button>
+        </div>
+
+        <!-- Count buttons -->
+        <div class="count-strip" role="group" aria-label="Pitch count">
+          <button class="count-btn ball-btn" data-count="ball" aria-label="Add ball">Ball</button>
+          <button class="count-btn strike-btn" data-count="strike" aria-label="Add strike">Strike</button>
+          <button class="count-btn foul-btn" data-count="foul" aria-label="Add foul">Foul</button>
+          <button class="count-btn reset-btn" data-count="reset" aria-label="Reset count">0-0</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — DJ Console -->
+    <div class="game-panel panel-dj" id="panel-dj" role="tabpanel" aria-hidden="true">
+      <div class="dj-now-playing" id="djNowPlaying">
+        <div class="dj-label">NOW PLAYING</div>
+        <div class="dj-song-title" id="djSongTitle">—</div>
+        <div class="dj-player-name" id="djPlayerName">—</div>
+        <div class="dj-progress-wrap">
+          <div class="dj-progress-bar">
+            <div class="dj-progress-fill" id="djProgressFill"></div>
+          </div>
+          <div class="dj-time-row">
+            <span id="djTimeCurrent">0:00</span>
+            <span id="djTimeDuration">0:00</span>
+          </div>
+        </div>
+        <div class="dj-transport">
+          <button class="dj-btn" id="djReplay" aria-label="Replay from start">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+          </button>
+          <button class="dj-btn dj-play" id="djPlayPause" aria-label="Play / Pause">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="dj-btn" id="djFade" aria-label="Fade out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="dj-on-deck" id="djOnDeck">
+        <div class="dj-label">ON DECK</div>
+        <div class="dj-od-name" id="djOnDeckName">—</div>
+        <div class="dj-od-song" id="djOnDeckSong">—</div>
+      </div>
+
+      <div class="dj-tts">
+        <button class="btn-secondary btn-full" id="announceBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          Announce Batter
+        </button>
+      </div>
+
+      <div class="dj-soundboard">
+        <div class="dj-label">SOUNDBOARD</div>
+        <div class="soundboard-grid">
+          <button class="sound-btn" data-sound="roar" aria-label="Crowd roar">
+            <span class="sound-icon">📣</span>
+            <span>Roar</span>
+          </button>
+          <button class="sound-btn" data-sound="horn" aria-label="Air horn">
+            <span class="sound-icon">📯</span>
+            <span>Horn</span>
+          </button>
+          <button class="sound-btn" data-sound="organ" aria-label="Organ charge">
+            <span class="sound-icon">🎹</span>
+            <span>Charge</span>
+          </button>
+          <button class="sound-btn" data-sound="rally" aria-label="Rally music">
+            <span class="sound-icon">⚡</span>
+            <span>Rally</span>
+          </button>
+          <button class="sound-btn" data-sound="walkoff" aria-label="Walk-off music">
+            <span class="sound-icon">🏆</span>
+            <span>Walk-Off</span>
+          </button>
+          <button class="sound-btn" data-sound="strikeout" aria-label="Strike 'em out riff">
+            <span class="sound-icon">🔥</span>
+            <span>K Riff</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dj-volume">
+        <label for="masterVolume" class="dj-label">VOLUME</label>
+        <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.8" aria-label="Master volume">
+      </div>
+    </div>
+
+    <!-- BOX SCORE panel (in-game) -->
+    <div class="game-panel panel-score" id="panel-score" role="tabpanel" aria-hidden="true">
+      <div class="boxscore-wrap">
+        <div class="boxscore-header">Box Score</div>
+        <div class="boxscore-scroll">
+          <table class="boxscore-table" id="boxscoreTable" aria-label="Box score">
+            <thead id="boxscoreHead"></thead>
+            <tbody id="boxscoreBody"></tbody>
+          </table>
+        </div>
+        <div class="batting-stats-wrap">
+          <div class="boxscore-header">Batting</div>
+          <table class="stats-table" id="battingStatsTable" aria-label="Batting stats">
+            <thead>
+              <tr><th>Player</th><th>AB</th><th>R</th><th>H</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th></tr>
+            </thead>
+            <tbody id="battingStatsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .game-columns -->
+
+  <!-- End Game / Menu -->
+  <button class="game-menu-btn" id="gameMenuBtn" aria-label="Game options" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+  </button>
+
+  <!-- Game Menu Sheet -->
+  <div class="sheet-overlay hidden" id="gameMenuOverlay" role="dialog" aria-modal="true" aria-labelledby="gameMenuTitle">
+    <div class="sheet" id="gameMenuSheet">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title" id="gameMenuTitle">Game Options</h2>
+      <div class="menu-list">
+        <button class="menu-item" id="endGameBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+          End Game &amp; View Summary
+        </button>
+        <button class="menu-item" id="exportDuringBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Scorebook PDF
+        </button>
+        <button class="menu-item danger" id="abandonGameBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Abandon Game
+        </button>
+        <button class="menu-item" id="closeGameMenu">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Substitution Sheet -->
+  <div class="sheet-overlay hidden" id="subSheetOverlay" role="dialog" aria-modal="true" aria-labelledby="subSheetTitle">
+    <div class="sheet" id="subSheet">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title" id="subSheetTitle">Substitution</h2>
+      <p class="sheet-desc">Replacing: <strong id="subOutName">—</strong></p>
+      <div class="sub-list" id="subList" role="list" aria-label="Available bench players"></div>
+      <button class="btn-ghost btn-full" id="cancelSub" style="margin-top:12px">Cancel</button>
+    </div>
+  </div>
+</div><!-- end #screen-game -->
+
+<!-- ════════════════════════════════════
+     SCREEN 5 — GAME SUMMARY
+════════════════════════════════════ -->
+<div id="screen-summary" class="screen" role="main" aria-label="Game summary">
+
+  <header class="app-bar">
+    <button class="app-bar-back" id="summaryBack" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="app-bar-title">
+      <span>Game Summary</span>
+      <span class="app-bar-sub" id="summaryMatchup">—</span>
+    </div>
+  </header>
+
+  <div class="summary-scroll">
+    <!-- Final score hero -->
+    <div class="summary-score-hero">
+      <div class="summary-score-block">
+        <span class="summary-team" id="summaryOurName">US</span>
+        <span class="summary-runs" id="summaryOurScore">0</span>
+      </div>
+      <span class="summary-divider">FINAL</span>
+      <div class="summary-score-block">
+        <span class="summary-team" id="summaryTheirName">THEM</span>
+        <span class="summary-runs" id="summaryTheirScore">0</span>
+      </div>
+    </div>
+
+    <!-- Box score -->
+    <div class="summary-section">
+      <div class="summary-section-title">Box Score</div>
+      <div class="summary-table-scroll">
+        <table class="boxscore-table" id="summaryBoxscore" aria-label="Final box score">
+          <thead id="summaryBoxHead"></thead>
+          <tbody id="summaryBoxBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Batting stats -->
+    <div class="summary-section">
+      <div class="summary-section-title">Batting</div>
+      <div class="summary-table-scroll">
+        <table class="stats-table" id="summaryBatting" aria-label="Final batting stats">
+          <thead>
+            <tr><th>Player</th><th>AB</th><th>R</th><th>H</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th></tr>
+          </thead>
+          <tbody id="summaryBattingBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Export actions -->
+    <div class="summary-actions">
+      <button class="btn-primary btn-full" id="summaryExportBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Scorebook PDF
+      </button>
+      <button class="btn-secondary btn-full" id="newGameBtn">New Game</button>
+      <button class="btn-ghost btn-full" id="backToRosterBtn">Back to Roster</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="scorebook-export.js"></script>
+<script src="foundry.js"></script>
+</body>
+</html>
