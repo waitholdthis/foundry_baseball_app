@@ -1830,8 +1830,24 @@ document.querySelectorAll('.sound-btn').forEach(btn => {
   });
 });
 
+function playMp3(src) {
+  const audio = new Audio(src);
+  audio.volume = parseFloat(document.getElementById('masterVolume').value);
+  audio.play().catch(() => {});
+}
+
 function playSound(type) {
   try {
+    switch (type) {
+      case 'roar':      playMp3('/sounds/roar.mp3');      return;
+      case 'horn':      playMp3('/sounds/horn.mp3');      return;
+      case 'organ':     playMp3('/sounds/charge.mp3');    return;
+      case 'catch':     playMp3('/sounds/catch.mp3');     return;
+      case 'foul':      playMp3('/sounds/foul-ball.mp3'); return;
+      case 'homerun':   playMp3('/sounds/homerun.mp3');   return;
+      case 'nocrying':  playMp3('/sounds/no_crying.mp3'); return;
+    }
+    // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
     const vol  = parseFloat(document.getElementById('masterVolume').value);
@@ -1840,9 +1856,6 @@ function playSound(type) {
     gain.gain.value = vol;
 
     switch (type) {
-      case 'roar':      playCrowdRoar(ctx, gain);    break;
-      case 'horn':      playAirHorn(ctx, gain);       break;
-      case 'organ':     playOrganCharge(ctx, gain);   break;
       case 'rally':     playRallyDrum(ctx, gain);     break;
       case 'walkoff':   playWalkOff(ctx, gain);       break;
       case 'strikeout': playKRiff(ctx, gain);         break;
