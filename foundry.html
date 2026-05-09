@@ -525,13 +525,42 @@
           </table>
         </div>
         <div class="batting-stats-wrap">
-          <div class="boxscore-header">Batting</div>
-          <table class="stats-table" id="battingStatsTable" aria-label="Batting stats">
-            <thead>
-              <tr><th>Player</th><th>AB</th><th>R</th><th>H</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th></tr>
-            </thead>
-            <tbody id="battingStatsBody"></tbody>
-          </table>
+          <div class="boxscore-header">Batting — This Game</div>
+          <div class="stats-scroll">
+            <table class="stats-table" id="battingStatsTable" aria-label="Batting stats">
+              <thead>
+                <tr><th>Player</th><th>AB</th><th>H</th><th>2B</th><th>3B</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th><th>OBP</th><th>SLG</th></tr>
+              </thead>
+              <tbody id="battingStatsBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="batting-stats-wrap">
+          <div class="boxscore-header">Season Totals</div>
+          <div class="stats-scroll">
+            <table class="stats-table" id="seasonStatsTable" aria-label="Season batting stats">
+              <thead id="seasonStatsHead">
+                <tr>
+                  <th>Player</th>
+                  <th data-sort="gp">GP</th>
+                  <th data-sort="pa">PA</th>
+                  <th data-sort="ab">AB</th>
+                  <th data-sort="h">H</th>
+                  <th data-sort="dbl">2B</th>
+                  <th data-sort="tpl">3B</th>
+                  <th data-sort="hr">HR</th>
+                  <th data-sort="rbi">RBI</th>
+                  <th data-sort="bb">BB</th>
+                  <th data-sort="k">K</th>
+                  <th data-sort="avg" class="sort-active">AVG</th>
+                  <th data-sort="obp">OBP</th>
+                  <th data-sort="slg">SLG</th>
+                  <th data-sort="ops">OPS</th>
+                </tr>
+              </thead>
+              <tbody id="seasonStatsBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -620,13 +649,42 @@
 
     <!-- Batting stats -->
     <div class="summary-section">
-      <div class="summary-section-title">Batting</div>
+      <div class="summary-section-title">Batting — This Game</div>
       <div class="summary-table-scroll">
         <table class="stats-table" id="summaryBatting" aria-label="Final batting stats">
           <thead>
-            <tr><th>Player</th><th>AB</th><th>R</th><th>H</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th></tr>
+            <tr><th>Player</th><th>AB</th><th>H</th><th>2B</th><th>3B</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>AVG</th><th>OBP</th><th>SLG</th></tr>
           </thead>
           <tbody id="summaryBattingBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Season Stats -->
+    <div class="summary-section">
+      <div class="summary-section-title">Season Totals</div>
+      <div class="summary-table-scroll">
+        <table class="stats-table" id="summarySeasonTable" aria-label="Season batting stats">
+          <thead id="summarySeasonHead">
+            <tr>
+              <th>Player</th>
+              <th data-sort="gp">GP</th>
+              <th data-sort="pa">PA</th>
+              <th data-sort="ab">AB</th>
+              <th data-sort="h">H</th>
+              <th data-sort="dbl">2B</th>
+              <th data-sort="tpl">3B</th>
+              <th data-sort="hr">HR</th>
+              <th data-sort="rbi">RBI</th>
+              <th data-sort="bb">BB</th>
+              <th data-sort="k">K</th>
+              <th data-sort="avg" class="sort-active">AVG</th>
+              <th data-sort="obp">OBP</th>
+              <th data-sort="slg">SLG</th>
+              <th data-sort="ops">OPS</th>
+            </tr>
+          </thead>
+          <tbody id="summarySeasonBody"></tbody>
         </table>
       </div>
     </div>

@@ -1406,6 +1406,37 @@ html, body {
 .cell-us   { color: var(--amber); font-weight: 700; }
 .cell-hit  { color: var(--green); font-weight: 700; }
 .cell-out  { color: var(--red); }
+.stats-name { white-space: nowrap; }
+.stats-empty { text-align: center; opacity: 0.5; padding: 16px !important; }
+
+/* Scrollable stats wrapper (allows horizontal scroll for wide tables) */
+.stats-scroll { overflow-x: auto; }
+.batting-stats-wrap { overflow-x: hidden; }
+
+/* Sortable column headers */
+.stats-table th[data-sort] {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  padding-right: 16px;
+  position: relative;
+}
+.stats-table th[data-sort]::after {
+  content: '⇅';
+  position: absolute;
+  right: 3px;
+  opacity: 0.3;
+  font-size: 9px;
+}
+.stats-table th[data-sort].sort-active::after {
+  content: '▼';
+  opacity: 0.8;
+  color: var(--amber);
+}
+.stats-table th[data-sort].sort-active.sort-asc::after {
+  content: '▲';
+}
+.stats-table th[data-sort].sort-active { color: var(--amber); }
 
 /* Game menu button */
 .game-menu-btn {

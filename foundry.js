@@ -540,6 +540,7 @@ function renderGameScreen() {
   updateAtBatCard();
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
+  renderSeasonStats('seasonStatsBody');
 }
 
 function updateScoreBar() {
@@ -752,6 +753,7 @@ function recordPlay(result) {
   updateAtBatCard();
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
+  renderSeasonStats('seasonStatsBody');
   if (isHit) openSprayModal(ab.id);
 }
 
@@ -859,6 +861,7 @@ function endHalfInning() {
   updateAtBatCard();
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
+  renderSeasonStats('seasonStatsBody');
   showToast(`${g.half === 'bottom' ? 'Bottom' : 'Top'} of inning ${g.inning}`);
   startInningPlaylist();
 }
@@ -908,6 +911,7 @@ function undoLastPlay() {
   updateAtBatCard();
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
+  renderSeasonStats('seasonStatsBody');
   showToast('Last play undone');
 }
 
@@ -1047,34 +1051,114 @@ function renderBoxScore(tableId, headId, bodyId) {
   body.innerHTML = usRow + themRow;
 }
 
+function computePlayerStats(atBats) {
+  const bb  = atBats.filter(ab => ['BB','HBP'].includes(ab.result)).length;
+  const sac = atBats.filter(ab => ab.result === 'SAC').length;
+  const pa  = atBats.length;
+  const ab  = pa - bb - sac;
+  const h   = atBats.filter(ab => ['1B','2B','3B','HR'].includes(ab.result)).length;
+  const dbl = atBats.filter(ab => ab.result === '2B').length;
+  const tpl = atBats.filter(ab => ab.result === '3B').length;
+  const hr  = atBats.filter(ab => ab.result === 'HR').length;
+  const k   = atBats.filter(ab => ['K','Kl'].includes(ab.result)).length;
+  const rbi = atBats.reduce((s, ab) => s + (ab.rbi || 0), 0);
+  const avg = ab > 0 ? h / ab : 0;
+  const obp = pa > 0 ? (h + bb) / pa : 0;
+  const slg = ab > 0 ? (h + dbl + 2 * tpl + 3 * hr) / ab : 0;
+  const ops = obp + slg;
+  return { pa, ab, h, dbl, tpl, hr, bb, k, rbi, avg, obp, slg, ops };
+}
+
 function renderBattingStats(bodyId) {
   const g = S.game;
   if (!g) return;
   const body = document.getElementById(bodyId);
   if (!body) return;
-
+  const fmt = n => n.toFixed(3).replace(/^0/, '');
   const rows = S.lineup.map(pid => {
-    const p   = playerById(pid);
-    const abs = g.atBats.filter(ab => ab.playerId === pid && !['BB','HBP','SAC'].includes(ab.result));
-    const bb  = g.atBats.filter(ab => ab.playerId === pid && ['BB','HBP'].includes(ab.result)).length;
-    const h   = g.atBats.filter(ab => ab.playerId === pid && ['1B','2B','3B','HR'].includes(ab.result)).length;
-    const k   = g.atBats.filter(ab => ab.playerId === pid && ['K','Kl'].includes(ab.result)).length;
-    const r   = g.atBats.filter(ab => ab.playerId === pid && ab.rbi > 0).length;
-    const rbi = g.atBats.filter(ab => ab.playerId === pid).reduce((s, ab) => s + (ab.rbi || 0), 0);
-    const ab  = abs.length;
-    const avg = ab > 0 ? (h / ab).toFixed(3).replace(/^0/, '') : '.000';
+    const p  = playerById(pid);
+    const st = computePlayerStats(g.atBats.filter(ab => ab.playerId === pid));
     return `<tr>
-      <td style="text-align:left">${esc(p?.name || '—')}</td>
-      <td>${ab}</td>
-      <td>${r}</td>
-      <td class="${h > 0 ? 'cell-hit' : ''}">${h}</td>
-      <td>${rbi}</td>
-      <td>${bb}</td>
-      <td class="${k > 0 ? 'cell-out' : ''}">${k}</td>
-      <td>${avg}</td>
+      <td class="stats-name">${esc(p?.name || '—')}</td>
+      <td>${st.ab}</td>
+      <td class="${st.h > 0 ? 'cell-hit' : ''}">${st.h}</td>
+      <td>${st.dbl}</td>
+      <td>${st.tpl}</td>
+      <td>${st.hr}</td>
+      <td>${st.rbi}</td>
+      <td>${st.bb}</td>
+      <td class="${st.k > 0 ? 'cell-out' : ''}">${st.k}</td>
+      <td>${st.ab > 0 ? fmt(st.avg) : '.000'}</td>
+      <td>${st.pa > 0 ? fmt(st.obp) : '.000'}</td>
+      <td>${st.ab > 0 ? fmt(st.slg) : '.000'}</td>
     </tr>`;
   });
   body.innerHTML = rows.join('');
+}
+
+let seasonSortCol = 'avg';
+let seasonSortDir = -1;
+
+function renderSeasonStats(bodyId) {
+  const body = document.getElementById(bodyId);
+  if (!body) return;
+  const games = S.completedGames || [];
+  const rows = S.players.map(p => {
+    const allAbs = games.flatMap(g => g.atBats.filter(ab => ab.playerId === p.id));
+    const gp = games.filter(g => g.atBats.some(ab => ab.playerId === p.id)).length;
+    return { p, gp, ...computePlayerStats(allAbs) };
+  }).filter(r => r.gp > 0 || r.pa > 0);
+
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="15" class="stats-empty">No completed games yet</td></tr>`;
+    return;
+  }
+
+  rows.sort((a, b) => {
+    const av = a[seasonSortCol] ?? 0;
+    const bv = b[seasonSortCol] ?? 0;
+    return seasonSortDir * (bv - av);
+  });
+
+  const fmt = n => n.toFixed(3).replace(/^0/, '');
+  body.innerHTML = rows.map(s => `<tr>
+    <td class="stats-name">${esc(s.p.name)}</td>
+    <td>${s.gp}</td>
+    <td>${s.pa}</td>
+    <td>${s.ab}</td>
+    <td class="${s.h > 0 ? 'cell-hit' : ''}">${s.h}</td>
+    <td>${s.dbl}</td>
+    <td>${s.tpl}</td>
+    <td>${s.hr}</td>
+    <td>${s.rbi}</td>
+    <td>${s.bb}</td>
+    <td class="${s.k > 0 ? 'cell-out' : ''}">${s.k}</td>
+    <td>${s.ab > 0 ? fmt(s.avg) : '.000'}</td>
+    <td>${s.pa > 0 ? fmt(s.obp) : '.000'}</td>
+    <td>${s.ab > 0 ? fmt(s.slg) : '.000'}</td>
+    <td>${s.pa > 0 ? fmt(s.ops) : '.000'}</td>
+  </tr>`).join('');
+}
+
+function bindSeasonSort(headId, bodyId) {
+  const head = document.getElementById(headId);
+  if (!head) return;
+  head.addEventListener('click', e => {
+    const th = e.target.closest('[data-sort]');
+    if (!th) return;
+    const col = th.dataset.sort;
+    if (seasonSortCol === col) {
+      seasonSortDir *= -1;
+    } else {
+      seasonSortCol = col;
+      seasonSortDir = -1;
+    }
+    head.querySelectorAll('[data-sort]').forEach(t => {
+      t.classList.toggle('sort-active', t.dataset.sort === col);
+      t.classList.toggle('sort-asc', t.dataset.sort === col && seasonSortDir === 1);
+    });
+    renderSeasonStats(bodyId);
+  });
 }
 
 /* ─────────────────────────────────────────────
@@ -1694,6 +1778,20 @@ function showSummary() {
   renderBattingStats('summaryBattingBody');
   renderSprayCharts('summarySprayContainer');
 
+  // Save this game to season history (deduplicated by game id)
+  S.completedGames = S.completedGames || [];
+  if (!S.completedGames.find(cg => cg.id === g.id)) {
+    S.completedGames.push({
+      id: g.id,
+      date: g.date,
+      opponent: g.opponent,
+      score: { ...g.score },
+      atBats: g.atBats.map(ab => ({ ...ab })),
+    });
+    saveState();
+  }
+  renderSeasonStats('summarySeasonBody');
+
   navigate('summary');
 }
 
@@ -1795,6 +1893,9 @@ function esc(str) {
 /* ─────────────────────────────────────────────
    INIT — Restore state on load
 ───────────────────────────────────────────── */
+bindSeasonSort('seasonStatsHead', 'seasonStatsBody');
+bindSeasonSort('summarySeasonHead', 'summarySeasonBody');
+
 (function init() {
   if (S.team) {
     if (S.game) {
