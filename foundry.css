@@ -1438,6 +1438,182 @@ html, body {
 }
 .stats-table th[data-sort].sort-active { color: var(--amber); }
 
+/* ═══════════════════════════════════════
+   PITCH TRACKING
+═══════════════════════════════════════ */
+.pitch-track-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.pitch-track-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.pitch-track-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+  text-transform: uppercase;
+}
+.pitcher-section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.pitcher-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pitcher-name-input {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-1);
+  font-size: 14px;
+  padding: 8px 10px;
+  outline: none;
+}
+.pitcher-name-input:focus { border-color: var(--amber); }
+.pitch-count-badge {
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--amber);
+  min-width: 36px;
+  text-align: center;
+}
+.pitch-change-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.pitch-change-btn:active { background: var(--bg-elevated); }
+.pitch-workload-wrap { /* same rhythm as batting-stats-wrap */ }
+.pitch-current-row td { color: var(--amber); }
+.pitch-cur-dot { font-size: 8px; vertical-align: middle; }
+
+/* Pitch entry sheet */
+.pitch-sheet { padding-bottom: calc(env(safe-area-inset-bottom) + 16px); }
+.pitch-sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.pitch-outcome-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.pitch-ball   { background: rgba(59,130,246,0.2); color: #60a5fa; }
+.pitch-strike { background: rgba(239,68,68,0.2);  color: #f87171; }
+.pitch-foul   { background: rgba(245,158,11,0.2); color: var(--amber); }
+.pitch-pitcher-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pitch-pc-label {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.pitch-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.pitch-zone-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10px;
+  opacity: 0.7;
+}
+.pitch-type-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pitch-type-btn {
+  flex: 1;
+  min-width: 36px;
+  padding: 8px 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.pitch-type-btn.active {
+  background: rgba(245,158,11,0.15);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.pitch-zone-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.zone-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+.zone-out {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.06);
+}
+.zone-in {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.15);
+}
+.zone-cell.zone-selected {
+  background: rgba(245,158,11,0.35);
+  border-color: var(--amber);
+}
+.zone-cell:active { opacity: 0.7; }
+.pitch-sheet-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.pitch-sheet-actions .btn-ghost { flex: 0 0 auto; }
+.pitch-sheet-actions .btn-primary { flex: 1; }
+
 /* Game menu button */
 .game-menu-btn {
   position: absolute;

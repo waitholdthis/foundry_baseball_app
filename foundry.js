@@ -22,6 +22,7 @@ const DEFAULT_STATE = {
   lineup: [],          // [playerId, ...] — current batting order
   game: null,          // see newGameState()
   completedGames: [],  // archived game summaries
+  pitchTracking: { enabled: false, warnAt: 75, alarmAt: 100 },
   superVoice: {
     enabled: false,
     template: 'Now batting, number {number}, {name}',
@@ -48,6 +49,7 @@ function loadState() {
       ...DEFAULT_STATE,
       ...saved,
       superVoice: { ...DEFAULT_STATE.superVoice, ...(saved.superVoice || {}) },
+      pitchTracking: { ...DEFAULT_STATE.pitchTracking, ...(saved.pitchTracking || {}) },
       playlist: {
         ...DEFAULT_STATE.playlist,
         ...(saved.playlist || {}),
@@ -83,6 +85,9 @@ function newGameState(opponent, date, field, homeAway, innings) {
     atBats: [],     // [{id, playerId, inning, half, result, rbi, bases}]
     events: [],     // for undo
     substitutions: {}, // {lineupSlot: newPlayerId}
+    pitches: [],    // [{id, inning, half, pitcherName, type, zone, outcome, pc}]
+    pitcher: '',    // current opposing pitcher name
+    pitchCount: 0,  // pitches thrown by current pitcher
   };
 }
 
@@ -541,6 +546,7 @@ function renderGameScreen() {
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
   renderSeasonStats('seasonStatsBody');
+  syncPitchUI();
 }
 
 function updateScoreBar() {
@@ -872,6 +878,14 @@ document.querySelectorAll('.count-btn').forEach(btn => {
     const g = S.game;
     if (!g) return;
     const type = btn.dataset.count;
+    if (type === 'reset') {
+      g.balls = 0; g.strikes = 0;
+      saveState(); updateAtBatCard(); return;
+    }
+    // Intercept for pitch tracking
+    if (S.pitchTracking?.enabled && g.pitcher && type !== 'reset') {
+      openPitchSheet(type); return;
+    }
     if (type === 'ball') {
       g.balls++;
       if (g.balls >= 4) { g.balls = 0; recordPlay('BB'); return; }
@@ -880,8 +894,6 @@ document.querySelectorAll('.count-btn').forEach(btn => {
       if (g.strikes >= 3) { g.strikes = 0; recordPlay('K'); return; }
     } else if (type === 'foul') {
       if (g.strikes < 2) g.strikes++;
-    } else {
-      g.balls = 0; g.strikes = 0;
     }
     saveState();
     updateAtBatCard();
@@ -1634,6 +1646,179 @@ document.getElementById('plFileInput')?.addEventListener('change', async e => {
 });
 
 syncPlaylistUI();
+
+/* ─────────────────────────────────────────────
+   PITCH TRACKING
+───────────────────────────────────────────── */
+let pendingPitchOutcome = null;
+
+function buildZoneGrid() {
+  const grid = document.getElementById('pitchZoneGrid');
+  if (!grid || grid.children.length > 0) return;
+  const IN_ZONE = new Set([7, 8, 9, 12, 13, 14, 17, 18, 19]);
+  for (let i = 1; i <= 25; i++) {
+    const btn = document.createElement('button');
+    btn.className = `zone-cell ${IN_ZONE.has(i) ? 'zone-in' : 'zone-out'}`;
+    btn.dataset.zone = i;
+    btn.setAttribute('aria-label', `Zone ${i}`);
+    btn.setAttribute('type', 'button');
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.zone-cell').forEach(c => c.classList.remove('zone-selected'));
+      btn.classList.add('zone-selected');
+    });
+    grid.appendChild(btn);
+  }
+}
+
+function openPitchSheet(outcome) {
+  buildZoneGrid();
+  const g = S.game;
+  pendingPitchOutcome = outcome;
+  const badge = document.getElementById('pitchOutcomeBadge');
+  badge.textContent = outcome === 'ball' ? 'Ball' : outcome === 'strike' ? 'Strike' : 'Foul';
+  badge.className = `pitch-outcome-badge pitch-${outcome}`;
+  document.getElementById('pitchPitcherLabel').textContent = g?.pitcher || '—';
+  document.getElementById('pitchPcLabel').textContent = `PC: ${g?.pitchCount ?? 0}`;
+  document.querySelectorAll('.pitch-type-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.pitch-type-btn[data-type=""]')?.classList.add('active');
+  document.querySelectorAll('.zone-cell').forEach(c => c.classList.remove('zone-selected'));
+  document.getElementById('pitchSheetOverlay').classList.remove('hidden');
+}
+
+function closePitchSheet() {
+  document.getElementById('pitchSheetOverlay').classList.add('hidden');
+  pendingPitchOutcome = null;
+}
+
+function logPitch() {
+  const g = S.game;
+  const outcome = pendingPitchOutcome;
+  if (!g || !outcome) return;
+
+  const type = document.querySelector('.pitch-type-btn.active')?.dataset.type || '';
+  const zone = parseInt(document.querySelector('.zone-cell.zone-selected')?.dataset.zone || '0', 10);
+
+  g.pitchCount = (g.pitchCount || 0) + 1;
+  const pc = g.pitchCount;
+
+  g.pitches = g.pitches || [];
+  g.pitches.push({ id: `pt_${Date.now()}`, inning: g.inning, half: g.half, pitcherName: g.pitcher, type, zone, outcome, pc });
+
+  const pt = S.pitchTracking || {};
+  if (pc === (pt.warnAt ?? 75)) showToast(`Warning: ${g.pitcher || 'Pitcher'} at ${pc} pitches`, 4000);
+  if (pc === (pt.alarmAt ?? 100)) showToast(`Alert: ${g.pitcher || 'Pitcher'} at ${pc} pitches — consider change`, 5000);
+
+  closePitchSheet();
+
+  if (outcome === 'ball') {
+    g.balls++;
+    if (g.balls >= 4) { g.balls = 0; saveState(); renderPitchWorkload(); recordPlay('BB'); return; }
+  } else if (outcome === 'strike') {
+    g.strikes++;
+    if (g.strikes >= 3) { g.strikes = 0; saveState(); renderPitchWorkload(); recordPlay('K'); return; }
+  } else if (outcome === 'foul') {
+    if (g.strikes < 2) g.strikes++;
+  }
+  saveState();
+  updateAtBatCard();
+  renderPitchWorkload();
+}
+
+function renderPitchWorkload() {
+  const g = S.game;
+  const body = document.getElementById('pitchWorkloadBody');
+  if (!body) return;
+  const pitches = g?.pitches || [];
+  if (!pitches.length) {
+    body.innerHTML = `<tr><td colspan="4" class="stats-empty">No pitches tracked yet</td></tr>`;
+    return;
+  }
+  const order = [];
+  const byName = {};
+  for (const p of pitches) {
+    if (!byName[p.pitcherName]) {
+      byName[p.pitcherName] = { name: p.pitcherName, pc: 0, strikes: 0, balls: 0 };
+      order.push(p.pitcherName);
+    }
+    byName[p.pitcherName].pc++;
+    if (p.outcome === 'strike' || p.outcome === 'foul') byName[p.pitcherName].strikes++;
+    else if (p.outcome === 'ball') byName[p.pitcherName].balls++;
+  }
+  body.innerHTML = order.map(name => {
+    const pw = byName[name];
+    const isCur = name === g.pitcher;
+    return `<tr${isCur ? ' class="pitch-current-row"' : ''}>
+      <td class="stats-name">${esc(name)}${isCur ? ' <span class="pitch-cur-dot">●</span>' : ''}</td>
+      <td>${pw.pc}</td><td>${pw.strikes}</td><td>${pw.balls}</td>
+    </tr>`;
+  }).join('');
+}
+
+function syncPitchUI() {
+  const enabled = !!S.pitchTracking?.enabled;
+  const toggle = document.getElementById('pitchTrackToggle');
+  if (toggle) toggle.checked = enabled;
+  const sec = document.getElementById('pitcherSection');
+  if (sec) sec.hidden = !enabled;
+  const wrap = document.getElementById('pitchWorkloadWrap');
+  if (wrap) wrap.hidden = !enabled;
+  if (enabled && S.game) {
+    const nameEl = document.getElementById('pitcherNameInput');
+    if (nameEl && document.activeElement !== nameEl) nameEl.value = S.game.pitcher || '';
+    const pcEl = document.getElementById('pitchCountDisplay');
+    if (pcEl) pcEl.textContent = S.game.pitchCount ?? 0;
+    renderPitchWorkload();
+  }
+}
+
+document.getElementById('pitchTrackToggle')?.addEventListener('change', e => {
+  S.pitchTracking = { ...S.pitchTracking, enabled: e.target.checked };
+  saveState();
+  syncPitchUI();
+});
+document.getElementById('pitcherNameInput')?.addEventListener('input', e => {
+  if (!S.game) return;
+  S.game.pitcher = e.target.value;
+  saveState();
+  document.getElementById('pitchCountDisplay').textContent = S.game.pitchCount ?? 0;
+});
+document.getElementById('pitcherChangBtn')?.addEventListener('click', () => {
+  if (!S.game) return;
+  S.game.pitchCount = 0;
+  const nameEl = document.getElementById('pitcherNameInput');
+  if (nameEl) { nameEl.value = ''; nameEl.focus(); }
+  document.getElementById('pitchCountDisplay').textContent = 0;
+  saveState();
+  renderPitchWorkload();
+  showToast('Pitcher changed — count reset');
+});
+
+document.querySelectorAll('.pitch-type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pitch-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+document.getElementById('pitchLog')?.addEventListener('click', logPitch);
+document.getElementById('pitchSkip')?.addEventListener('click', () => {
+  const outcome = pendingPitchOutcome;
+  closePitchSheet();
+  if (!S.game || !outcome) return;
+  const g = S.game;
+  if (outcome === 'ball') {
+    g.balls++;
+    if (g.balls >= 4) { g.balls = 0; recordPlay('BB'); return; }
+  } else if (outcome === 'strike') {
+    g.strikes++;
+    if (g.strikes >= 3) { g.strikes = 0; recordPlay('K'); return; }
+  } else if (outcome === 'foul') {
+    if (g.strikes < 2) g.strikes++;
+  }
+  saveState(); updateAtBatCard();
+});
+document.getElementById('pitchSheetOverlay')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('pitchSheetOverlay')) closePitchSheet();
+});
 
 /* Soundboard — Web Audio API generated sounds */
 document.querySelectorAll('.sound-btn').forEach(btn => {

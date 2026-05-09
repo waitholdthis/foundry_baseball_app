@@ -517,6 +517,23 @@
     <!-- BOX SCORE panel (in-game) -->
     <div class="game-panel panel-score" id="panel-score" role="tabpanel" aria-hidden="true">
       <div class="boxscore-wrap">
+
+        <!-- Pitch Tracking controls -->
+        <div class="pitch-track-bar">
+          <label class="pitch-track-toggle-wrap">
+            <input type="checkbox" id="pitchTrackToggle" role="switch" aria-label="Enable pitch tracking">
+            <span class="pl-pill" aria-hidden="true"></span>
+            <span class="pitch-track-label">Pitch Tracking</span>
+          </label>
+        </div>
+        <div class="pitcher-section" id="pitcherSection" hidden>
+          <div class="pitcher-input-row">
+            <input type="text" class="pitcher-name-input" id="pitcherNameInput" placeholder="Pitcher name…" autocomplete="off" aria-label="Current pitcher name">
+            <div class="pitch-count-badge" id="pitchCountDisplay" aria-label="Pitch count">0</div>
+            <button class="pitch-change-btn" id="pitcherChangBtn" aria-label="New pitcher — reset count">New</button>
+          </div>
+        </div>
+
         <div class="boxscore-header">Box Score</div>
         <div class="boxscore-scroll">
           <table class="boxscore-table" id="boxscoreTable" aria-label="Box score">
@@ -562,6 +579,19 @@
             </table>
           </div>
         </div>
+        <!-- Pitching workload (visible when pitch tracking is on) -->
+        <div class="pitch-workload-wrap" id="pitchWorkloadWrap" hidden>
+          <div class="boxscore-header">Pitching Workload</div>
+          <div class="stats-scroll">
+            <table class="stats-table" id="pitchWorkloadTable" aria-label="Pitching workload">
+              <thead>
+                <tr><th>Pitcher</th><th>PC</th><th>Str</th><th>Ball</th></tr>
+              </thead>
+              <tbody id="pitchWorkloadBody"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -591,6 +621,37 @@
           Abandon Game
         </button>
         <button class="menu-item" id="closeGameMenu">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pitch Entry Sheet -->
+  <div class="sheet-overlay hidden" id="pitchSheetOverlay" role="dialog" aria-modal="true" aria-labelledby="pitchSheetTitle">
+    <div class="sheet pitch-sheet" id="pitchSheet">
+      <div class="sheet-handle"></div>
+      <div class="pitch-sheet-header">
+        <span class="pitch-outcome-badge pitch-ball" id="pitchOutcomeBadge">Ball</span>
+        <span class="pitch-pitcher-label" id="pitchPitcherLabel">—</span>
+        <span class="pitch-pc-label" id="pitchPcLabel">PC: 0</span>
+      </div>
+
+      <div class="pitch-section-label">PITCH TYPE</div>
+      <div class="pitch-type-row" role="group" aria-label="Pitch type">
+        <button class="pitch-type-btn" data-type="FB" type="button">FB</button>
+        <button class="pitch-type-btn" data-type="CB" type="button">CB</button>
+        <button class="pitch-type-btn" data-type="SL" type="button">SL</button>
+        <button class="pitch-type-btn" data-type="CH" type="button">CH</button>
+        <button class="pitch-type-btn" data-type="CT" type="button">CT</button>
+        <button class="pitch-type-btn" data-type="2S" type="button">2S</button>
+        <button class="pitch-type-btn active" data-type="" type="button">—</button>
+      </div>
+
+      <div class="pitch-section-label">LOCATION <span class="pitch-zone-hint">tap to mark · inner = strike zone</span></div>
+      <div class="pitch-zone-grid" id="pitchZoneGrid" role="group" aria-label="Pitch location"></div>
+
+      <div class="pitch-sheet-actions">
+        <button class="btn-ghost" id="pitchSkip" type="button">Skip</button>
+        <button class="btn-primary" id="pitchLog" type="button">Log Pitch</button>
       </div>
     </div>
   </div>
