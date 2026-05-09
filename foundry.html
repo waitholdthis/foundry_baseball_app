@@ -147,12 +147,16 @@
           </div>
         </div>
         <div class="field-group">
-          <label for="walkUpFile">Walk-Up Song <span class="field-optional">(MP3/M4A)</span></label>
+          <label for="walkUpFile">Walk-Up Song <span class="field-optional">(MP3/M4A file)</span></label>
           <div class="file-pick-row">
             <button type="button" class="btn-secondary" id="pickWalkUp">Choose File</button>
             <span class="file-pick-name" id="walkUpFileName">No file</span>
             <input id="walkUpFile" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/*" class="sr-only" aria-label="Walk-up audio file">
           </div>
+        </div>
+        <div class="field-group">
+          <label for="walkUpUrl">— or paste a direct audio URL <span class="field-optional">(MP3 link)</span></label>
+          <input type="url" id="walkUpUrl" placeholder="https://example.com/song.mp3" autocomplete="off" spellcheck="false">
         </div>
         <div class="sheet-actions">
           <button type="button" class="btn-ghost" id="cancelPlayer">Cancel</button>

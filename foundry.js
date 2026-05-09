@@ -251,7 +251,7 @@ function renderPlayerList() {
         <div class="player-name">${esc(p.name)}</div>
         <div class="player-detail">${p.pos} · B:${p.bats} T:${p.throws}</div>
       </div>
-      <span class="player-audio-badge${p.walkUpKey ? '' : ' hidden'}" aria-label="Has walk-up song">♪</span>
+      <span class="player-audio-badge${(p.walkUpKey || p.walkUpUrl) ? '' : ' hidden'}" aria-label="Has walk-up song">♪</span>
       <button class="player-delete" data-id="${p.id}" aria-label="Delete ${esc(p.name)}">✕</button>
     `;
     card.addEventListener('click', ev => {
@@ -318,11 +318,13 @@ function openPlayerSheet(player) {
     playerBatsEl.value= player.bats;
     playerThrowEl.value= player.throws;
     walkUpNameEl.textContent = player.walkUpKey ? 'File saved' : 'No file';
+    document.getElementById('walkUpUrl').value = player.walkUpUrl || '';
   } else {
     document.getElementById('playerSheetTitle').textContent = 'Add Player';
     playerForm.reset();
     playerIdEl.value = '';
     walkUpNameEl.textContent = 'No file';
+    document.getElementById('walkUpUrl').value = '';
   }
   playerSheetOverlay.classList.remove('hidden');
   setTimeout(() => playerNameEl.focus(), 100);
@@ -355,9 +357,12 @@ playerForm.addEventListener('submit', async e => {
   if (pendingAudioBlob) {
     const key = `audio_${player.id}`;
     await saveAudioBlob(key, pendingAudioBlob);
-    player.walkUpKey = key;
+    player.walkUpKey  = key;
     player.walkUpName = pendingAudioName;
   }
+
+  const urlInput = document.getElementById('walkUpUrl').value.trim();
+  player.walkUpUrl = urlInput || null;
 
   saveState();
   closePlayerSheet();
@@ -642,7 +647,7 @@ function updateAtBatCard() {
   const onDeckSlot = (batterSlot + 1) % S.lineup.length;
   const onDeckP = playerById(S.lineup[onDeckSlot]);
   document.getElementById('djOnDeckName').textContent = onDeckP ? onDeckP.name : '—';
-  document.getElementById('djOnDeckSong').textContent = onDeckP?.walkUpKey ? '♪ Walk-up loaded' : 'No walk-up';
+  document.getElementById('djOnDeckSong').textContent = (onDeckP?.walkUpKey || onDeckP?.walkUpUrl) ? '♪ Walk-up loaded' : 'No walk-up';
 
   // SuperVoice + walk-up on batter change
   if (p) {
@@ -1321,7 +1326,7 @@ async function handleBatterChange(player) {
   stopPlaylist(); // batter is up — stop between-innings music
 
   const sv = S.superVoice || {};
-  const hasSong = !!player.walkUpKey;
+  const hasSong = !!(player.walkUpKey || player.walkUpUrl);
 
   if (sv.enabled) {
     if (sv.beforeSong) {
@@ -1331,9 +1336,13 @@ async function handleBatterChange(player) {
     }
   }
 
-  if (hasSong) {
-    const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
-    if (blob && currentWalkUpPid === player.id) playWalkUpBlob(blob, player);
+  if (hasSong && currentWalkUpPid === player.id) {
+    if (player.walkUpKey) {
+      const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
+      if (blob && currentWalkUpPid === player.id) playWalkUpSrc(URL.createObjectURL(blob), player);
+    } else {
+      playWalkUpSrc(player.walkUpUrl, player);
+    }
   }
 }
 
@@ -1358,10 +1367,9 @@ function announcePlayer(player) {
   });
 }
 
-function playWalkUpBlob(blob, player) {
+function playWalkUpSrc(src, player) {
   stopWalkUp();
-  const url = URL.createObjectURL(blob);
-  walkUpAudio = new Audio(url);
+  walkUpAudio = new Audio(src);
   walkUpAudio.volume = parseFloat(document.getElementById('masterVolume').value);
   walkUpAudio.play().catch(() => {});
 
