@@ -298,11 +298,46 @@
 
     <!-- LEFT — Lineup Rail -->
     <div class="game-panel panel-lineup" id="panel-lineup" role="tabpanel">
-      <div class="rail-header">
-        <span class="rail-label">BATTING ORDER</span>
-        <button class="rail-sub-btn" id="subBtn" aria-label="Make substitution">SUB</button>
+
+      <!-- Batting view -->
+      <div id="battingView">
+        <div class="rail-header">
+          <span class="rail-label">BATTING ORDER</span>
+          <button class="rail-sub-btn" id="subBtn" aria-label="Make substitution">SUB</button>
+        </div>
+        <ol class="lineup-rail" id="gameLineupRail" aria-label="Batting order" aria-live="polite"></ol>
       </div>
-      <ol class="lineup-rail" id="gameLineupRail" aria-label="Batting order" aria-live="polite"></ol>
+
+      <!-- Fielding view (shown when opponent bats) -->
+      <div id="fieldingView" class="fielding-view hidden">
+        <div class="fielding-inning-label" id="fieldingInningLabel">TOP OF 1</div>
+
+        <div class="fielding-outs-wrap">
+          <div class="fielding-out-dots" aria-label="Outs">
+            <span class="fielding-out-dot" id="fDot0" aria-hidden="true"></span>
+            <span class="fielding-out-dot" id="fDot1" aria-hidden="true"></span>
+            <span class="fielding-out-dot" id="fDot2" aria-hidden="true"></span>
+          </div>
+          <div class="fielding-outs-label">OUTS</div>
+        </div>
+
+        <div class="fielding-pitch-wrap">
+          <div class="fielding-pitch-num" id="fieldingPitchNum">0</div>
+          <div class="fielding-pitch-sub">PITCHES</div>
+        </div>
+
+        <div class="fielding-actions">
+          <button class="fielding-btn fielding-pitch-btn" id="fieldingAddPitch" type="button">+ Pitch</button>
+          <button class="fielding-btn fielding-out-btn" id="fieldingAddOut" type="button">+ Out</button>
+          <button class="fielding-btn fielding-run-btn" id="fieldingAddRun" type="button">+ Run</button>
+        </div>
+
+        <div class="fielding-score-row">
+          <span class="fielding-score-label">Opponent</span>
+          <span class="fielding-score-num" id="fieldingTheirScore">0</span>
+        </div>
+      </div>
+
     </div>
 
     <!-- CENTER — Scorebook / Play Recorder -->

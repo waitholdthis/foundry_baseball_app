@@ -554,8 +554,7 @@ document.getElementById('gameSetupForm').addEventListener('submit', e => {
   gameSetupOverlay.classList.add('hidden');
   renderGameScreen();
   navigate('game');
-  // Start game: show scorebook panel first
-  activateTab('scorebook');
+  activateTab(weAreBatting() ? 'scorebook' : 'lineup');
 });
 
 /* ─────────────────────────────────────────────
@@ -585,6 +584,7 @@ function renderGameScreen() {
   renderBattingStats('battingStatsBody');
   renderSeasonStats('seasonStatsBody');
   syncPitchUI();
+  showHalfView();
 }
 
 function updateScoreBar() {
@@ -857,6 +857,59 @@ function recordOpponentPlay(result) {
   updateScoreBar();
 }
 
+/* ─── Fielding view ─── */
+function showHalfView() {
+  const batting = weAreBatting();
+  document.getElementById('battingView').classList.toggle('hidden', !batting);
+  document.getElementById('fieldingView').classList.toggle('hidden', batting);
+  if (!batting) updateFieldingView();
+}
+
+function updateFieldingView() {
+  const g = S.game;
+  if (!g) return;
+  const halfName = g.half === 'top' ? 'TOP' : 'BOTTOM';
+  document.getElementById('fieldingInningLabel').textContent = `${halfName} OF ${g.inning}`;
+  for (let i = 0; i < 3; i++) {
+    document.getElementById(`fDot${i}`).classList.toggle('filled', i < g.outs);
+  }
+  document.getElementById('fieldingPitchNum').textContent = g.pitchCount ?? 0;
+  document.getElementById('fieldingTheirScore').textContent = g.score.them;
+}
+
+document.getElementById('fieldingAddPitch').addEventListener('click', () => {
+  const g = S.game;
+  if (!g) return;
+  g.pitchCount = (g.pitchCount || 0) + 1;
+  const pc = g.pitchCount;
+  const pt = S.pitchTracking || {};
+  if (pc === (pt.warnAt ?? 75)) showToast(`Warning: pitcher at ${pc} pitches`, 4000);
+  if (pc === (pt.alarmAt ?? 100)) showToast(`Alert: pitcher at ${pc} pitches — consider change`, 5000);
+  document.getElementById('fieldingPitchNum').textContent = pc;
+  document.getElementById('pitchCountDisplay').textContent = pc;
+  saveState();
+});
+
+document.getElementById('fieldingAddOut').addEventListener('click', () => {
+  const g = S.game;
+  if (!g || g.outs >= 3) return;
+  g.outs++;
+  updateScoreBar();
+  updateFieldingView();
+  saveState();
+  if (g.outs >= 3) setTimeout(() => endHalfInning(), 500);
+});
+
+document.getElementById('fieldingAddRun').addEventListener('click', () => {
+  const g = S.game;
+  if (!g) return;
+  g.score.them++;
+  updateScoreBar();
+  updateFieldingView();
+  saveState();
+  showToast('Opponent run scored');
+});
+
 function endHalfInning() {
   const g = S.game;
   // away team bats in top half; home team bats in bottom half
@@ -908,6 +961,8 @@ function endHalfInning() {
   renderSeasonStats('seasonStatsBody');
   showToast(`${g.half === 'bottom' ? 'Bottom' : 'Top'} of inning ${g.inning}`);
   startInningPlaylist();
+  showHalfView();
+  activateTab(weAreBatting() ? 'scorebook' : 'lineup');
 }
 
 /* ─── Count buttons ─── */
@@ -2255,7 +2310,7 @@ bindSeasonSort('summarySeasonHead', 'summarySeasonBody');
     if (S.game) {
       renderGameScreen();
       navigate('game');
-      activateTab('scorebook');
+      activateTab(weAreBatting() ? 'scorebook' : 'lineup');
     } else {
       renderRosterScreen();
       navigate('roster');

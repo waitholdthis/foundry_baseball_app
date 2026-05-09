@@ -822,6 +822,65 @@ html, body {
 .rail-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rail-pos { font-size: 11px; color: var(--text-2); }
 
+/* ── Fielding View ── */
+#battingView { display: flex; flex-direction: column; height: 100%; }
+.fielding-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px 20px;
+  height: 100%;
+}
+.fielding-inning-label {
+  font-family: 'Anton', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: var(--text-2);
+  text-transform: uppercase;
+}
+.fielding-outs-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.fielding-out-dots { display: flex; gap: 14px; }
+.fielding-out-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border);
+  transition: background 0.15s, border-color 0.15s;
+}
+.fielding-out-dot.filled { background: var(--amber); border-color: var(--amber); }
+.fielding-outs-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-2); text-transform: uppercase; }
+.fielding-pitch-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fielding-pitch-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-1);
+}
+.fielding-pitch-sub { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-2); text-transform: uppercase; }
+.fielding-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.fielding-btn {
+  min-width: 90px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.1s, transform 0.1s;
+}
+.fielding-btn:active { opacity: 0.72; transform: scale(0.96); }
+.fielding-pitch-btn { background: var(--bg-elevated); color: var(--text-1); border: 1px solid var(--border); }
+.fielding-out-btn { background: var(--amber); color: #000; }
+.fielding-run-btn { background: var(--red); color: #fff; }
+.fielding-score-row { display: flex; align-items: center; gap: 12px; }
+.fielding-score-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-2); text-transform: uppercase; }
+.fielding-score-num { font-family: 'IBM Plex Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--text-1); }
+
 /* At Bat Card (center) */
 .at-bat-card {
   flex: 1;
