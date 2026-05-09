@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050608" />
+    <meta name="description" content="Foundry — the all-in-one dugout command center for baseball and softball. Lineup builder, digital scorebook, and Ballpark DJ in a single unified app." />
+    <title>Foundry — The Dugout Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <header class="site-header" id="siteHeader">
+      <a class="brand" href="#top" aria-label="Foundry home">
+        <span class="brand-mark" aria-hidden="true">
+          <!-- Baseball diamond logo mark -->
+          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="22" y="4"  width="15" height="15" rx="1" transform="rotate(45 22 4)"  fill="#f59e0b" opacity="0.9"/>
+            <rect x="22" y="4"  width="15" height="15" rx="1" transform="rotate(45 22 4)"  fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.4"/>
+            <circle cx="22" cy="22" r="3" fill="#f7f7f4"/>
+            <!-- Base dots -->
+            <circle cx="22" cy="6"  r="1.8" fill="#f7f7f4"/>
+            <circle cx="38" cy="22" r="1.8" fill="#f7f7f4"/>
+            <circle cx="22" cy="38" r="1.8" fill="#f7f7f4"/>
+            <circle cx="6"  cy="22" r="1.8" fill="#f7f7f4"/>
+            <!-- Foul lines -->
+            <line x1="22" y1="38" x2="6"  y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+            <line x1="22" y1="38" x2="38" y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+          </svg>
+        </span>
+        <span class="brand-word">
+          <strong>Foundry</strong>
+          <span>Command Center</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="#pillars">Features</a>
+        <a href="#command">Scorebook</a>
+        <a href="#community">Live Feed</a>
+        <a href="#engine">At Bat Engine</a>
+        <a href="app.html" class="nav-app-link">App</a>
+        <a href="app.html#download" class="nav-cta-link">Download</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="game-meter" aria-label="Season progress">
+          <span id="gamePhase">PRE-SEASON</span>
+          <div class="meter-track"><span id="gameProgress"></span></div>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+
+      <!-- ═══ HERO ═══ -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true">
+          <div class="film-grain"></div>
+          <div class="scan-line"></div>
+          <div class="hero-field"></div>
+          <div class="hero-diamond"></div>
+        </div>
+
+        <div class="hero-content">
+          <p class="hero-badge shiny-text">The Dugout Command Center</p>
+          <div class="hero-heading-row">
+            <h1 id="hero-title" data-split-text>27 Outs. One Screen.</h1>
+          </div>
+          <div class="hero-divider"></div>
+          <p class="hero-copy">
+            Lineup builder, digital scorebook, and Ballpark DJ — unified so that the moment a batter steps in the box, the music starts.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary border-glow" href="app.html#download">Download Free</a>
+            <a class="button secondary border-glow" href="#command">See It in Action</a>
+          </div>
+        </div>
+
+        <aside class="stat-panel" aria-label="App stats">
+          <span class="panel-label">Coaches This Season</span>
+          <strong id="coachCount">12,847</strong>
+          <span>across 6 leagues</span>
+        </aside>
+
+        <a class="hero-scroll" href="#philosophy" aria-label="Scroll to learn more">
+          <span>Scroll</span>
+        </a>
+      </section>
+
+      <!-- ═══ TICKER ═══ -->
+      <section class="ticker" aria-label="Brand statements" aria-hidden="true">
+        <div>
+          <span>One Tap. Play Recorded.</span>
+          <span>Walk-Up Auto-Queued.</span>
+          <span>Lineup. Scorebook. DJ.</span>
+          <span>Built for the Dugout.</span>
+          <span>Offline. Always.</span>
+          <span>One Tap. Play Recorded.</span>
+          <span>Walk-Up Auto-Queued.</span>
+          <span>Lineup. Scorebook. DJ.</span>
+          <span>Built for the Dugout.</span>
+          <span>Offline. Always.</span>
+        </div>
+      </section>
+
+      <!-- ═══ PHILOSOPHY ═══ -->
+      <section id="philosophy" class="philosophy-section section" aria-labelledby="philosophy-title">
+        <div class="about-inner reveal">
+          <p class="section-label">The Problem</p>
+          <h2 id="philosophy-title" class="section-title">Coaches juggle three apps. <em>Foundry is one.</em></h2>
+          <p class="about-lead">
+            Every dugout runs iScore in one hand, a clipboard lineup in the other, and a Bluetooth speaker that nobody knows how to control. Foundry fuses the scorebook, the lineup board, and the DJ console into a single command center — built for outdoor visibility, gloved hands, and zero internet.
+          </p>
+          <p class="about-quote">The call is made. The score updates. The song plays.</p>
+          <div class="about-stats" aria-label="Foundry in numbers">
+            <div>
+              <strong class="about-stat-num" data-count-up="27">0</strong>
+              <span class="about-stat-label">Outs Per Game</span>
+            </div>
+            <div>
+              <strong class="about-stat-num" data-count-up="1">0</strong>
+              <span class="about-stat-label">Screen. Everything.</span>
+            </div>
+            <div>
+              <strong class="about-stat-num" data-count-up="0">0</strong>
+              <span class="about-stat-label">Wi-Fi Required</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ THREE PILLARS ═══ -->
+      <section id="pillars" class="pillars-section section">
+        <div class="section-heading reveal">
+          <p class="section-label">Three Systems</p>
+          <h2 class="section-title">Command the game <em>from one place.</em></h2>
+        </div>
+
+        <div class="phase-grid magic-bento">
+
+          <article class="phase-card lineup reveal border-glow">
+            <span class="phase-day">01 — Lineup Builder</span>
+            <h3>Build it once. Run it all game.</h3>
+            <p>Drag-and-drop batting order with DP/Flex softball logic baked in. Auto-validates for illegal substitutions before you even confirm.</p>
+            <a href="app.html#lineup">Build Your Lineup</a>
+          </article>
+
+          <article class="phase-card scorebook reveal reveal-delay-1 border-glow">
+            <span class="phase-day">02 — Pro Scorebook</span>
+            <h3>One tap. Play recorded.</h3>
+            <p>Ten outcome buttons. Interactive diamond. Live AVG, OBP, ERA updating in real-time after every single call you make.</p>
+            <a href="app.html#scorebook">See the Scorebook</a>
+          </article>
+
+          <article class="phase-card dj reveal reveal-delay-2 border-glow">
+            <span class="phase-day">03 — Ballpark DJ</span>
+            <h3>Batter up. Song starts.</h3>
+            <p>Walk-up songs auto-queue the moment a player's at-bat cell goes active. Spotify, Apple Music, or local MP3 — your choice.</p>
+            <a href="app.html#dj">Explore the DJ</a>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ═══ COMMAND CENTER (phone mockup) ═══ -->
+      <section id="command" class="command-section section grid-scan" aria-labelledby="command-title">
+        <div class="command-copy reveal">
+          <p class="section-label">Game Day Interface</p>
+          <h2 id="command-title" class="section-title">Your scorebook <em>runs the whole show.</em></h2>
+          <p>
+            When you tap a play result, Foundry does three things simultaneously: it records the plate appearance, advances the batting order, and queues the next batter's walk-up song. No switching apps. No manual DJ trigger. One tap — three systems respond.
+          </p>
+          <div class="flow-stepper" aria-label="At Bat event flow">
+            <div class="step active">
+              <span>01</span>
+              <strong>Tap Result</strong>
+            </div>
+            <div class="step">
+              <span>02</span>
+              <strong>Score Updates</strong>
+            </div>
+            <div class="step">
+              <span>03</span>
+              <strong>Order Advances</strong>
+            </div>
+            <div class="step">
+              <span>04</span>
+              <strong>Song Plays</strong>
+            </div>
+          </div>
+          <div class="command-actions">
+            <a class="button primary border-glow" href="app.html">Explore All Features</a>
+            <a class="button secondary border-glow" href="app.html#download">Get the App</a>
+          </div>
+        </div>
+
+        <div class="lab-experience reveal reveal-delay-1">
+          <!-- Phone shell mimicking Elevation 168's phone mockup -->
+          <div class="phone-shell border-glow" aria-label="Foundry game day interface preview" role="img">
+            <div class="phone-top"></div>
+            <div class="game-screen">
+
+              <!-- Score header -->
+              <div class="score-header">
+                <div class="score-team">
+                  <span>Visitors</span>
+                  <strong>4</strong>
+                </div>
+                <div class="score-inning">
+                  <div>▲ 4th</div>
+                  <div style="font-size:0.5rem;margin-top:2px;color:var(--steel)">1 OUT</div>
+                </div>
+                <div class="score-team home">
+                  <span>Home</span>
+                  <strong>2</strong>
+                </div>
+              </div>
+
+              <!-- At Bat card -->
+              <div class="at-bat-card">
+                <span class="at-bat-label">▶ At Bat — #7</span>
+                <div class="at-bat-name">Johnson</div>
+                <div class="count-row">
+                  <div class="count-dot ball"></div>
+                  <div class="count-dot"></div>
+                  <div class="count-dot"></div>
+                  <div class="count-dot strike"></div>
+                  <div class="count-dot strike"></div>
+                  <span class="count-label">1-2</span>
+                </div>
+              </div>
+
+              <!-- Diamond graphic -->
+              <div class="diamond-wrap" aria-label="Baseball diamond — runner on first">
+                <svg class="diamond-svg" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                  <!-- Base paths -->
+                  <line x1="40" y1="4"  x2="76" y2="40" stroke="rgba(247,247,244,0.18)" stroke-width="1"/>
+                  <line x1="76" y1="40" x2="40" y2="76" stroke="rgba(247,247,244,0.18)" stroke-width="1"/>
+                  <line x1="40" y1="76" x2="4"  y2="40" stroke="rgba(247,247,244,0.18)" stroke-width="1"/>
+                  <line x1="4"  y1="40" x2="40" y2="4"  stroke="rgba(247,247,244,0.18)" stroke-width="1"/>
+                  <!-- Bases: home, 1B, 2B, 3B -->
+                  <rect x="36" y="72" width="8" height="8" rx="1" fill="rgba(247,247,244,0.5)"/>
+                  <!-- 1B — occupied (amber = runner) -->
+                  <rect x="72" y="36" width="8" height="8" rx="1" fill="#f59e0b"/>
+                  <!-- 2B -->
+                  <rect x="36" y="0"  width="8" height="8" rx="1" fill="rgba(247,247,244,0.25)"/>
+                  <!-- 3B -->
+                  <rect x="0"  y="36" width="8" height="8" rx="1" fill="rgba(247,247,244,0.25)"/>
+                  <!-- Runner dot on 1B -->
+                  <circle cx="76" cy="40" r="3.5" fill="#f59e0b" opacity="0.9">
+                    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+              </div>
+
+              <!-- Outcome buttons -->
+              <div class="outcome-grid" role="group" aria-label="Plate appearance outcomes">
+                <button class="out-btn hit" type="button">BB</button>
+                <button class="out-btn hit" type="button">1B</button>
+                <button class="out-btn hit" type="button">2B</button>
+                <button class="out-btn hit" type="button">3B</button>
+                <button class="out-btn hit" type="button">HR</button>
+                <button class="out-btn out" type="button">K</button>
+                <button class="out-btn out" type="button">OUT</button>
+                <button class="out-btn out" type="button">E</button>
+                <button class="out-btn walk" type="button">SAC</button>
+                <button class="out-btn walk" type="button">FC</button>
+              </div>
+
+              <!-- Mini DJ strip -->
+              <div class="dj-strip" aria-label="Now playing — walk-up song">
+                <span class="dj-label">♪ DJ</span>
+                <div class="dj-song">
+                  <strong>Eye of the Tiger</strong>
+                  <small>Auto-queued • Johnson #7</small>
+                </div>
+                <div class="dj-controls">
+                  <button class="dj-btn" type="button" aria-label="Skip">
+                    <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 2l6 4-6 4V2zm7 0h1.5v8H9V2z"/>
+                    </svg>
+                  </button>
+                  <button class="dj-btn" type="button" aria-label="Fade out">
+                    <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="1" y="5" width="10" height="2" rx="1"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+            </div><!-- /game-screen -->
+          </div><!-- /phone-shell -->
+        </div>
+      </section>
+
+      <!-- ═══ COMMUNITY / LIVE GAME FEED ═══ -->
+      <section id="community" class="community-section section" aria-labelledby="community-title">
+        <div class="section-heading reveal">
+          <p class="section-label">Live Game Feed</p>
+          <h2 id="community-title" class="section-title">Every call. <em>Tracked in real-time.</em></h2>
+        </div>
+
+        <div class="leaderboard reveal reveal-delay-1">
+          <!-- Scoring dial — replaces "74% weekly mastery" -->
+          <div class="dial" aria-label="Team batting average this game">
+            <span>.312</span>
+            <small>team AVG</small>
+          </div>
+
+          <div class="rank-list" aria-label="Top performers this game">
+            <div class="rank-row">
+              <span>01</span>
+              <strong>JOHNSON / CF</strong>
+              <em>2-3, HR, 3 RBI</em>
+            </div>
+            <div class="rank-row">
+              <span>02</span>
+              <strong>RAMIREZ / 2B</strong>
+              <em>2-4, 2B, BB</em>
+            </div>
+            <div class="rank-row">
+              <span>03</span>
+              <strong>CHEN / SS</strong>
+              <em>1-3, SB, RBI</em>
+            </div>
+          </div>
+
+          <div class="activity-feed" aria-label="Live play-by-play">
+            <div class="feed-item is-active hit-event">
+              <span>NOW</span>
+              <strong>Johnson — HR to left-center</strong>
+              <em>+3 RBI</em>
+            </div>
+            <div class="feed-item hit-event">
+              <span>2M</span>
+              <strong>Ramirez — 2B, scores Chen</strong>
+              <em>+1 RBI</em>
+            </div>
+            <div class="feed-item out-event">
+              <span>4M</span>
+              <strong>Williams — K swinging</strong>
+              <em>2 OUT</em>
+            </div>
+            <div class="feed-item">
+              <span>6M</span>
+              <strong>Chen — BB, steals 2nd</strong>
+              <em>on base</em>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ AT BAT ENGINE ═══ -->
+      <section id="engine" class="section grid-scan" style="background:linear-gradient(90deg, rgba(245,158,11,0.07), transparent 40%), #080b0e;" aria-labelledby="engine-title">
+        <div class="section-heading reveal">
+          <p class="section-label">The At Bat Engine</p>
+          <h2 id="engine-title" class="section-title">Your data becomes <em>the atmosphere.</em></h2>
+        </div>
+
+        <div class="sync-flow reveal reveal-delay-1" role="img" aria-label="At Bat Engine flow: scorebook tap triggers lineup advance and DJ queue simultaneously">
+          <div class="sync-inputs" style="display:grid;gap:14px;" aria-label="Trigger inputs">
+            <div style="padding:18px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.04);display:grid;gap:6px;" class="border-glow">
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;">Trigger</span>
+              <strong style="font-size:1.1rem;text-transform:uppercase;">Play Recorded</strong>
+              <small style="color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Johnson — HR</small>
+            </div>
+            <div style="padding:18px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.04);display:grid;gap:6px;" class="border-glow">
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;">Next Batter</span>
+              <strong style="font-size:1.1rem;text-transform:uppercase;">Ramirez #3</strong>
+              <small style="color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;">2B — Walks Up</small>
+            </div>
+          </div>
+
+          <div style="display:grid;place-items:center;gap:12px;" aria-hidden="true">
+            <div style="padding:24px 28px;border:1px solid rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);text-align:center;" class="border-glow">
+              <span style="color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;display:block;margin-bottom:8px;letter-spacing:.12em;">At Bat Engine</span>
+              <div style="width:52px;height:52px;border-radius:50%;border:2px solid var(--hot-amber);display:grid;place-items:center;margin:0 auto 8px;animation:atBatPulse 2s ease-in-out infinite;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" aria-hidden="true">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
+              <strong style="font-family:Anton,sans-serif;font-size:1.1rem;color:var(--hot-amber);letter-spacing:.04em;">FIRING</strong>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:14px;" aria-label="Simultaneous outputs">
+            <div style="padding:18px 20px;border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.07);display:grid;gap:6px;" class="border-glow">
+              <span style="color:var(--hot-green);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;">✓ Scorebook</span>
+              <strong style="font-size:1.1rem;text-transform:uppercase;">HR Logged</strong>
+              <small style="color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;">AVG updated → .312</small>
+            </div>
+            <div style="padding:18px 20px;border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.07);display:grid;gap:6px;" class="border-glow">
+              <span style="color:var(--hot-purple);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;">♪ DJ Auto-Queue</span>
+              <strong style="font-size:1.1rem;text-transform:uppercase;">Welcome to the Party</strong>
+              <small style="color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;text-transform:uppercase;">Ramirez — crossfade 1.5s</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2" style="margin-top:48px;">
+          <div style="display:grid;gap:12px;max-width:860px;">
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;padding:16px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.03);">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--steel);text-transform:uppercase;">Batter steps to plate</span>
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;">→</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);text-transform:uppercase;">Walk-up song auto-starts via Spotify / Apple Music / local MP3</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;padding:16px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.03);">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--steel);text-transform:uppercase;">3rd out recorded</span>
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;">→</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);text-transform:uppercase;">Between-innings playlist starts automatically</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;padding:16px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.03);">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--steel);text-transform:uppercase;">Substitution confirmed</span>
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;">→</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);text-transform:uppercase;">New player's walk-up loaded from roster, re-entry eligibility flagged</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;padding:16px 20px;border:1px solid var(--line);background:rgba(247,247,244,0.03);">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--steel);text-transform:uppercase;">Wi-Fi drops</span>
+              <span style="color:var(--hot-amber);font-family:'IBM Plex Mono',monospace;">→</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);text-transform:uppercase;">Fallback to local MP3. All scoring writes to SQLite. Zero data lost.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ APP TEASER ═══ -->
+      <section class="app-teaser-section section" aria-labelledby="appTeaserTitle">
+        <div class="app-teaser-inner reveal">
+          <div class="app-teaser-copy">
+            <p class="section-label">The Foundry App</p>
+            <h2 id="appTeaserTitle" class="section-title">Your roster learns <em>your game.</em></h2>
+            <p class="app-teaser-body">
+              Season stats aggregate automatically across every game you score. Post-game box scores export as PNG in one tap. The app works at any ballpark — no signal, no problem.
+            </p>
+            <div class="app-teaser-buttons">
+              <a href="app.html" class="button primary border-glow">Explore the App</a>
+              <a href="app.html#download" class="button secondary border-glow">Download Free</a>
+            </div>
+          </div>
+
+          <div class="app-teaser-stats" aria-label="App highlights">
+            <div class="ats-item border-glow">
+              <strong>100%</strong>
+              <span>Offline reliable — SQLite local-first</span>
+            </div>
+            <div class="ats-item border-glow">
+              <strong>1&nbsp;tap</strong>
+              <span>Box score PNG exported &amp; shared</span>
+            </div>
+            <div class="ats-item border-glow">
+              <strong>56pt</strong>
+              <span>Min touch targets — gloved-hand ready</span>
+            </div>
+            <div class="ats-item border-glow">
+              <strong>3-in-1</strong>
+              <span>Lineup + Scorebook + DJ unified</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <strong>Foundry</strong>
+      <span class="footer-accent">Dugout Command Center</span>
+      <p>Every coach gets 27 outs. What you do with them is the difference.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050608" />
+    <meta name="description" content="Foundry App — lineup builder, digital scorebook, and Ballpark DJ in one dugout command center for baseball and softball." />
+    <title>Foundry App — Own the Dugout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+
+    <header class="site-header" id="siteHeader">
+      <a class="brand" href="index.html" aria-label="Foundry home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="22" y="4"  width="15" height="15" rx="1" transform="rotate(45 22 4)"  fill="#f59e0b" opacity="0.9"/>
+            <circle cx="22" cy="22" r="3" fill="#f7f7f4"/>
+            <circle cx="22" cy="6"  r="1.8" fill="#f7f7f4"/>
+            <circle cx="38" cy="22" r="1.8" fill="#f7f7f4"/>
+            <circle cx="22" cy="38" r="1.8" fill="#f7f7f4"/>
+            <circle cx="6"  cy="22" r="1.8" fill="#f7f7f4"/>
+            <line x1="22" y1="38" x2="6"  y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+            <line x1="22" y1="38" x2="38" y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
+          </svg>
+        </span>
+        <span class="brand-word">
+          <strong>Foundry</strong>
+          <span>Command Center</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="index.html#pillars">Features</a>
+        <a href="index.html#command">Scorebook</a>
+        <a href="index.html#community">Live Feed</a>
+        <a href="index.html#engine">At Bat Engine</a>
+        <a href="app.html" class="nav-app-active">App</a>
+        <a href="#download" class="nav-cta-link">Download</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="game-meter" aria-label="Season progress">
+          <span id="gamePhase">GAME DAY</span>
+          <div class="meter-track"><span id="gameProgress" style="width:63%"></span></div>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+
+      <!-- ═══ APP HERO ═══ -->
+      <section class="app-hero section" aria-labelledby="appHeroTitle">
+        <div class="app-hero-bg" aria-hidden="true"></div>
+
+        <div class="app-hero-content reveal">
+          <p class="section-label shiny-text">The Foundry App</p>
+          <h1 id="appHeroTitle" class="app-hero-headline">Own the<br><em>dugout.</em></h1>
+          <p class="app-hero-sub">
+            Your lineup, your scorebook, and your Ballpark DJ — synced as one system. Tap a play result and three things happen simultaneously.
+          </p>
+          <div class="store-buttons" role="list" id="download">
+            <a href="#download" class="store-btn border-glow" role="listitem" aria-label="Download on the App Store">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <span><small>Download on the</small>App Store</span>
+            </a>
+            <a href="#download" class="store-btn border-glow" role="listitem" aria-label="Get it on Google Play">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M3.18 23.76c.3.17.64.19.96.07l12.43-7.19-2.63-2.64-10.76 9.76zM.56 1.6C.21 1.98 0 2.56 0 3.29v17.42c0 .73.21 1.31.57 1.69l.09.08 9.75-9.75v-.23L.65 1.52.56 1.6zM20.44 10.7l-2.6-1.5-2.93 2.93 2.93 2.93 2.62-1.52c.75-.43.75-1.41-.02-1.84zM3.18.24l10.76 9.76 2.63-2.63L4.14.17C3.82.05 3.48.07 3.18.24z"/>
+              </svg>
+              <span><small>Get it on</small>Google Play</span>
+            </a>
+          </div>
+          <p class="app-launch-note">
+            Launching Q4 2026 — <a href="#notify">join the early access list</a>
+          </p>
+        </div>
+
+        <!-- Phone mockup -->
+        <div class="app-hero-phone reveal reveal-delay-1" aria-label="Foundry app interface preview">
+          <div class="app-phone-device">
+            <div class="app-phone-island" aria-hidden="true"></div>
+            <div class="app-phone-screen" role="img" aria-label="Foundry scorebook showing Johnson at bat with walk-up song queued">
+
+              <div class="aps-header">
+                <span class="aps-wordmark">FOUNDRY</span>
+                <div class="aps-game-label">
+                  <div>▲ 4TH INNING</div>
+                  <div>VISITORS 4 — HOME 2</div>
+                </div>
+              </div>
+
+              <!-- Team batting AVG ring -->
+              <div class="aps-ring-wrap">
+                <svg class="aps-ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+                  <circle class="aps-ring-track" cx="100" cy="100" r="80"/>
+                  <circle class="aps-ring-fill"  cx="100" cy="100" r="80" id="heroRingFill"/>
+                </svg>
+                <div class="aps-ring-center">
+                  <strong id="heroAvg">.312</strong>
+                  <span>team AVG</span>
+                  <em id="heroInning">TOP 4</em>
+                </div>
+              </div>
+
+              <!-- Module pills -->
+              <div class="aps-phase-row" aria-label="Active modules">
+                <span class="aps-pill aps-pill-amber">Lineup</span>
+                <span class="aps-pill aps-pill-green">Score</span>
+                <span class="aps-pill aps-pill-purple">DJ</span>
+              </div>
+
+              <!-- Quick stats row -->
+              <div class="aps-stats-row">
+                <div class="aps-stat">
+                  <strong style="color:var(--hot-amber)" data-app-count="7">0</strong>
+                  <small>Hits</small>
+                </div>
+                <div class="aps-stat">
+                  <strong style="color:var(--hot-green)" data-app-count="4">0</strong>
+                  <small>Runs</small>
+                </div>
+                <div class="aps-stat">
+                  <strong style="color:var(--hot-red)" data-app-count="5">0</strong>
+                  <small>K's</small>
+                </div>
+              </div>
+
+              <!-- DJ recommendation card -->
+              <div class="aps-dj-card">
+                <span class="aps-dj-label">♪ Now Playing — Walk-Up</span>
+                <p>Eye of the Tiger — Survivor<br>Auto-queued for Johnson #7</p>
+                <a href="#dj">Manage DJ →</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TICKER ═══ -->
+      <div class="ticker" aria-label="App feature highlights" aria-hidden="true">
+        <div>
+          <span>Lineup Builder</span>
+          <span>Digital Scorebook</span>
+          <span>Ballpark DJ</span>
+          <span>Offline First</span>
+          <span>At Bat Engine</span>
+          <span>Spray Charts</span>
+          <span>Box Score Export</span>
+          <span>Lineup Builder</span>
+          <span>Digital Scorebook</span>
+          <span>Ballpark DJ</span>
+          <span>Offline First</span>
+          <span>At Bat Engine</span>
+          <span>Spray Charts</span>
+          <span>Box Score Export</span>
+        </div>
+      </div>
+
+      <!-- ═══ UVP ═══ -->
+      <section class="uvp-section section" aria-labelledby="uvpTitle">
+        <div class="uvp-copy reveal">
+          <p class="section-label">Unique Value</p>
+          <h2 id="uvpTitle" class="section-title">Not just a scorebook.<br><em>A system that runs the game.</em></h2>
+          <p class="uvp-body">
+            Foundry isn't three features bolted together — it's one unified state machine. The moment you tap a play result, your lineup advances, your stats recalculate, and the next batter's song starts. That's the At Bat Engine.
+          </p>
+        </div>
+        <div class="uvp-pillars reveal reveal-delay-1">
+          <div class="uvp-pillar border-glow" id="lineup">
+            <span class="pillar-num">01</span>
+            <h3 class="pillar-head">Command Center Lineup</h3>
+            <p>Drag-and-drop batting order with DP/Flex softball rules built in. Auto-validates for illegal substitutions, re-entry eligibility, and pitch count limits before you confirm.</p>
+          </div>
+          <div class="uvp-pillar border-glow" id="scorebook">
+            <span class="pillar-num">02</span>
+            <h3 class="pillar-head">Pro-Grade Scorebook</h3>
+            <p>Ten one-tap outcome buttons. Interactive base diamond to advance runners. Live AVG, OBP, ERA after every call. Box score and spray chart generated automatically.</p>
+          </div>
+          <div class="uvp-pillar border-glow" id="dj">
+            <span class="pillar-num">03</span>
+            <h3 class="pillar-head">Ballpark DJ</h3>
+            <p>Walk-up songs auto-queue via the At Bat Engine. Spotify, Apple Music, or local MP3. Soundboard, between-innings playlists, TTS announcer, and custom voice intros.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ FEATURES ═══ -->
+      <section class="features-section section" aria-labelledby="featuresTitle">
+        <div class="section-heading reveal">
+          <p class="section-label">Core Features</p>
+          <h2 id="featuresTitle" class="section-title">Five systems.<br><em>One dugout screen.</em></h2>
+        </div>
+
+        <div class="features-grid">
+
+          <article class="feature-card reveal border-glow" aria-labelledby="feat1">
+            <div class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="feat-label">01 / Lineup</span>
+            <h3 id="feat1" class="feat-head">Drag-Drop Lineup Builder</h3>
+            <p>Build your batting order with haptic snap feedback. Assign defensive positions on an interactive field diagram. Save lineup templates for reuse across the season.</p>
+            <ul class="feat-specs">
+              <li>Softball DP/Flex dual-slot with ASA/USA rule enforcement</li>
+              <li>Re-entry eligibility highlighted before confirmation</li>
+              <li>Pitcher pitch count gate with configurable warning threshold</li>
+              <li>Printable lineup card PDF export</li>
+            </ul>
+          </article>
+
+          <article class="feature-card reveal reveal-delay-1 border-glow" aria-labelledby="feat2">
+            <div class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 21V9"/>
+              </svg>
+            </div>
+            <span class="feat-label">02 / Scorebook</span>
+            <h3 id="feat2" class="feat-head">Digital Scorebook</h3>
+            <p>Traditional scorebook logic with one-tap input. Ten outcome buttons sized at 56pt minimum — legible and tappable in full sun with batting gloves on.</p>
+            <ul class="feat-specs">
+              <li>Interactive base diamond — tap to advance runners</li>
+              <li>Live AVG, OBP, SLG, ERA updating after every call</li>
+              <li>Spray chart with tap-to-mark batted ball location</li>
+              <li>Shake-to-undo last play — always available</li>
+            </ul>
+          </article>
+
+          <article class="feature-card reveal border-glow" aria-labelledby="feat3">
+            <div class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+              </svg>
+            </div>
+            <span class="feat-label">03 / DJ</span>
+            <h3 id="feat3" class="feat-head">Ballpark DJ</h3>
+            <p>Walk-up songs auto-start when a batter's cell goes active in the scorebook. Configure a start-point "drop" per player. Between-innings playlist triggers on the 3rd out.</p>
+            <ul class="feat-specs">
+              <li>Spotify Premium / Apple Music stream or local MP3 fallback</li>
+              <li>1.5-second crossfade between ambient and walk-up tracks</li>
+              <li>6-button soundboard — Crowd Roar, Air Horn, Organ, Rally</li>
+              <li>TTS announcer with custom voice recording per player</li>
+            </ul>
+          </article>
+
+          <article class="feature-card reveal reveal-delay-1 border-glow" aria-labelledby="feat4">
+            <div class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <span class="feat-label">04 / Stats</span>
+            <h3 id="feat4" class="feat-head">Real-Time Stats Engine</h3>
+            <p>Every plate appearance recalculates the full stat line instantly — no manual refresh, no end-of-game data entry. Season aggregates build automatically across games.</p>
+            <ul class="feat-specs">
+              <li>Hitting: AVG, OBP, SLG, OPS, K%, BB%, RBI, BABIP</li>
+              <li>Pitching: ERA, WHIP, K/9, BB/9, pitch count, FIP</li>
+              <li>Box score PNG share — one tap to team chat</li>
+              <li>CSV export compatible with GameChanger import format</li>
+            </ul>
+          </article>
+
+          <article class="feature-card feature-card-wide reveal border-glow" aria-labelledby="feat5">
+            <div class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+            </div>
+            <span class="feat-label">05 / Engine</span>
+            <h3 id="feat5" class="feat-head">The At Bat Engine — Unified State</h3>
+            <p class="feat-wide-body">The intelligence core. A single GameEvent bus connects all three modules. Tap one play result and three things fire simultaneously: the scorebook records the play, the lineup strip advances to the next batter, and the DJ queues that batter's walk-up song. Zero manual coordination. One tap — the whole dugout responds.</p>
+            <ul class="feat-specs feat-specs-row">
+              <li>Scorebook tap dispatches BATTER_UP event to all subscribers</li>
+              <li>Audio Engine crossfades to new walk-up within 1.5 seconds</li>
+              <li>3rd out fires Between Innings playlist if Auto is enabled</li>
+              <li>Substitution reassigns walk-up song from roster automatically</li>
+            </ul>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ═══ ONBOARDING FLOW ═══ -->
+      <section class="onboarding-section section" aria-labelledby="onboardTitle">
+        <div class="section-heading reveal">
+          <p class="section-label">Game Day Flow</p>
+          <h2 id="onboardTitle" class="section-title">From roster setup<br><em>to first pitch.</em></h2>
+        </div>
+
+        <ol class="onboard-journey reveal reveal-delay-1" aria-label="Game day onboarding steps">
+
+          <li class="ob-step">
+            <div class="ob-num" aria-hidden="true">01</div>
+            <div class="ob-content border-glow">
+              <span class="ob-location">App — First Launch</span>
+              <h3 class="ob-head">Build Your Roster</h3>
+              <p>Enter players manually or import via CSV. Assign number, position, bats/throws. The moment you tap a player, their walk-up song slot appears — link Spotify, search Apple Music, or upload a local MP3 from your Files.</p>
+              <span class="ob-note">→ Each player's walk-up song travels with them across every game all season</span>
+            </div>
+          </li>
+          <li class="ob-connector" aria-hidden="true"></li>
+
+          <li class="ob-step">
+            <div class="ob-num" aria-hidden="true">02</div>
+            <div class="ob-content border-glow">
+              <span class="ob-location">App — Pre-Game</span>
+              <h3 class="ob-head">Set the Lineup</h3>
+              <p>Drag players into batting order slots. Tap any player to assign their defensive position on the field diagram. Foundry auto-validates: duplicate positions, illegal substitutions, DP/Flex legality — and warns before you lock in.</p>
+              <span class="ob-note">→ Lock Lineup fires a single tap → Game Day screen opens, ready to score</span>
+            </div>
+          </li>
+          <li class="ob-connector" aria-hidden="true"></li>
+
+          <li class="ob-step">
+            <div class="ob-num" aria-hidden="true">03</div>
+            <div class="ob-content border-glow">
+              <span class="ob-location">App — In Game</span>
+              <h3 class="ob-head">Score the Game</h3>
+              <p>The active batter glows amber in the lineup rail. Tap their plate appearance outcome — the diamond advances runners, the score updates, and their song fades as the next batter's walk-up crossfades in. One tap per plate appearance. That's it.</p>
+              <span class="ob-note">→ Full offline operation — all writes go to SQLite first, sync when signal returns</span>
+            </div>
+          </li>
+          <li class="ob-connector" aria-hidden="true"></li>
+
+          <li class="ob-step">
+            <div class="ob-num" aria-hidden="true">04</div>
+            <div class="ob-content border-glow">
+              <span class="ob-location">App — Post Game</span>
+              <h3 class="ob-head">Share the Box Score</h3>
+              <p>Final out triggers the Game Summary. Box score, individual hitting lines, spray charts, and season stats updated automatically. Share the box score as a PNG to the team group chat in one tap — or export the full scorebook as a PDF.</p>
+              <span class="ob-note">→ Season stats aggregate across all saved games — no manual data entry ever</span>
+            </div>
+          </li>
+
+        </ol>
+      </section>
+
+      <!-- ═══ FINAL CTA ═══ -->
+      <section id="notify" class="app-cta-section section" aria-labelledby="ctaTitle">
+        <div class="app-cta-inner reveal">
+          <p class="section-label">Download Free</p>
+          <h2 id="ctaTitle" class="section-title">The first pitch<br>is already coming.</h2>
+          <p class="app-cta-sub">Get Foundry before opening day. Your roster, your lineup, your DJ — ready.</p>
+          <div class="store-buttons store-buttons-centered" role="list">
+            <a href="#" class="store-btn store-btn-large border-glow" role="listitem" aria-label="Download on the App Store">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <span><small>Download on the</small>App Store</span>
+            </a>
+            <a href="#" class="store-btn store-btn-large border-glow" role="listitem" aria-label="Get it on Google Play">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M3.18 23.76c.3.17.64.19.96.07l12.43-7.19-2.63-2.64-10.76 9.76zM.56 1.6C.21 1.98 0 2.56 0 3.29v17.42c0 .73.21 1.31.57 1.69l.09.08 9.75-9.75v-.23L.65 1.52.56 1.6zM20.44 10.7l-2.6-1.5-2.93 2.93 2.93 2.93 2.62-1.52c.75-.43.75-1.41-.02-1.84zM3.18.24l10.76 9.76 2.63-2.63L4.14.17C3.82.05 3.48.07 3.18.24z"/>
+              </svg>
+              <span><small>Get it on</small>Google Play</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-cta-glow" aria-hidden="true"></div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <strong>Foundry</strong>
+      <span class="footer-accent">Dugout Command Center</span>
+      <p>Every coach gets 27 outs. What you do with them is the difference.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
