@@ -340,7 +340,7 @@ const WALKUP_LIBRARY = [
   { name: 'Katseye — Gnarly',               file: '/walkupsongs/Katseye Gnarly.mp3' },
   { name: 'Katseye — Pink Up',              file: '/walkupsongs/Katseye Pink Up.mp3' },
   { name: 'Metallica — Enter Sandman',      file: '/walkupsongs/Metallica - Enter Sandman.mp3' },
-  { name: 'Never Get Used to This',         file: '/walkupsongs/Never_Get_Use_To_This.mp3' },
+  { name: 'Forrest Frank — Never Get Used To This', file: '/walkupsongs/Forrest Frank - Never Get Used To This.mp3' },
   { name: 'Rihanna — What\'s My Name',      file: '/walkupsongs/Rihanna - What\'s My Name.mp3' },
   { name: 'Saweetie — Best Friend',         file: '/walkupsongs/Saweetie - Best Friend.mp3' },
   { name: 'Silent — Watch Me Whip',         file: '/walkupsongs/Silent Watch Me Whip.mp3' },
@@ -728,6 +728,9 @@ function launchGame() {
   document.getElementById('warmupOverlay').classList.add('hidden');
   const d = warmupPending;
   S.game = newGameState(d.opponent, d.date, d.field, d.homeAway, d.innings);
+  if (d.homeAway === 'away') {
+    S.game.half = 'bottom';
+  }
   S.lastOpponent = d.opponent;
   S.superVoice = { ...S.superVoice, enabled: true, paMode: true };
   saveState();
@@ -735,6 +738,7 @@ function launchGame() {
   syncSVUI();
   navigate('game');
   activateTab(weAreBatting() ? 'scorebook' : 'lineup');
+  if (!weAreBatting()) setTimeout(showFieldingStartNotice, 150);
 }
 
 document.getElementById('warmupPlayPause').addEventListener('click', () => {
@@ -781,6 +785,22 @@ document.getElementById('warmupFileInput').addEventListener('change', e => {
 
 document.getElementById('warmupStartGame').addEventListener('click', launchGame);
 document.getElementById('warmupSkip').addEventListener('click', launchGame);
+
+function showFieldingStartNotice() {
+  const notice = document.getElementById('fieldingStartNotice');
+  if (!notice) return;
+  notice.classList.remove('hidden');
+  activateTab('lineup');
+}
+
+function hideFieldingStartNotice() {
+  document.getElementById('fieldingStartNotice')?.classList.add('hidden');
+}
+
+document.getElementById('fieldingStartOk')?.addEventListener('click', hideFieldingStartNotice);
+document.getElementById('fieldingStartNotice')?.addEventListener('click', e => {
+  if (e.target.id === 'fieldingStartNotice') hideFieldingStartNotice();
+});
 
 /* ─────────────────────────────────────────────
    SCREEN 4 — GAME DAY
@@ -922,7 +942,7 @@ function updateAtBatCard() {
   const p   = playerById(pid);
 
   document.getElementById('atBatSlot').textContent = `#${batterSlot + 1}`;
-  document.getElementById('atBatName').textContent = p ? p.name : '—';
+  document.getElementById('atBatReplay').textContent = p ? p.name : '—';
   document.getElementById('atBatMeta').textContent = p ? `#${p.number} · ${p.pos} · B:${p.bats}` : '—';
 
   // Count dots
@@ -1281,9 +1301,8 @@ function showBetweenInningsPrompt() {
   const g = S.game;
   const overlay = document.getElementById('betweenInningsOverlay');
   const subtitle = document.getElementById('biPromptSubtitle');
-  const hasTracks = (S.playlist?.tracks?.length || 0) > 0;
 
-  if (!hasTracks || !overlay) {
+  if (!overlay) {
     endHalfInning();
     return;
   }
@@ -1291,24 +1310,49 @@ function showBetweenInningsPrompt() {
   const nextHalf = g.half === 'top' ? 'bottom' : 'top';
   const nextInning = nextHalf === 'top' ? g.inning + 1 : g.inning;
   const halfWord = nextHalf === 'bottom' ? 'Bottom' : 'Top';
-  subtitle.textContent = `${halfWord} of ${nextInning} is next`;
+  const nextSide = nextHalf === (g.homeAway === 'away' ? 'top' : 'bottom') ? 'your batting order' : 'the opponent half';
+  subtitle.textContent = `${halfWord} of ${nextInning} is next — start ${nextSide} when ready.`;
 
   overlay.classList.remove('hidden');
 
   const playBtn = document.getElementById('biPlayBtn');
+  const stopBtn = document.getElementById('biStopBtn');
   const skipBtn = document.getElementById('biSkipBtn');
+  const hasTracks = getBetweenInningsTracks().length > 0;
+  playBtn.disabled = !hasTracks;
+  playBtn.textContent = hasTracks ? '♪ Play Music' : 'No Music Loaded';
+  stopBtn.disabled = true;
 
-  function dismiss(playMusic) {
-    overlay.classList.add('hidden');
-    playBtn.replaceWith(playBtn.cloneNode(true));
-    skipBtn.replaceWith(skipBtn.cloneNode(true));
-    if (playMusic) betweenInningsActive = true;
-    endHalfInning(); // updateAtBatCard inside will store pendingWalkUpPlayer if active
-    if (playMusic) startInningPlaylist();
+  function startBreakMusic() {
+    if (!hasTracks) return;
+    betweenInningsActive = true;
+    startBetweenInningsBreakMusic();
+    playBtn.textContent = '♪ Music Playing';
+    playBtn.disabled = true;
+    stopBtn.disabled = false;
   }
 
-  document.getElementById('biPlayBtn').addEventListener('click', () => dismiss(true), { once: true });
-  document.getElementById('biSkipBtn').addEventListener('click', () => dismiss(false), { once: true });
+  function stopBreakMusic() {
+    stopPlaylist(true);
+    betweenInningsActive = false;
+    playBtn.textContent = hasTracks ? '♪ Play Music' : 'No Music Loaded';
+    playBtn.disabled = !hasTracks;
+    stopBtn.disabled = true;
+  }
+
+  function startNextHalf() {
+    overlay.classList.add('hidden');
+    stopPlaylist(true);
+    betweenInningsActive = false;
+    playBtn.replaceWith(playBtn.cloneNode(true));
+    stopBtn.replaceWith(stopBtn.cloneNode(true));
+    skipBtn.replaceWith(skipBtn.cloneNode(true));
+    endHalfInning();
+  }
+
+  playBtn.addEventListener('click', startBreakMusic, { once: true });
+  stopBtn.addEventListener('click', stopBreakMusic);
+  skipBtn.addEventListener('click', startNextHalf, { once: true });
 }
 
 function endHalfInning() {
@@ -1839,7 +1883,10 @@ document.getElementById('masterVolume').addEventListener('input', e => {
 async function handleBatterChange(player) {
   if (currentWalkUpPid === player.id) return;
   currentWalkUpPid = player.id;
+  return runBatterIntro(player);
+}
 
+async function runBatterIntro(player) {
   const sv = S.superVoice || {};
   const hasSong = !!(player.walkUpKey || player.walkUpUrl);
 
@@ -1861,6 +1908,28 @@ async function handleBatterChange(player) {
     }
   }
 }
+
+function getCurrentBatter() {
+  const g = S.game;
+  if (!g || !S.lineup.length || !weAreBatting()) return null;
+  return playerById(S.lineup[g.lineupIndex % S.lineup.length]);
+}
+
+function replayCurrentBatterIntro() {
+  const p = getCurrentBatter();
+  if (!p) {
+    showToast('No active batter to announce');
+    return;
+  }
+  currentWalkUpPid = null;
+  pendingWalkUpPlayer = null;
+  betweenInningsActive = false;
+  runBatterIntro(p);
+  showToast(`Replaying announcement for ${p.name}`);
+}
+
+document.getElementById('atBatReplay')?.addEventListener('click', replayCurrentBatterIntro);
+document.getElementById('atBatAnnounceBtn')?.addEventListener('click', replayCurrentBatterIntro);
 
 
 /* ElevenLabs — session cache so the same line isn't re-generated mid-game */
@@ -2263,6 +2332,25 @@ async function startInningPlaylist() {
     idx = plCurrentIdx;
   }
   await playPlaylistTrack(pl.tracks[idx], idx);
+}
+
+function getBetweenInningsTracks() {
+  const playlistTracks = S.playlist?.tracks || [];
+  if (playlistTracks.length) return playlistTracks;
+  return BETWEEN_INNINGS_LIBRARY.map(track => ({ name: track.name, url: track.url }));
+}
+
+async function startBetweenInningsBreakMusic() {
+  const tracks = getBetweenInningsTracks();
+  if (!tracks.length) return;
+  let idx;
+  if (S.playlist?.shuffle) {
+    idx = Math.floor(Math.random() * tracks.length);
+  } else {
+    plCurrentIdx = (plCurrentIdx + 1) % tracks.length;
+    idx = plCurrentIdx;
+  }
+  await playPlaylistTrack(tracks[idx], idx);
 }
 
 function renderPlaylistUI() {

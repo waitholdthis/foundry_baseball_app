@@ -998,18 +998,37 @@ html, body {
   min-height: 36px;
 }
 .at-bat-name {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-1);
+  text-align: left;
+  font-family: inherit;
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.02em;
   padding: 14px 16px 4px;
   line-height: 1.1;
   overflow-wrap: anywhere;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+.at-bat-name:active { color: var(--amber); }
 .at-bat-meta {
   font-size: 13px;
   color: var(--text-2);
   padding: 0 16px 14px;
   font-weight: 500;
+}
+.at-bat-fallback-row {
+  padding: 0 16px 12px;
+  flex-shrink: 0;
+}
+.at-bat-announce-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 13px;
 }
 
 /* Diamond */
@@ -1046,7 +1065,7 @@ html, body {
 /* Outcome strip */
 .outcome-strip {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
   gap: 6px;
   padding: 12px 14px;
   flex-shrink: 0;
@@ -1055,12 +1074,15 @@ html, body {
   min-height: 56px;
   border: none;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+  line-height: 1.15;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: transform 100ms, opacity 100ms;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
+  padding: 8px 6px;
+  overflow-wrap: anywhere;
 }
 .outcome-btn:active { transform: scale(0.94); opacity: 0.8; }
 .outcome-btn.out    { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(239,68,68,0.3); }
@@ -2211,7 +2233,39 @@ html, body {
   gap: 10px;
 }
 .bi-play-btn { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
+.bi-stop-btn { font-size: 13px; }
 .bi-skip-btn { font-size: 13px; }
+
+/* Start-of-game fielding notice */
+.game-start-notice {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-r)) calc(16px + var(--safe-bot)) calc(16px + var(--safe-l));
+  background: rgba(2, 6, 23, 0.78);
+}
+.game-start-notice.hidden { display: none; }
+.game-start-card {
+  width: min(340px, 100%);
+  padding: 22px;
+  border: 1px solid rgba(245,158,11,0.35);
+  border-radius: 14px;
+  background: var(--bg-surface);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+}
+.game-start-card h2 {
+  font-size: 20px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.game-start-card p {
+  color: var(--text-2);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
 
 /* ── Warm-up Music Overlay ── */
 .warmup-overlay {
@@ -2347,8 +2401,8 @@ html, body {
   .out-dot { width: 18px; height: 18px; }
   .at-bat-name { font-size: 24px; }
   .diamond-wrap { width: 180px; height: 180px; }
-  .outcome-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .outcome-btn { min-height: 50px; font-size: 12px; }
+  .outcome-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .outcome-btn { min-height: 52px; font-size: 11px; }
   .hold-strip,
   .steal-strip,
   .count-strip,

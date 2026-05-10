@@ -369,8 +369,11 @@
           </div>
           <button class="undo-btn" id="undoBtn" aria-label="Undo last play">↩ UNDO</button>
         </div>
-        <div class="at-bat-name" id="atBatName">—</div>
+        <button class="at-bat-name at-bat-replay" id="atBatReplay" type="button" aria-label="Replay current batter announcement">—</button>
         <div class="at-bat-meta" id="atBatMeta">— · —</div>
+        <div class="at-bat-fallback-row">
+          <button class="btn-secondary at-bat-announce-btn" id="atBatAnnounceBtn" type="button">Announce Batter</button>
+        </div>
 
         <!-- Diamond -->
         <div class="diamond-wrap" aria-label="Bases">
@@ -399,20 +402,20 @@
 
         <!-- Outcome Buttons -->
         <div class="outcome-strip" role="group" aria-label="Plate appearance outcome">
-          <button class="outcome-btn out" data-result="K">K</button>
-          <button class="outcome-btn out" data-result="Kl">K̲</button>
-          <button class="outcome-btn out" data-result="GO">GO</button>
-          <button class="outcome-btn out" data-result="FO">FO</button>
-          <button class="outcome-btn out" data-result="DP">DP</button>
-          <button class="outcome-btn obp" data-result="BB">BB</button>
-          <button class="outcome-btn obp" data-result="HBP">HBP</button>
-          <button class="outcome-btn hit" data-result="1B">1B</button>
-          <button class="outcome-btn hit" data-result="2B">2B</button>
-          <button class="outcome-btn hit" data-result="3B">3B</button>
-          <button class="outcome-btn hr"  data-result="HR">HR</button>
-          <button class="outcome-btn obp" data-result="E">E</button>
-          <button class="outcome-btn obp" data-result="FC">FC</button>
-          <button class="outcome-btn obp" data-result="SAC">SAC</button>
+          <button class="outcome-btn out" data-result="K">Strikeout</button>
+          <button class="outcome-btn out" data-result="Kl">Strikeout Looking</button>
+          <button class="outcome-btn out" data-result="GO">Groundout</button>
+          <button class="outcome-btn out" data-result="FO">Flyout</button>
+          <button class="outcome-btn out" data-result="DP">Double Play</button>
+          <button class="outcome-btn obp" data-result="BB">Walk</button>
+          <button class="outcome-btn obp" data-result="HBP">Hit By Pitch</button>
+          <button class="outcome-btn hit" data-result="1B">Single</button>
+          <button class="outcome-btn hit" data-result="2B">Double</button>
+          <button class="outcome-btn hit" data-result="3B">Triple</button>
+          <button class="outcome-btn hr"  data-result="HR">Home Run</button>
+          <button class="outcome-btn obp" data-result="E">Error</button>
+          <button class="outcome-btn obp" data-result="FC">Fielder's Choice</button>
+          <button class="outcome-btn obp" data-result="SAC">Sacrifice</button>
         </div>
 
         <!-- Hold Runners toggle -->
@@ -836,6 +839,15 @@
       <button class="btn-ghost btn-full" id="cancelSub" style="margin-top:12px">Cancel</button>
     </div>
   </div>
+
+  <!-- Start Fielding Notice -->
+  <div class="game-start-notice hidden" id="fieldingStartNotice" role="dialog" aria-modal="true" aria-labelledby="fieldingStartTitle">
+    <div class="game-start-card">
+      <h2 id="fieldingStartTitle">Your team is in the field</h2>
+      <p>Track opponent pitches, outs, and runs on the left.</p>
+      <button class="btn-primary btn-full" id="fieldingStartOk" type="button">Got it</button>
+    </div>
+  </div>
 </div><!-- end #screen-game -->
 
 <!-- ════════════════════════════════════
@@ -1028,7 +1040,8 @@
     <div class="bi-prompt-subtitle" id="biPromptSubtitle">Start the between-innings music?</div>
     <div class="bi-prompt-actions">
       <button class="btn-primary bi-play-btn" id="biPlayBtn">♪ Play Music</button>
-      <button class="btn-secondary bi-skip-btn" id="biSkipBtn">Play Ball →</button>
+      <button class="btn-secondary bi-stop-btn" id="biStopBtn" disabled>Stop Music</button>
+      <button class="btn-secondary bi-skip-btn" id="biSkipBtn">Start Game →</button>
     </div>
   </div>
 </div>
