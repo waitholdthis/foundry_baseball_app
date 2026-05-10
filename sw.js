@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v24';
+const CACHE = 'foundry-v25';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -25,8 +25,12 @@ const MEDIA_ASSETS = [
   './BetweenInnings/Row My Boat ft. CJ Beatty.mp3',
   './BetweenInnings/Swing.mp3',
   './BetweenInnings/Tokyo Drift.mp3',
+  './sounds/Angerdingus.mp3',
+  './sounds/Homerun.mp3',
   './sounds/K Riff.mp3',
   './sounds/Rally.mp3',
+  './sounds/SoNervy.mp3',
+  './sounds/Strikeout.mp3',
   './sounds/awkward-cricket.mp3',
   './sounds/aye-thats-pretty-good.mp3',
   './sounds/bruh-sound-effect.mp3',

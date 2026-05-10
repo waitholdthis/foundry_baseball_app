@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=24', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=25', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -2633,6 +2633,10 @@ function playSound(type) {
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
       case 'homerun':   playMp3('sounds/homerun.mp3');   return;
+      case 'homerunCall': playMp3('sounds/Homerun.mp3'); return;
+      case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
+      case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
+      case 'angerDingus': playMp3('sounds/Angerdingus.mp3'); return;
       case 'nocrying':  playMp3('sounds/no_crying.mp3');           return;
       case 'cricket':   playMp3('sounds/awkward-cricket.mp3');     return;
       case 'prettyGood':playMp3('sounds/aye-thats-pretty-good.mp3'); return;
