@@ -2289,9 +2289,9 @@ html, body {
   max-width: 420px;
   max-height: calc(100vh - var(--safe-top) - var(--safe-bot) - 24px);
   max-height: calc(100dvh - var(--safe-top) - var(--safe-bot) - 24px);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   gap: 18px;
 }
 
@@ -2340,9 +2340,9 @@ html, body {
 
 .warmup-library-wrap {
   min-height: 0;
-  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .warmup-lib-header {
   display: flex;
@@ -2356,8 +2356,7 @@ html, body {
   flex-wrap: wrap;
   gap: 6px;
   flex: 1 1 auto;
-  min-height: 92px;
-  max-height: clamp(120px, 24dvh, 180px);
+  min-height: 0;
   overflow-y: auto;
   padding-bottom: 2px;
 }
@@ -2367,14 +2366,9 @@ html, body {
   border-color: #f59e0b;
 }
 .warmup-actions {
-  position: sticky;
-  bottom: 0;
   display: grid;
   gap: 8px;
-  flex: 0 0 auto;
   background: #0f172a;
-  padding-top: 4px;
-  z-index: 1;
 }
 .warmup-actions .btn-ghost {
   font-size: 13px;
@@ -2410,7 +2404,7 @@ html, body {
   .warmup-now-playing { padding: 8px 10px; }
   .warmup-transport { gap: 10px; }
   .warmup-lib-header { margin-bottom: 6px; }
-  .warmup-lib-btns { min-height: 70px; max-height: 22dvh; }
+  .warmup-lib-btns { min-height: 0; }
 }
 
 @media (max-width: 420px) {
@@ -2449,7 +2443,7 @@ html, body {
   .warmup-matchup { font-size: 15px; }
   .warmup-now-playing { padding: 10px 12px; }
   .warmup-transport { gap: 12px; }
-  .warmup-lib-btns { max-height: 26dvh; }
+  .warmup-lib-btns { min-height: 0; }
 }
 
 @media (max-width: 360px) {
