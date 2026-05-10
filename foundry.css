@@ -667,6 +667,14 @@ html, body {
   border-radius: 4px;
 }
 .score-half-btn[aria-pressed="true"] { color: var(--amber); }
+.score-half-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
 .outs-row {
   display: flex;
   justify-content: center;
@@ -674,7 +682,7 @@ html, body {
   padding: 6px 0 2px;
 }
 .out-dot {
-  width: 12px; height: 12px;
+  width: 20px; height: 20px;
   border-radius: 50%;
   background: var(--bg-elevated);
   border: 2px solid var(--border);
@@ -770,9 +778,10 @@ html, body {
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-2);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 6px 10px;
+  min-height: 40px;
   cursor: pointer;
   letter-spacing: 0.05em;
 }
@@ -820,6 +829,7 @@ html, body {
 .rail-item.on-deck .rail-slot { color: var(--blue); }
 .rail-info { flex: 1; min-width: 0; }
 .rail-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-song-icon { font-size: 11px; color: var(--amber); margin-left: 4px; opacity: 0.85; }
 .rail-pos { font-size: 11px; color: var(--text-2); }
 
 /* ── Fielding View ── */
@@ -843,8 +853,8 @@ html, body {
 .fielding-outs-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .fielding-out-dots { display: flex; gap: 14px; }
 .fielding-out-dot {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--bg-elevated);
   border: 2px solid var(--border);
@@ -896,12 +906,14 @@ html, body {
   padding: 10px 16px;
   gap: 8px;
   border-bottom: 1px solid var(--border);
+  border-left: 4px solid var(--amber);
+  background: var(--amber-dim);
   flex-shrink: 0;
 }
 .at-bat-slot { font-size: 13px; font-weight: 700; color: var(--text-2); }
 .at-bat-count { display: flex; gap: 5px; align-items: center; flex: 1; justify-content: center; }
 .count-dot {
-  width: 12px; height: 12px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   border: 2px solid var(--border);
   background: transparent;
@@ -975,7 +987,7 @@ html, body {
   flex-shrink: 0;
 }
 .outcome-btn {
-  min-height: 52px;
+  min-height: 56px;
   border: none;
   border-radius: 8px;
   font-size: 13px;
@@ -992,6 +1004,30 @@ html, body {
 .outcome-btn.hr     { background: rgba(245,158,11,0.25); color: var(--amber); border: 1px solid var(--amber); font-size: 14px; }
 
 /* Count strip */
+.recent-plays-strip {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 10px;
+  flex-shrink: 0;
+  min-height: 28px;
+  align-items: center;
+}
+.recent-play-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  padding: 3px 10px 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+.recent-play-chip.out   { background: var(--red-dim);   color: var(--red);   border-color: rgba(239,68,68,0.3); }
+.recent-play-chip.obp   { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,158,11,0.3); }
+.recent-play-chip.hit   { background: var(--green-dim); color: var(--green); border-color: rgba(34,197,94,0.3); }
+.recent-play-chip.hr    { background: rgba(245,158,11,0.25); color: var(--amber); border-color: var(--amber); }
+.recent-play-result { font-size: 12px; font-weight: 800; }
+.recent-play-name   { font-size: 10px; font-weight: 500; opacity: 0.8; }
 .count-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1000,7 +1036,7 @@ html, body {
   flex-shrink: 0;
 }
 .count-btn {
-  height: 40px;
+  height: 48px;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
@@ -1022,13 +1058,35 @@ html, body {
   padding: 14px;
   gap: 16px;
 }
+.dj-now-playing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
 .dj-label {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--purple);
   text-transform: uppercase;
-  margin-bottom: 8px;
+}
+.dj-status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--bg-elevated);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  transition: background 200ms, color 200ms;
+}
+.dj-status-badge.playing {
+  background: rgba(34,197,94,0.15);
+  color: var(--green);
+  border-color: rgba(34,197,94,0.4);
 }
 .dj-now-playing {
   background: var(--bg-surface);

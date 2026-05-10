@@ -266,7 +266,11 @@ function renderPlayerList() {
       if (e.key === 'Enter') openPlayerSheet(p);
     });
     const del = card.querySelector('.player-delete');
-    del.addEventListener('click', ev => { ev.stopPropagation(); deletePlayer(p.id); });
+    del.addEventListener('click', ev => {
+      ev.stopPropagation();
+      if (!confirm(`Delete ${p.name}? This cannot be undone.`)) return;
+      deletePlayer(p.id);
+    });
     list.appendChild(card);
   });
 }
@@ -526,6 +530,7 @@ let selectedHA = 'home';
 document.getElementById('startGameBtn').addEventListener('click', () => {
   document.getElementById('gameDate').value = new Date().toISOString().slice(0, 10);
   document.getElementById('gameField').value = S.team?.field || '';
+  document.getElementById('gameOpponent').value = S.lastOpponent || '';
   gameSetupOverlay.classList.remove('hidden');
   setTimeout(() => document.getElementById('gameOpponent').focus(), 100);
 });
@@ -550,6 +555,7 @@ document.getElementById('gameSetupForm').addEventListener('submit', e => {
   const field = document.getElementById('gameField').value.trim();
   const innings = parseInt(document.getElementById('gameInnings').value, 10);
   S.game = newGameState(opp, date, field, selectedHA, innings);
+  S.lastOpponent = opp;
   saveState();
   gameSetupOverlay.classList.add('hidden');
   renderGameScreen();
@@ -594,6 +600,8 @@ function updateScoreBar() {
   document.getElementById('scoreInning').textContent    = g.inning;
   document.getElementById('halfTopBtn').setAttribute('aria-pressed', g.half === 'top' ? 'true' : 'false');
   document.getElementById('halfBotBtn').setAttribute('aria-pressed', g.half === 'bottom' ? 'true' : 'false');
+  const halfLabelEl = document.getElementById('scoreHalfLabel');
+  if (halfLabelEl) halfLabelEl.textContent = g.half === 'top' ? 'TOP' : 'BOT';
 
   // Outs
   [1, 2, 3].forEach(n => {
@@ -640,10 +648,11 @@ function renderLineupRail() {
     const battedCount = g.atBats.filter(ab => ab.lineupSlot === i && ab.inning === g.inning && ab.half === g.half).length;
     if (battedCount > 0 && !isAtBat) li.classList.add('batted');
 
+    const hasSong = !!(p.walkUpKey || p.walkUpUrl);
     li.innerHTML = `
       <span class="rail-slot">${i + 1}</span>
       <div class="rail-info">
-        <div class="rail-name">${esc(p.name)}</div>
+        <div class="rail-name">${esc(p.name)}${hasSong ? ' <span class="rail-song-icon" aria-label="Has walk-up song">♪</span>' : ''}</div>
         <div class="rail-pos">#${p.number} · ${p.pos}</div>
       </div>
     `;
@@ -676,6 +685,9 @@ function updateAtBatCard() {
   // Runners
   updateDiamond();
 
+  // Recent plays
+  updateRecentPlays();
+
   // DJ on-deck
   const onDeckSlot = (batterSlot + 1) % S.lineup.length;
   const onDeckP = playerById(S.lineup[onDeckSlot]);
@@ -686,6 +698,20 @@ function updateAtBatCard() {
   if (p) {
     setTimeout(() => handleBatterChange(p), 200);
   }
+}
+
+function updateRecentPlays() {
+  const g = S.game;
+  const strip = document.getElementById('recentPlaysStrip');
+  if (!strip) return;
+  const recent = (g?.atBats || []).slice(-3).reverse();
+  if (!recent.length) { strip.innerHTML = ''; return; }
+  const RESULT_CLASS = { K:'out', Kl:'out', GO:'out', FO:'out', DP:'out', BB:'obp', HBP:'obp', E:'obp', FC:'obp', SAC:'obp', '1B':'hit', '2B':'hit', '3B':'hit', HR:'hr' };
+  strip.innerHTML = recent.map(ab => {
+    const p = playerById(ab.playerId);
+    const cls = RESULT_CLASS[ab.result] || 'obp';
+    return `<span class="recent-play-chip ${cls}"><span class="recent-play-result">${ab.result}</span><span class="recent-play-name">${p ? p.name.split(' ')[0] : '—'}</span></span>`;
+  }).join('');
 }
 
 function updateDiamond() {
@@ -709,7 +735,10 @@ function updateDiamond() {
   if (!btn) return;
   btn.addEventListener('click', () => {
     if (!S.game) return;
-    S.game.runners[parseInt(b) - 1] = !S.game.runners[parseInt(b) - 1];
+    const base = parseInt(b);
+    S.game.runners[base - 1] = !S.game.runners[base - 1];
+    const label = ['1st', '2nd', '3rd'][base - 1];
+    showToast(S.game.runners[base - 1] ? `Runner on ${label}` : `${label} cleared`);
     updateDiamond();
     saveState();
   });
@@ -884,7 +913,8 @@ document.getElementById('fieldingAddPitch').addEventListener('click', () => {
   const pc = g.pitchCount;
   const pt = S.pitchTracking || {};
   if (pc === (pt.warnAt ?? 75)) showToast(`Warning: pitcher at ${pc} pitches`, 4000);
-  if (pc === (pt.alarmAt ?? 100)) showToast(`Alert: pitcher at ${pc} pitches — consider change`, 5000);
+  else if (pc === (pt.alarmAt ?? 100)) showToast(`Alert: pitcher at ${pc} pitches — consider change`, 5000);
+  else showToast(`Pitch #${pc}`);
   document.getElementById('fieldingPitchNum').textContent = pc;
   document.getElementById('pitchCountDisplay').textContent = pc;
   saveState();
@@ -959,7 +989,9 @@ function endHalfInning() {
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
   renderSeasonStats('seasonStatsBody');
-  showToast(`${g.half === 'bottom' ? 'Bottom' : 'Top'} of inning ${g.inning}`);
+  const halfLabel = g.half === 'bottom' ? 'Bottom' : 'Top';
+  const sideMsg = weAreBatting() ? 'Your team bats' : 'Your team fields';
+  showToast(`${halfLabel} of ${g.inning} — ${sideMsg}`, 4000);
   startInningPlaylist();
   showHalfView();
   activateTab(weAreBatting() ? 'scorebook' : 'lineup');
@@ -1086,6 +1118,8 @@ document.getElementById('closeGameMenu').addEventListener('click', () => gameMen
 gameMenuOverlay.addEventListener('click', e => { if (e.target === gameMenuOverlay) gameMenuOverlay.classList.add('hidden'); });
 
 document.getElementById('endGameBtn').addEventListener('click', () => {
+  const opp = S.game?.opponent || 'opponent';
+  if (!confirm(`End game vs ${opp}? This cannot be undone.`)) return;
   gameMenuOverlay.classList.add('hidden');
   showSummary();
 });
@@ -1425,6 +1459,7 @@ async function handleBatterChange(player) {
   }
 
   if (hasSong && currentWalkUpPid === player.id) {
+    showToast(`♪ Walk-up queued — ${player.name}`);
     if (player.walkUpKey) {
       const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
       if (blob && currentWalkUpPid === player.id) playWalkUpSrc(URL.createObjectURL(blob), player);
@@ -1510,6 +1545,13 @@ async function announcePlayer(player) {
   });
 }
 
+function setDJStatusBadge(playing) {
+  const badge = document.getElementById('djStatusBadge');
+  if (!badge) return;
+  badge.textContent = playing ? 'Playing' : 'Paused';
+  badge.classList.toggle('playing', playing);
+}
+
 function playWalkUpSrc(src, player) {
   stopWalkUp();
   walkUpAudio = new Audio(src);
@@ -1518,6 +1560,7 @@ function playWalkUpSrc(src, player) {
 
   document.getElementById('djSongTitle').textContent  = player.walkUpName || 'Walk-Up Song';
   document.getElementById('djPlayerName').textContent = player.name;
+  setDJStatusBadge(true);
 
   const fill = document.getElementById('djProgressFill');
   const cur  = document.getElementById('djTimeCurrent');
@@ -1538,6 +1581,7 @@ function playWalkUpSrc(src, player) {
     pause.querySelector('.icon-play').classList.remove('hidden');
     pause.querySelector('.icon-pause').classList.add('hidden');
     fill.style.width = '0%';
+    setDJStatusBadge(false);
   });
 }
 
@@ -1557,22 +1601,25 @@ function fmtTime(s) {
 
 document.getElementById('djPlayPause').addEventListener('click', () => {
   if (!walkUpAudio) {
-    // Try to load current batter's song
     const g = S.game;
-    if (!g) return;
+    if (!g) { showToast('Start a game first'); return; }
     const pid = S.lineup[g.lineupIndex % S.lineup.length];
     const p   = playerById(pid);
-    if (p) handleBatterChange(p);
+    if (!p) { showToast('No batter found'); return; }
+    if (!p.walkUpUrl && !p.walkUpKey) { showToast(`No walk-up song for ${p.name}`); return; }
+    handleBatterChange(p);
     return;
   }
   if (walkUpAudio.paused) {
     walkUpAudio.play();
     document.getElementById('djPlayPause').querySelector('.icon-play').classList.add('hidden');
     document.getElementById('djPlayPause').querySelector('.icon-pause').classList.remove('hidden');
+    setDJStatusBadge(true);
   } else {
     walkUpAudio.pause();
     document.getElementById('djPlayPause').querySelector('.icon-play').classList.remove('hidden');
     document.getElementById('djPlayPause').querySelector('.icon-pause').classList.add('hidden');
+    setDJStatusBadge(false);
   }
 });
 

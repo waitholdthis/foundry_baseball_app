@@ -256,9 +256,10 @@
         <span class="score-runs" id="scoreOurRuns">0</span>
       </button>
       <div class="score-inning-block">
-        <button class="score-half-btn" id="halfTopBtn" aria-label="Top of inning" aria-pressed="true">▲</button>
+        <span class="score-half-label" id="scoreHalfLabel">TOP</span>
         <span class="score-inning-num" id="scoreInning">1</span>
-        <button class="score-half-btn" id="halfBotBtn" aria-label="Bottom of inning" aria-pressed="false">▼</button>
+        <button class="score-half-btn" id="halfTopBtn" aria-label="Top of inning" aria-pressed="true" style="display:none">▲</button>
+        <button class="score-half-btn" id="halfBotBtn" aria-label="Bottom of inning" aria-pressed="false" style="display:none">▼</button>
       </div>
       <button class="score-team-block them" id="scoreThem" aria-label="Opponent score" aria-haspopup="dialog">
         <span class="score-team-name" id="scoreTheirName">AWAY</span>
@@ -400,6 +401,9 @@
           <button class="outcome-btn obp" data-result="SAC">SAC</button>
         </div>
 
+        <!-- Recent plays -->
+        <div class="recent-plays-strip" id="recentPlaysStrip" aria-label="Recent plays" aria-live="polite"></div>
+
         <!-- Count buttons -->
         <div class="count-strip" role="group" aria-label="Pitch count">
           <button class="count-btn ball-btn" data-count="ball" aria-label="Add ball">Ball</button>
@@ -413,7 +417,10 @@
     <!-- RIGHT — DJ Console -->
     <div class="game-panel panel-dj" id="panel-dj" role="tabpanel" aria-hidden="true">
       <div class="dj-now-playing" id="djNowPlaying">
-        <div class="dj-label">NOW PLAYING</div>
+        <div class="dj-now-playing-header">
+          <div class="dj-label">NOW PLAYING</div>
+          <span class="dj-status-badge" id="djStatusBadge">Paused</span>
+        </div>
         <div class="dj-song-title" id="djSongTitle">—</div>
         <div class="dj-player-name" id="djPlayerName">—</div>
         <div class="dj-progress-wrap">
