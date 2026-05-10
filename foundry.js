@@ -812,11 +812,7 @@ document.querySelectorAll('.outcome-btn').forEach(btn => {
 function recordPlay(result) {
   const g = S.game;
   if (!g) return;
-  if (!weAreBatting()) {
-    // We're in the field — they bat (simplified: just record their out/score)
-    recordOpponentPlay(result);
-    return;
-  }
+  if (!weAreBatting()) return; // fielding — use the fielding panel to track opponent outs/runs
 
   const slot = g.lineupIndex % S.lineup.length;
   const pid  = S.lineup[slot];
@@ -942,9 +938,6 @@ function showHalfView() {
   const batting = weAreBatting();
   document.getElementById('battingView').classList.toggle('hidden', !batting);
   document.getElementById('fieldingView').classList.toggle('hidden', batting);
-  // On tablet all panels stay visible — disable scorebook inputs while fielding
-  document.querySelectorAll('.outcome-btn, .count-btn').forEach(btn => { btn.disabled = !batting; });
-  document.getElementById('atBatCard')?.classList.toggle('fielding-dimmed', !batting);
   if (!batting) updateFieldingView();
 }
 
