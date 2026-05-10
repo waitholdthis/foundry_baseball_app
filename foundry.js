@@ -737,9 +737,13 @@ function updateAtBatCard() {
   document.getElementById('djOnDeckName').textContent = onDeckP ? onDeckP.name : '—';
   document.getElementById('djOnDeckSong').textContent = (onDeckP?.walkUpKey || onDeckP?.walkUpUrl) ? '♪ Walk-up loaded' : 'No walk-up';
 
-  // SuperVoice + walk-up on batter change
+  // SuperVoice + walk-up on batter change — defer if between-innings music is playing
   if (p) {
-    setTimeout(() => handleBatterChange(p), 200);
+    if (betweenInningsActive) {
+      pendingWalkUpPlayer = p;
+    } else {
+      setTimeout(() => handleBatterChange(p), 200);
+    }
   }
 }
 
@@ -1011,8 +1015,9 @@ function showBetweenInningsPrompt() {
     overlay.classList.add('hidden');
     playBtn.replaceWith(playBtn.cloneNode(true));
     skipBtn.replaceWith(skipBtn.cloneNode(true));
+    if (playMusic) betweenInningsActive = true;
+    endHalfInning(); // updateAtBatCard inside will store pendingWalkUpPlayer if active
     if (playMusic) startInningPlaylist();
-    endHalfInning();
   }
 
   document.getElementById('biPlayBtn').addEventListener('click', () => dismiss(true), { once: true });
@@ -1499,6 +1504,8 @@ let plCurrentIdx  = -1;
 let soundCtx     = null;
 let masterGain   = null;
 let currentWalkUpPid = null;
+let betweenInningsActive = false;
+let pendingWalkUpPlayer  = null;
 
 function getAudioCtx() {
   if (!soundCtx) {
@@ -1652,7 +1659,9 @@ function setDJStatusBadge(playing) {
 }
 
 function playWalkUpSrc(src, player) {
-  stopPlaylist(); // walk-up starts — stop between-innings music
+  betweenInningsActive = false; // walk-up is starting, clear deferred state
+  pendingWalkUpPlayer  = null;
+  stopPlaylist(); // stop between-innings music
   stopWalkUp();
   walkUpAudio = new Audio(src);
   walkUpAudio.volume = parseFloat(document.getElementById('masterVolume').value);
@@ -1879,13 +1888,20 @@ syncSVUI();
 /* ─────────────────────────────────────────────
    BETWEEN-INNINGS PLAYLIST
 ───────────────────────────────────────────── */
-function stopPlaylist() {
+function stopPlaylist(internal = false) {
   if (!playlistAudio) return;
   playlistAudio.pause();
   playlistAudio.src = '';
   playlistAudio = null;
   const el = document.getElementById('plNowPlaying');
   if (el) el.hidden = true;
+  // External stop (user or walk-up starting) — fire deferred walk-up announcement
+  if (!internal && betweenInningsActive) {
+    betweenInningsActive = false;
+    const p = pendingWalkUpPlayer;
+    pendingWalkUpPlayer = null;
+    if (p) setTimeout(() => handleBatterChange(p), 100);
+  }
 }
 
 async function playPlaylistTrack(track, idx) {
@@ -1897,7 +1913,7 @@ async function playPlaylistTrack(track, idx) {
     if (!blob) return;
     url = URL.createObjectURL(blob);
   }
-  stopPlaylist();
+  stopPlaylist(true); // internal track cycle — don't trigger walk-up
   playlistAudio = new Audio(url);
   playlistAudio.volume = parseFloat(document.getElementById('masterVolume').value);
   plCurrentIdx = idx;
