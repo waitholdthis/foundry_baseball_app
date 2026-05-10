@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v28';
+const CACHE = 'foundry-v29';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -27,7 +27,9 @@ const MEDIA_ASSETS = [
   './BetweenInnings/Tokyo Drift.mp3',
   './BetweenInnings/We Ready.mp3',
   './sounds/Angerdingus.mp3',
+  './sounds/Hi.mp3',
   './sounds/Homerun.mp3',
+  './sounds/Hot Dog.mp3',
   './sounds/K Riff.mp3',
   './sounds/Rally.mp3',
   './sounds/SoNervy.mp3',
