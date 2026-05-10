@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#020617">
+  <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Foundry">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <title>Foundry</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,6 +117,7 @@
         <div class="field-group">
           <label for="playerPos">Primary Position</label>
           <select id="playerPos">
+            <option value="BENCH">Bench — not in batting order</option>
             <option value="P">P — Pitcher</option>
             <option value="C">C — Catcher</option>
             <option value="1B">1B — First Base</option>
@@ -190,7 +192,7 @@
   </header>
 
   <div class="lineup-instructions">
-    <span>Set batting order. All players bat.</span>
+    <span>Set batting order. Bench players are available as subs.</span>
   </div>
 
   <ol id="lineupList" class="lineup-list" aria-label="Batting order"></ol>
@@ -251,20 +253,32 @@
   <!-- Score Bar (always visible) -->
   <div class="score-bar" id="scoreBar">
     <div class="score-bar-inner">
-      <button class="score-team-block us" id="scoreUs" aria-label="Our score" aria-haspopup="dialog">
-        <span class="score-team-name" id="scoreOurName">HOME</span>
-        <span class="score-runs" id="scoreOurRuns">0</span>
-      </button>
+      <div class="score-team-wrap">
+        <button class="score-team-block us" id="scoreUs" aria-label="Adjust our score">
+          <span class="score-team-name" id="scoreOurName">HOME</span>
+          <span class="score-runs" id="scoreOurRuns">0</span>
+        </button>
+        <div class="score-adjuster" id="scoreAdjUs" hidden>
+          <button class="adj-btn" id="adjUsMinus" aria-label="Subtract run">−</button>
+          <button class="adj-btn" id="adjUsPlus"  aria-label="Add run">+</button>
+        </div>
+      </div>
       <div class="score-inning-block">
         <span class="score-half-label" id="scoreHalfLabel">TOP</span>
         <span class="score-inning-num" id="scoreInning">1</span>
         <button class="score-half-btn" id="halfTopBtn" aria-label="Top of inning" aria-pressed="true" style="display:none">▲</button>
         <button class="score-half-btn" id="halfBotBtn" aria-label="Bottom of inning" aria-pressed="false" style="display:none">▼</button>
       </div>
-      <button class="score-team-block them" id="scoreThem" aria-label="Opponent score" aria-haspopup="dialog">
-        <span class="score-team-name" id="scoreTheirName">AWAY</span>
-        <span class="score-runs" id="scoreTheirRuns">0</span>
-      </button>
+      <div class="score-team-wrap">
+        <button class="score-team-block them" id="scoreThem" aria-label="Adjust opponent score">
+          <span class="score-team-name" id="scoreTheirName">AWAY</span>
+          <span class="score-runs" id="scoreTheirRuns">0</span>
+        </button>
+        <div class="score-adjuster" id="scoreAdjThem" hidden>
+          <button class="adj-btn" id="adjThemMinus" aria-label="Subtract run">−</button>
+          <button class="adj-btn" id="adjThemPlus"  aria-label="Add run">+</button>
+        </div>
+      </div>
     </div>
     <!-- Outs dots -->
     <div class="outs-row" aria-label="Outs" role="status">
@@ -399,6 +413,22 @@
           <button class="outcome-btn obp" data-result="E">E</button>
           <button class="outcome-btn obp" data-result="FC">FC</button>
           <button class="outcome-btn obp" data-result="SAC">SAC</button>
+        </div>
+
+        <!-- Hold Runners toggle -->
+        <div class="hold-strip" id="holdStrip" hidden>
+          <button class="hold-btn" id="holdRunnersBtn" aria-pressed="false" aria-label="Hold runners — they don't advance on next play">
+            <span class="hold-icon">✋</span> HOLD RUNNERS
+          </button>
+          <span class="hold-hint">Runners stay on next play</span>
+        </div>
+
+        <!-- Steal buttons -->
+        <div class="steal-strip" id="stealStrip" role="group" aria-label="Steal base" hidden>
+          <span class="steal-label">STEAL</span>
+          <button class="steal-btn" id="stealBtn1" aria-label="Steal 2nd base">2nd</button>
+          <button class="steal-btn" id="stealBtn2" aria-label="Steal 3rd base">3rd</button>
+          <button class="steal-btn" id="stealBtn3" aria-label="Steal home">Home</button>
         </div>
 
         <!-- Recent plays -->
@@ -786,6 +816,22 @@
       <div class="sheet-handle"></div>
       <h2 class="sheet-title" id="subSheetTitle">Substitution</h2>
       <p class="sheet-desc">Replacing: <strong id="subOutName">—</strong></p>
+      <div class="field-group">
+        <label for="subPosition">Incoming Position</label>
+        <select id="subPosition">
+          <option value="P">P — Pitcher</option>
+          <option value="C">C — Catcher</option>
+          <option value="1B">1B — First Base</option>
+          <option value="2B">2B — Second Base</option>
+          <option value="3B">3B — Third Base</option>
+          <option value="SS">SS — Shortstop</option>
+          <option value="LF">LF — Left Field</option>
+          <option value="CF">CF — Center Field</option>
+          <option value="RF">RF — Right Field</option>
+          <option value="DH">DH — Designated Hitter</option>
+          <option value="UT">UT — Utility</option>
+        </select>
+      </div>
       <div class="sub-list" id="subList" role="list" aria-label="Available bench players"></div>
       <button class="btn-ghost btn-full" id="cancelSub" style="margin-top:12px">Cancel</button>
     </div>
@@ -982,7 +1028,7 @@
     <div class="bi-prompt-subtitle" id="biPromptSubtitle">Start the between-innings music?</div>
     <div class="bi-prompt-actions">
       <button class="btn-primary bi-play-btn" id="biPlayBtn">♪ Play Music</button>
-      <button class="btn-secondary bi-skip-btn" id="biSkipBtn">Skip →</button>
+      <button class="btn-secondary bi-skip-btn" id="biSkipBtn">Play Ball →</button>
     </div>
   </div>
 </div>

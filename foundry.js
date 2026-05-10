@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -232,6 +232,25 @@ function renderRosterScreen() {
   renderPlayerList();
 }
 
+function isBenchPlayer(player) {
+  return player?.pos === 'BENCH';
+}
+
+function activePlayerIds() {
+  return S.players.filter(p => !isBenchPlayer(p)).map(p => p.id);
+}
+
+function syncLineupWithRoster() {
+  const ids = activePlayerIds();
+  S.lineup = [...S.lineup.filter(id => ids.includes(id))];
+  ids.forEach(id => { if (!S.lineup.includes(id)) S.lineup.push(id); });
+  return ids;
+}
+
+function posLabel(pos) {
+  return pos === 'BENCH' ? 'Bench' : (pos || '—');
+}
+
 function renderPlayerList() {
   const list = document.getElementById('rosterList');
   const empty = document.getElementById('rosterEmpty');
@@ -239,21 +258,22 @@ function renderPlayerList() {
 
   list.innerHTML = '';
   const players = S.players;
+  const activeCount = players.filter(p => !isBenchPlayer(p)).length;
   const isEmpty = players.length === 0;
   empty.classList.toggle('hidden', !isEmpty);
-  doneBtn.disabled = players.length < 1;
-  document.getElementById('rosterCount').textContent = `${players.length} player${players.length === 1 ? '' : 's'}`;
+  doneBtn.disabled = activeCount < 1;
+  document.getElementById('rosterCount').textContent = `${players.length} player${players.length === 1 ? '' : 's'} · ${activeCount} batting`;
 
   players.forEach(p => {
     const card = document.createElement('div');
-    card.className = 'player-card';
+    card.className = `player-card${isBenchPlayer(p) ? ' bench' : ''}`;
     card.setAttribute('role', 'listitem');
     card.setAttribute('tabindex', '0');
     card.innerHTML = `
       <span class="player-num">${p.number}</span>
       <div class="player-info">
         <div class="player-name">${esc(p.name)}</div>
-        <div class="player-detail">${p.pos} · B:${p.bats} T:${p.throws}</div>
+        <div class="player-detail">${posLabel(p.pos)}${isBenchPlayer(p) ? ' · not batting' : ''} · B:${p.bats} T:${p.throws}</div>
       </div>
       <span class="player-audio-badge${(p.walkUpKey || p.walkUpUrl) ? '' : ' hidden'}" aria-label="Has walk-up song">♪</span>
       <button class="player-delete" data-id="${p.id}" aria-label="Delete ${esc(p.name)}">✕</button>
@@ -314,6 +334,7 @@ const BETWEEN_INNINGS_LIBRARY = [
 const WALKUP_LIBRARY = [
   { name: 'AC/DC — Thunderstruck',          file: '/walkupsongs/ACDC Thunderstruck.mp3' },
   { name: 'Centerfield',                    file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
+  { name: 'Crazy Train',                    file: '/walkupsongs/CrazyTrain.mp3' },
   { name: 'DMX — Ruff Ryders\' Anthem',     file: '/walkupsongs/DMX Ruff Ryders.mp3' },
   { name: 'Janelle Monáe — Beach',          file: '/walkupsongs/Janelle Monay Beach.mp3' },
   { name: 'Katseye — Gnarly',               file: '/walkupsongs/Katseye Gnarly.mp3' },
@@ -396,7 +417,7 @@ function openPlayerSheet(player) {
     playerIdEl.value  = player.id;
     playerNumEl.value = player.number;
     playerNameEl.value= player.name;
-    playerPosEl.value = player.pos;
+    playerPosEl.value = player.pos || 'P';
     playerBatsEl.value= player.bats;
     playerThrowEl.value= player.throws;
     walkUpNameEl.textContent = player.walkUpKey ? 'File saved' : 'No file';
@@ -405,6 +426,7 @@ function openPlayerSheet(player) {
     document.getElementById('playerSheetTitle').textContent = 'Add Player';
     playerForm.reset();
     playerIdEl.value = '';
+    playerPosEl.value = 'P';
     walkUpNameEl.textContent = 'No file';
     document.getElementById('walkUpUrl').value = '';
   }
@@ -450,21 +472,21 @@ playerForm.addEventListener('submit', async e => {
   const urlInput = document.getElementById('walkUpUrl').value.trim();
   player.walkUpUrl = urlInput || null;
 
+  syncLineupWithRoster();
   saveState();
   closePlayerSheet();
   renderPlayerList();
-
-  // Auto-add to lineup if not already in it
-  if (!S.lineup.includes(player.id)) S.lineup.push(player.id);
-  saveState();
 });
 
 // Roster "Done" button → Lineup
 document.getElementById('rosterDone').addEventListener('click', () => {
-  // Sync lineup: keep existing order, add new players at end, remove deleted ones
-  const ids = S.players.map(p => p.id);
-  S.lineup = [...S.lineup.filter(id => ids.includes(id))];
-  ids.forEach(id => { if (!S.lineup.includes(id)) S.lineup.push(id); });
+  // Sync lineup: keep existing order, add active players at end, remove deleted/bench players
+  const ids = syncLineupWithRoster();
+  if (ids.length < 1) {
+    showToast('Add at least one non-bench player to build a lineup');
+    renderPlayerList();
+    return;
+  }
   saveState();
   renderLineupScreen();
   navigate('lineup');
@@ -567,7 +589,7 @@ function setupDragItem(el, container) {
 document.getElementById('lineupBack').addEventListener('click', () => navigate('roster'));
 document.getElementById('lineupBackBtn').addEventListener('click', () => navigate('roster'));
 document.getElementById('lineupReset').addEventListener('click', () => {
-  S.lineup = S.players.map(p => p.id);
+  S.lineup = activePlayerIds();
   saveState();
   renderLineupScreen();
 });
@@ -577,6 +599,15 @@ const gameSetupOverlay = document.getElementById('gameSetupOverlay');
 let selectedHA = 'home';
 
 document.getElementById('startGameBtn').addEventListener('click', () => {
+  syncLineupWithRoster();
+  if (S.lineup.length < 1) {
+    saveState();
+    showToast('Add at least one non-bench player before starting a game');
+    navigate('roster');
+    renderPlayerList();
+    return;
+  }
+  saveState();
   document.getElementById('gameDate').value = new Date().toISOString().slice(0, 10);
   document.getElementById('gameField').value = S.team?.field || '';
   document.getElementById('gameOpponent').value = S.lastOpponent || '';
@@ -797,6 +828,38 @@ function updateScoreBar() {
   });
 }
 
+/* ── Score adjusters ── */
+function closeScoreAdj() {
+  document.getElementById('scoreAdjUs').hidden   = true;
+  document.getElementById('scoreAdjThem').hidden = true;
+}
+
+document.getElementById('scoreUs').addEventListener('click', () => {
+  if (!S.game) return;
+  const adj = document.getElementById('scoreAdjUs');
+  const wasHidden = adj.hidden;
+  closeScoreAdj();
+  adj.hidden = !wasHidden;
+});
+
+document.getElementById('scoreThem').addEventListener('click', () => {
+  if (!S.game) return;
+  const adj = document.getElementById('scoreAdjThem');
+  const wasHidden = adj.hidden;
+  closeScoreAdj();
+  adj.hidden = !wasHidden;
+});
+
+document.getElementById('adjUsPlus').addEventListener('click',   () => { if (!S.game) return; S.game.score.us++;  saveState(); updateScoreBar(); });
+document.getElementById('adjUsMinus').addEventListener('click',  () => { if (!S.game) return; S.game.score.us   = Math.max(0, S.game.score.us - 1);  saveState(); updateScoreBar(); });
+document.getElementById('adjThemPlus').addEventListener('click', () => { if (!S.game) return; S.game.score.them++; saveState(); updateScoreBar(); });
+document.getElementById('adjThemMinus').addEventListener('click',() => { if (!S.game) return; S.game.score.them = Math.max(0, S.game.score.them - 1); saveState(); updateScoreBar(); });
+
+// Close adjusters when tapping anywhere else
+document.addEventListener('click', e => {
+  if (!e.target.closest('#scoreUs, #scoreAdjUs, #scoreThem, #scoreAdjThem')) closeScoreAdj();
+});
+
 /* Tab bar (phone) */
 function activateTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -882,8 +945,8 @@ function updateAtBatCard() {
   document.getElementById('djOnDeckName').textContent = onDeckP ? onDeckP.name : '—';
   document.getElementById('djOnDeckSong').textContent = (onDeckP?.walkUpKey || onDeckP?.walkUpUrl) ? '♪ Walk-up loaded' : 'No walk-up';
 
-  // SuperVoice + walk-up on batter change — defer if between-innings music is playing
-  if (p) {
+  // SuperVoice + walk-up on batter change — only when our team is batting
+  if (p && weAreBatting()) {
     if (betweenInningsActive) {
       pendingWalkUpPlayer = p;
     } else {
@@ -906,6 +969,17 @@ function updateRecentPlays() {
   }).join('');
 }
 
+let holdRunners = false;
+
+function setHoldRunners(val) {
+  holdRunners = val;
+  const btn = document.getElementById('holdRunnersBtn');
+  if (btn) {
+    btn.setAttribute('aria-pressed', val ? 'true' : 'false');
+    btn.classList.toggle('active', val);
+  }
+}
+
 function updateDiamond() {
   const runners = S.game.runners; // [1B, 2B, 3B]
   const baseIds = { 1: 'base1', 2: 'base2', 3: 'base3' };
@@ -919,6 +993,34 @@ function updateDiamond() {
     const el = document.getElementById(pathMap[b]);
     if (el) el.classList.toggle('runner', runners[b - 1]);
   });
+  updateStealStrip();
+  updateHoldStrip();
+}
+
+function updateStealStrip() {
+  const g = S.game;
+  if (!g) return;
+  const runners = g.runners; // [1B, 2B, 3B]
+  // Show steal buttons only for bases that have a runner and the next base is free (or is home)
+  const canSteal2nd = runners[0] && !runners[1];  // runner on 1B, 2B open
+  const canSteal3rd = runners[1] && !runners[2];  // runner on 2B, 3B open
+  const canStealHome = runners[2];                 // runner on 3B
+  const anySteal = canSteal2nd || canSteal3rd || canStealHome;
+  const strip = document.getElementById('stealStrip');
+  if (!strip) return;
+  strip.hidden = !anySteal;
+  document.getElementById('stealBtn1').hidden = !canSteal2nd;
+  document.getElementById('stealBtn2').hidden = !canSteal3rd;
+  document.getElementById('stealBtn3').hidden = !canStealHome;
+}
+
+function updateHoldStrip() {
+  const g = S.game;
+  if (!g) return;
+  const anyRunner = g.runners.some(Boolean);
+  const strip = document.getElementById('holdStrip');
+  if (strip) strip.hidden = !anyRunner;
+  if (!anyRunner) setHoldRunners(false);
 }
 
 // Base toggle buttons
@@ -931,6 +1033,40 @@ function updateDiamond() {
     S.game.runners[base - 1] = !S.game.runners[base - 1];
     const label = ['1st', '2nd', '3rd'][base - 1];
     showToast(S.game.runners[base - 1] ? `Runner on ${label}` : `${label} cleared`);
+    updateDiamond();
+    saveState();
+  });
+});
+
+// Hold Runners toggle
+document.getElementById('holdRunnersBtn')?.addEventListener('click', () => {
+  setHoldRunners(!holdRunners);
+  showToast(holdRunners ? 'Runners hold on next play' : 'Hold cancelled');
+});
+
+// Steal buttons — advance a specific runner one base
+// stealBtn1 = runner on 1B steals 2nd, stealBtn2 = 2B steals 3rd, stealBtn3 = 3B steals home
+[
+  { id: 'stealBtn1', from: 0, to: 1, label: '2nd' },
+  { id: 'stealBtn2', from: 1, to: 2, label: '3rd' },
+  { id: 'stealBtn3', from: 2, to: -1, label: 'Home' },
+].forEach(({ id, from, to, label }) => {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    if (!S.game) return;
+    const g = S.game;
+    if (!g.runners[from]) return;
+    g.runners[from] = false;
+    if (to === -1) {
+      g.score.us++;
+      showToast('Runner scores! Stolen home');
+    } else {
+      g.runners[to] = true;
+      showToast(`Stolen ${label}!`);
+    }
+    playSound('stolenbase');
+    updateScoreBar();
     updateDiamond();
     saveState();
   });
@@ -987,9 +1123,11 @@ function recordPlay(result) {
 
   let rbi = 0;
   const prevRunners = [...g.runners];
+  const held = holdRunners;
+  setHoldRunners(false); // reset after consuming
 
   if (!isOut) {
-    rbi = advanceRunners(bases, prevRunners);
+    rbi = advanceRunners(bases, prevRunners, held);
   } else if (result === 'SAC') {
     // SAC fly — score runner from 3rd
     if (prevRunners[2]) { g.score.us++; rbi = 1; g.runners[2] = false; }
@@ -1021,23 +1159,31 @@ function recordPlay(result) {
   renderSeasonStats('seasonStatsBody');
 }
 
-function advanceRunners(bases, prev) {
+function advanceRunners(bases, prev, hold = false) {
   const g = S.game;
   let rbi = 0;
 
-  // Move existing runners
-  const newRunners = [false, false, false];
-  for (let r = 2; r >= 0; r--) {
-    if (!prev[r]) continue;
-    const newBase = r + 1 + bases;
-    if (newBase >= 4) { g.score.us++; rbi++; }
-    else { newRunners[newBase - 1] = true; }
+  const newRunners = hold ? [...prev] : [false, false, false];
+
+  if (!hold) {
+    // Move existing runners forward by bases hit
+    for (let r = 2; r >= 0; r--) {
+      if (!prev[r]) continue;
+      const newBase = r + 1 + bases;
+      if (newBase >= 4) { g.score.us++; rbi++; }
+      else { newRunners[newBase - 1] = true; }
+    }
   }
 
-  // Place batter
+  // Always place the batter (hold only affects existing runners)
   if (bases > 0) {
     if (bases >= 4) { g.score.us++; rbi++; }
-    else { newRunners[bases - 1] = true; }
+    else {
+      // If a runner is holding at the batter's destination, batter stops one base short
+      let dest = bases - 1;
+      while (dest > 0 && newRunners[dest]) dest--;
+      newRunners[dest] = true;
+    }
   }
 
   g.runners = newRunners;
@@ -1222,6 +1368,17 @@ function endHalfInning() {
 }
 
 /* ─── Count buttons ─── */
+function updateCountDots() {
+  const g = S.game;
+  if (!g) return;
+  ['b1','b2','b3'].forEach((id, i) => {
+    document.getElementById(id)?.classList.toggle('active', i < g.balls);
+  });
+  ['s1','s2'].forEach((id, i) => {
+    document.getElementById(id)?.classList.toggle('active', i < g.strikes);
+  });
+}
+
 document.querySelectorAll('.count-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const g = S.game;
@@ -1229,7 +1386,7 @@ document.querySelectorAll('.count-btn').forEach(btn => {
     const type = btn.dataset.count;
     if (type === 'reset') {
       g.balls = 0; g.strikes = 0;
-      saveState(); updateAtBatCard(); return;
+      saveState(); updateCountDots(); return;
     }
     // Intercept for pitch tracking
     if (S.pitchTracking?.enabled && g.pitcher && type !== 'reset') {
@@ -1245,7 +1402,7 @@ document.querySelectorAll('.count-btn').forEach(btn => {
       if (g.strikes < 2) g.strikes++;
     }
     saveState();
-    updateAtBatCard();
+    updateCountDots();
   });
 });
 
@@ -1292,6 +1449,8 @@ function openSubSheet(slot) {
   const currentP = playerById(currentPid);
   subTargetSlot = slot;
   document.getElementById('subOutName').textContent = currentP ? currentP.name : '—';
+  const subPositionEl = document.getElementById('subPosition');
+  if (subPositionEl) subPositionEl.value = currentP && !isBenchPlayer(currentP) ? currentP.pos : 'UT';
 
   // All players NOT in lineup (bench)
   const inLineup = new Set(S.lineup);
@@ -1307,11 +1466,11 @@ function openSubSheet(slot) {
       item.className = 'sub-item';
       item.setAttribute('role', 'listitem');
       item.innerHTML = `
-        <span class="sub-item-num">${p.number}</span>
-        <div class="sub-item-info">
-          <div class="sub-item-name">${esc(p.name)}</div>
-          <div class="sub-item-detail">${p.pos} · B:${p.bats}</div>
-        </div>
+          <span class="sub-item-num">${p.number}</span>
+          <div class="sub-item-info">
+            <div class="sub-item-name">${esc(p.name)}</div>
+            <div class="sub-item-detail">${posLabel(p.pos)} · B:${p.bats}</div>
+          </div>
       `;
       item.addEventListener('click', () => makeSub(slot, p.id));
       list.appendChild(item);
@@ -1323,12 +1482,18 @@ function openSubSheet(slot) {
 
 function makeSub(slot, newPid) {
   const oldPid = S.lineup[slot];
+  const oldPlayer = playerById(oldPid);
+  const newPlayer = playerById(newPid);
+  const incomingPos = document.getElementById('subPosition')?.value || 'UT';
   S.lineup[slot] = newPid;
+  if (oldPlayer) oldPlayer.pos = 'BENCH';
+  if (newPlayer) newPlayer.pos = incomingPos;
   S.game.substitutions[slot] = newPid;
   saveState();
   subSheetOverlay.classList.add('hidden');
   renderLineupRail();
   updateAtBatCard();
+  renderPlayerList();
   showToast(`Substitution: ${playerById(newPid)?.name || '—'} in for ${playerById(oldPid)?.name || '—'}`);
 }
 
@@ -1357,10 +1522,13 @@ document.getElementById('abandonGameBtn').addEventListener('click', () => {
   if (!confirm('Abandon this game? All data will be lost.')) return;
   stopWalkUp();
   stopPlaylist();
+  stopWarmupAudio();
   S.game = null;
+  S.team = null;
   saveState();
   gameMenuOverlay.classList.add('hidden');
-  navigate('roster');
+  teamNameEl.value = '';
+  navigate('setup');
 });
 
 /* ─────────────────────────────────────────────
@@ -2041,7 +2209,7 @@ function stopPlaylist(internal = false) {
     betweenInningsActive = false;
     const p = pendingWalkUpPlayer;
     pendingWalkUpPlayer = null;
-    if (p) setTimeout(() => handleBatterChange(p), 100);
+    if (p && weAreBatting()) setTimeout(() => handleBatterChange(p), 100);
   }
 }
 

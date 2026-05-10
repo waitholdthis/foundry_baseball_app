@@ -1,13 +1,15 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v9';
+const CACHE = 'foundry-v16';
 const ASSETS = [
-  '/foundry.html',
-  '/foundry.css',
-  '/foundry.js',
-  '/manifest.json',
-  '/icons/icon.svg',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+  './foundry.html',
+  './foundry.css',
+  './foundry.js',
+  './scorebook-export.js',
+  './manifest.json',
+  './icons/icon.svg',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
 ];
 
 self.addEventListener('install', e => {
@@ -28,7 +30,7 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   // Always go network for local audio files
-  if (url.pathname.startsWith('/audio/')) return;
+  if (url.pathname.includes('/audio/') || url.pathname.includes('/sounds/') || url.pathname.includes('/walkupsongs/') || url.pathname.includes('/BetweenInnings/')) return;
 
   e.respondWith(
     caches.match(e.request).then(cached => {

@@ -2,8 +2,8 @@
   "name": "Foundry — Dugout Command Center",
   "short_name": "Foundry",
   "description": "Lineup builder, digital scorebook, and Ballpark DJ in one.",
-  "start_url": "/foundry.html",
-  "scope": "/",
+  "start_url": "foundry.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#020617",
@@ -33,7 +33,7 @@
   "shortcuts": [
     {
       "name": "New Game",
-      "url": "/foundry.html?start=game",
+      "url": "foundry.html?start=game",
       "description": "Jump straight to game setup"
     }
   ]
