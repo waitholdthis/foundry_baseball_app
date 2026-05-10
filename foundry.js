@@ -312,7 +312,9 @@ const BETWEEN_INNINGS_LIBRARY = [
 const WALKUP_LIBRARY = [
   { name: 'AC/DC — Thunderstruck',          file: '/walkupsongs/ACDC Thunderstruck.mp3' },
   { name: 'Centerfield',                    file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
+  { name: 'DMX — Ruff Ryders\' Anthem',     file: '/walkupsongs/DMX Ruff Ryders.mp3' },
   { name: 'Janelle Monáe — Beach',          file: '/walkupsongs/Janelle Monay Beach.mp3' },
+  { name: 'Katseye — Gnarly',               file: '/walkupsongs/Katseye Gnarly.mp3' },
   { name: 'Katseye — Pink Up',              file: '/walkupsongs/Katseye Pink Up.mp3' },
   { name: 'Metallica — Enter Sandman',      file: '/walkupsongs/Metallica - Enter Sandman.mp3' },
   { name: 'Never Get Used to This',         file: '/walkupsongs/Never_Get_Use_To_This.mp3' },
@@ -322,6 +324,8 @@ const WALKUP_LIBRARY = [
   { name: 'Soda Pop',                       file: '/walkupsongs/Soda_Pop.mp3' },
   { name: 'Soulja Boy — Superman',          file: '/walkupsongs/Soulja Boy Superman.mp3' },
   { name: 'Taylor Swift — Fate of Ophelia', file: '/walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
+  { name: '2Pac — All Eyez on Me (America)', file: '/walkupsongs/2Pac Americas.mp3' },
+  { name: '2Pac — California Love',         file: '/walkupsongs/2Pac California.mp3' },
   { name: 'Up',                             file: '/walkupsongs/Up.mp3' },
 ];
 
