@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=19', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=20', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -1248,6 +1248,10 @@ function showHalfView() {
   const batting = weAreBatting();
   document.getElementById('battingView').classList.toggle('hidden', !batting);
   document.getElementById('fieldingView').classList.toggle('hidden', batting);
+  const lineupTabLabel = document.getElementById('lineupTabLabel');
+  if (lineupTabLabel) lineupTabLabel.textContent = batting ? 'Lineup' : 'Fielding';
+  const lineupPanel = document.getElementById('panel-lineup');
+  if (lineupPanel) lineupPanel.setAttribute('aria-label', batting ? 'Batting order' : 'Fielding controls');
   if (!batting) updateFieldingView();
 }
 
