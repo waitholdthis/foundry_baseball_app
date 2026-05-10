@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050608" />
     <meta name="description" content="Foundry App — lineup builder, digital scorebook, and Ballpark DJ in one dugout command center for baseball and softball." />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
     <title>Foundry App — Own the Dugout</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -71,10 +73,10 @@
               <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
               <span><small>Launch in browser —</small>Open App</span>
             </a>
-            <a href="foundry.html" class="store-btn border-glow" role="listitem" aria-label="Install as app on your phone">
+            <button type="button" class="store-btn border-glow js-install-app" role="listitem" aria-label="Install as app on your phone">
               <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="3"/></svg>
               <span><small>iOS &amp; Android —</small>Install Free</span>
-            </a>
+            </button>
           </div>
           <p class="app-launch-note">
             Free web app — works offline · installable on any device
@@ -441,21 +443,29 @@
         <div class="app-cta-inner reveal">
           <p class="section-label">Download Free</p>
           <h2 id="ctaTitle" class="section-title">The first pitch<br>is already coming.</h2>
-          <p class="app-cta-sub">Get Foundry before opening day. Your roster, your lineup, your DJ — ready.</p>
+          <p class="app-cta-sub">Install Foundry from this page. Android can use the install button; iPhone installs from Safari with Add to Home Screen.</p>
           <div class="store-buttons store-buttons-centered" role="list">
-            <a href="#" class="store-btn store-btn-large border-glow" role="listitem" aria-label="Download on the App Store">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <span><small>Download on the</small>App Store</span>
-            </a>
-            <a href="#" class="store-btn store-btn-large border-glow" role="listitem" aria-label="Get it on Google Play">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M3.18 23.76c.3.17.64.19.96.07l12.43-7.19-2.63-2.64-10.76 9.76zM.56 1.6C.21 1.98 0 2.56 0 3.29v17.42c0 .73.21 1.31.57 1.69l.09.08 9.75-9.75v-.23L.65 1.52.56 1.6zM20.44 10.7l-2.6-1.5-2.93 2.93 2.93 2.93 2.62-1.52c.75-.43.75-1.41-.02-1.84zM3.18.24l10.76 9.76 2.63-2.63L4.14.17C3.82.05 3.48.07 3.18.24z"/>
-              </svg>
-              <span><small>Get it on</small>Google Play</span>
-            </a>
+            <button type="button" class="store-btn store-btn-large border-glow js-install-app" role="listitem" aria-label="Install Foundry on Android">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+              <span><small>Android Chrome</small>Install App</span>
+            </button>
+            <button type="button" class="store-btn store-btn-large border-glow js-ios-help" role="listitem" aria-label="Show iPhone install steps">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/><path d="M12 8v6"/><path d="m9 11 3-3 3 3"/></svg>
+              <span><small>iPhone Safari</small>Add to Home Screen</span>
+            </button>
           </div>
+          <p class="install-status" id="installStatus" role="status">Open this page on your phone, then install Foundry to your home screen.</p>
+          <div class="install-help-grid" id="installHelp">
+            <article class="install-help-card">
+              <h3>Android</h3>
+              <p>Open this page in Chrome, tap Install App, then confirm the browser prompt. Foundry will launch like a normal app.</p>
+            </article>
+            <article class="install-help-card">
+              <h3>iPhone</h3>
+              <p>Open this page in Safari, tap Share, choose Add to Home Screen, then tap Add.</p>
+            </article>
+          </div>
+          <a href="foundry.html" class="button secondary border-glow app-open-fallback">Open Foundry in Browser</a>
         </div>
         <div class="app-cta-glow" aria-hidden="true"></div>
       </section>

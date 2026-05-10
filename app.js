@@ -6,6 +6,75 @@
 
 "use strict";
 
+/* ── PWA install/download flow ── */
+(function initPwaInstall() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register(new URL("sw.js", window.location.href), { scope: "./" }).catch(() => {});
+    });
+  }
+
+  let deferredPrompt = null;
+  const installButtons = document.querySelectorAll(".js-install-app");
+  const iosHelpButtons = document.querySelectorAll(".js-ios-help");
+  const status = document.getElementById("installStatus");
+  const help = document.getElementById("installHelp");
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+
+  function setStatus(text) {
+    if (status) status.textContent = text;
+  }
+
+  function showHelp(platform) {
+    if (help) help.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (platform === "ios") {
+      setStatus("On iPhone: Safari Share button, then Add to Home Screen.");
+    } else {
+      setStatus("On Android: use Chrome's install prompt or browser menu, then Install App.");
+    }
+  }
+
+  if (isStandalone) {
+    setStatus("Foundry is already installed on this device.");
+    installButtons.forEach(btn => { btn.disabled = true; });
+    return;
+  }
+
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setStatus("Install is ready. Tap Install App to add Foundry to your home screen.");
+  });
+
+  installButtons.forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (isIOS) {
+        showHelp("ios");
+        return;
+      }
+      if (!deferredPrompt) {
+        showHelp("android");
+        return;
+      }
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice.catch(() => null);
+      deferredPrompt = null;
+      setStatus(choice?.outcome === "accepted" ? "Foundry install started." : "Install dismissed. You can try again from your browser menu.");
+    });
+  });
+
+  iosHelpButtons.forEach(btn => {
+    btn.addEventListener("click", () => showHelp("ios"));
+  });
+
+  window.addEventListener("appinstalled", () => {
+    setStatus("Foundry was installed successfully.");
+    installButtons.forEach(btn => { btn.disabled = true; });
+  });
+})();
+
 /* ── App hero scoring ring animation ── */
 (function initHeroRing() {
   const fill = document.getElementById("heroRingFill");

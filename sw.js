@@ -3,6 +3,11 @@
 const CACHE = 'foundry-v16';
 const ASSETS = [
   './foundry.html',
+  './app.html',
+  './app.css',
+  './app.js',
+  './styles.css',
+  './script.js',
   './foundry.css',
   './foundry.js',
   './scorebook-export.js',
