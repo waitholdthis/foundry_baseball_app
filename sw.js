@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v22';
+const CACHE = 'foundry-v23';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -42,14 +42,19 @@ const MEDIA_ASSETS = [
   './sounds/yeah-boiii-i-i-i.mp3',
   './walkupsongs/2Pac Americas.mp3',
   './walkupsongs/2Pac California.mp3',
+  './walkupsongs/A-O-K.mp3',
   './walkupsongs/ACDC Thunderstruck.mp3',
+  './walkupsongs/Big Dawgs.mp3',
   './walkupsongs/CrazyTrain.mp3',
   './walkupsongs/DMX Ruff Ryders.mp3',
+  './walkupsongs/Eve - Who\'s That Girl.mp3',
   './walkupsongs/Forrest Frank - Never Get Used To This.mp3',
   './walkupsongs/Janelle Monay Beach.mp3',
   './walkupsongs/Katseye Gnarly.mp3',
   './walkupsongs/Katseye Pink Up.mp3',
   './walkupsongs/Metallica - Enter Sandman.mp3',
+  './walkupsongs/Party In The USA.mp3',
+  './walkupsongs/Pretty Girl Walk.mp3',
   './walkupsongs/Rihanna - What\'s My Name.mp3',
   './walkupsongs/Saweetie - Best Friend.mp3',
   './walkupsongs/Silent Watch Me Whip.mp3',

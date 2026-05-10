@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=22', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=23', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -333,14 +333,19 @@ const BETWEEN_INNINGS_LIBRARY = [
 /* ── Walk-up song library (add entries here as you drop files in walkupsongs/) ── */
 const WALKUP_LIBRARY = [
   { name: 'AC/DC — Thunderstruck',          file: 'walkupsongs/ACDC Thunderstruck.mp3' },
+  { name: 'A-O-K',                          file: 'walkupsongs/A-O-K.mp3' },
+  { name: 'Big Dawgs',                      file: 'walkupsongs/Big Dawgs.mp3' },
   { name: 'Centerfield',                    file: 'walkupsongs/Walk_Up_Centerfield.mp3' },
   { name: 'Crazy Train',                    file: 'walkupsongs/CrazyTrain.mp3' },
   { name: 'DMX — Ruff Ryders\' Anthem',     file: 'walkupsongs/DMX Ruff Ryders.mp3' },
+  { name: 'Eve — Who\'s That Girl',         file: 'walkupsongs/Eve - Who\'s That Girl.mp3' },
   { name: 'Janelle Monáe — Beach',          file: 'walkupsongs/Janelle Monay Beach.mp3' },
   { name: 'Katseye — Gnarly',               file: 'walkupsongs/Katseye Gnarly.mp3' },
   { name: 'Katseye — Pink Up',              file: 'walkupsongs/Katseye Pink Up.mp3' },
   { name: 'Metallica — Enter Sandman',      file: 'walkupsongs/Metallica - Enter Sandman.mp3' },
   { name: 'Forrest Frank — Never Get Used To This', file: 'walkupsongs/Forrest Frank - Never Get Used To This.mp3' },
+  { name: 'Party In The USA',               file: 'walkupsongs/Party In The USA.mp3' },
+  { name: 'Pretty Girl Walk',               file: 'walkupsongs/Pretty Girl Walk.mp3' },
   { name: 'Rihanna — What\'s My Name',      file: 'walkupsongs/Rihanna - What\'s My Name.mp3' },
   { name: 'Saweetie — Best Friend',         file: 'walkupsongs/Saweetie - Best Friend.mp3' },
   { name: 'Silent — Watch Me Whip',         file: 'walkupsongs/Silent Watch Me Whip.mp3' },
