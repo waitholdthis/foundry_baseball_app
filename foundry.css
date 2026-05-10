@@ -2287,8 +2287,8 @@ html, body {
   padding: 24px 20px 20px;
   width: 100%;
   max-width: 420px;
-  max-height: 90vh;
-  max-height: 90dvh;
+  max-height: calc(100vh - var(--safe-top) - var(--safe-bot) - 24px);
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bot) - 24px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -2338,24 +2338,46 @@ html, body {
   gap: 16px;
 }
 
-.warmup-library-wrap { min-height: 0; }
+.warmup-library-wrap {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
 .warmup-lib-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  flex: 0 0 auto;
 }
 .warmup-lib-btns {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  max-height: 180px;
+  flex: 1 1 auto;
+  min-height: 92px;
+  max-height: clamp(120px, 24dvh, 180px);
   overflow-y: auto;
+  padding-bottom: 2px;
 }
 .warmup-lib-btns .walkup-lib-btn.active {
   background: #f59e0b;
   color: #020617;
   border-color: #f59e0b;
+}
+.warmup-actions {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: 8px;
+  flex: 0 0 auto;
+  background: #0f172a;
+  padding-top: 4px;
+  z-index: 1;
+}
+.warmup-actions .btn-ghost {
+  font-size: 13px;
 }
 
 /* Landscape phone adjustments */
@@ -2381,6 +2403,14 @@ html, body {
     padding-left: calc(env(safe-area-inset-left, 0px) + 16px);
     padding-right: calc(env(safe-area-inset-right, 0px) + 16px);
   }
+  .warmup-overlay { align-items: stretch; padding-top: calc(8px + var(--safe-top)); padding-bottom: calc(8px + var(--safe-bot)); }
+  .warmup-card { gap: 8px; padding: 12px 14px; max-width: none; }
+  .warmup-icon { display: none; }
+  .warmup-title { margin-bottom: 2px; }
+  .warmup-now-playing { padding: 8px 10px; }
+  .warmup-transport { gap: 10px; }
+  .warmup-lib-header { margin-bottom: 6px; }
+  .warmup-lib-btns { min-height: 70px; max-height: 22dvh; }
 }
 
 @media (max-width: 420px) {
@@ -2412,6 +2442,14 @@ html, body {
   .summary-score-hero { gap: 14px; padding-left: 16px; padding-right: 16px; }
   .summary-runs { font-size: 44px; }
   .sv-two-col { grid-template-columns: 1fr; }
+  .warmup-overlay { padding: calc(8px + var(--safe-top)) calc(8px + var(--safe-r)) calc(8px + var(--safe-bot)) calc(8px + var(--safe-l)); }
+  .warmup-card { gap: 12px; padding: 16px 14px; border-radius: 16px; }
+  .warmup-icon { font-size: 24px; margin-bottom: 2px; }
+  .warmup-title { font-size: 10px; }
+  .warmup-matchup { font-size: 15px; }
+  .warmup-now-playing { padding: 10px 12px; }
+  .warmup-transport { gap: 12px; }
+  .warmup-lib-btns { max-height: 26dvh; }
 }
 
 @media (max-width: 360px) {
