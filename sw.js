@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v16';
+const CACHE = 'foundry-v17';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -34,8 +34,23 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  // Always go network for local audio files
-  if (url.pathname.includes('/audio/') || url.pathname.includes('/sounds/') || url.pathname.includes('/walkupsongs/') || url.pathname.includes('/BetweenInnings/')) return;
+  const isMedia = url.pathname.includes('/audio/')
+    || url.pathname.includes('/sounds/')
+    || url.pathname.includes('/walkupsongs/')
+    || url.pathname.includes('/BetweenInnings/');
+
+  if (isMedia) {
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+        if (res.ok) {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return res;
+      }).catch(() => cached))
+    );
+    return;
+  }
 
   e.respondWith(
     caches.match(e.request).then(cached => {

@@ -319,37 +319,37 @@ const walkUpNameEl= document.getElementById('walkUpFileName');
 let pendingAudioBlob = null;
 let pendingAudioName = '';
 
-/* ── Between-innings library (add entries here as you drop files in /BetweenInnings/) ── */
+/* ── Between-innings library (add entries here as you drop files in BetweenInnings/) ── */
 const BETWEEN_INNINGS_LIBRARY = [
-  { name: 'Big Girl Talk — CJ Beatty', url: '/BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3' },
-  { name: 'Glory Days',                url: '/BetweenInnings/Glory Days.mp3' },
-  { name: 'Light Em Up',               url: '/BetweenInnings/Light Em Up.mp3' },
-  { name: 'North Carolina',            url: '/BetweenInnings/North Carolina.mp3' },
-  { name: 'Row My Boat — CJ Beatty',   url: '/BetweenInnings/Row My Boat ft. CJ Beatty.mp3' },
-  { name: 'Swing',                     url: '/BetweenInnings/Swing.mp3' },
-  { name: 'Tokyo Drift',               url: '/BetweenInnings/Tokyo Drift.mp3' },
+  { name: 'Big Girl Talk — CJ Beatty', url: 'BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3' },
+  { name: 'Glory Days',                url: 'BetweenInnings/Glory Days.mp3' },
+  { name: 'Light Em Up',               url: 'BetweenInnings/Light Em Up.mp3' },
+  { name: 'North Carolina',            url: 'BetweenInnings/North Carolina.mp3' },
+  { name: 'Row My Boat — CJ Beatty',   url: 'BetweenInnings/Row My Boat ft. CJ Beatty.mp3' },
+  { name: 'Swing',                     url: 'BetweenInnings/Swing.mp3' },
+  { name: 'Tokyo Drift',               url: 'BetweenInnings/Tokyo Drift.mp3' },
 ];
 
-/* ── Walk-up song library (add entries here as you drop files in /walkupsongs/) ── */
+/* ── Walk-up song library (add entries here as you drop files in walkupsongs/) ── */
 const WALKUP_LIBRARY = [
-  { name: 'AC/DC — Thunderstruck',          file: '/walkupsongs/ACDC Thunderstruck.mp3' },
-  { name: 'Centerfield',                    file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
-  { name: 'Crazy Train',                    file: '/walkupsongs/CrazyTrain.mp3' },
-  { name: 'DMX — Ruff Ryders\' Anthem',     file: '/walkupsongs/DMX Ruff Ryders.mp3' },
-  { name: 'Janelle Monáe — Beach',          file: '/walkupsongs/Janelle Monay Beach.mp3' },
-  { name: 'Katseye — Gnarly',               file: '/walkupsongs/Katseye Gnarly.mp3' },
-  { name: 'Katseye — Pink Up',              file: '/walkupsongs/Katseye Pink Up.mp3' },
-  { name: 'Metallica — Enter Sandman',      file: '/walkupsongs/Metallica - Enter Sandman.mp3' },
-  { name: 'Forrest Frank — Never Get Used To This', file: '/walkupsongs/Forrest Frank - Never Get Used To This.mp3' },
-  { name: 'Rihanna — What\'s My Name',      file: '/walkupsongs/Rihanna - What\'s My Name.mp3' },
-  { name: 'Saweetie — Best Friend',         file: '/walkupsongs/Saweetie - Best Friend.mp3' },
-  { name: 'Silent — Watch Me Whip',         file: '/walkupsongs/Silent Watch Me Whip.mp3' },
-  { name: 'Soda Pop',                       file: '/walkupsongs/Soda_Pop.mp3' },
-  { name: 'Soulja Boy — Superman',          file: '/walkupsongs/Soulja Boy Superman.mp3' },
-  { name: 'Taylor Swift — Fate of Ophelia', file: '/walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
-  { name: '2Pac — All Eyez on Me (America)', file: '/walkupsongs/2Pac Americas.mp3' },
-  { name: '2Pac — California Love',         file: '/walkupsongs/2Pac California.mp3' },
-  { name: 'Up',                             file: '/walkupsongs/Up.mp3' },
+  { name: 'AC/DC — Thunderstruck',          file: 'walkupsongs/ACDC Thunderstruck.mp3' },
+  { name: 'Centerfield',                    file: 'walkupsongs/Walk_Up_Centerfield.mp3' },
+  { name: 'Crazy Train',                    file: 'walkupsongs/CrazyTrain.mp3' },
+  { name: 'DMX — Ruff Ryders\' Anthem',     file: 'walkupsongs/DMX Ruff Ryders.mp3' },
+  { name: 'Janelle Monáe — Beach',          file: 'walkupsongs/Janelle Monay Beach.mp3' },
+  { name: 'Katseye — Gnarly',               file: 'walkupsongs/Katseye Gnarly.mp3' },
+  { name: 'Katseye — Pink Up',              file: 'walkupsongs/Katseye Pink Up.mp3' },
+  { name: 'Metallica — Enter Sandman',      file: 'walkupsongs/Metallica - Enter Sandman.mp3' },
+  { name: 'Forrest Frank — Never Get Used To This', file: 'walkupsongs/Forrest Frank - Never Get Used To This.mp3' },
+  { name: 'Rihanna — What\'s My Name',      file: 'walkupsongs/Rihanna - What\'s My Name.mp3' },
+  { name: 'Saweetie — Best Friend',         file: 'walkupsongs/Saweetie - Best Friend.mp3' },
+  { name: 'Silent — Watch Me Whip',         file: 'walkupsongs/Silent Watch Me Whip.mp3' },
+  { name: 'Soda Pop',                       file: 'walkupsongs/Soda_Pop.mp3' },
+  { name: 'Soulja Boy — Superman',          file: 'walkupsongs/Soulja Boy Superman.mp3' },
+  { name: 'Taylor Swift — Fate of Ophelia', file: 'walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
+  { name: '2Pac — All Eyez on Me (America)', file: 'walkupsongs/2Pac Americas.mp3' },
+  { name: '2Pac — California Love',         file: 'walkupsongs/2Pac California.mp3' },
+  { name: 'Up',                             file: 'walkupsongs/Up.mp3' },
 ];
 
 (function buildWalkUpLibrary() {
@@ -2615,21 +2615,21 @@ function playMp3(src) {
 function playSound(type) {
   try {
     switch (type) {
-      case 'roar':      playMp3('/sounds/roar.mp3');      return;
-      case 'horn':      playMp3('/sounds/horn.mp3');      return;
-      case 'organ':     playMp3('/sounds/charge.mp3');    return;
-      case 'catch':     playMp3('/sounds/catch.mp3');     return;
-      case 'foul':      playMp3('/sounds/foul-ball.mp3'); return;
-      case 'homerun':   playMp3('/sounds/homerun.mp3');   return;
-      case 'nocrying':  playMp3('/sounds/no_crying.mp3');           return;
-      case 'cricket':   playMp3('/sounds/awkward-cricket.mp3');     return;
-      case 'prettyGood':playMp3('/sounds/aye-thats-pretty-good.mp3'); return;
-      case 'bruh':      playMp3('/sounds/bruh-sound-effect.mp3');   return;
-      case 'lizard':    playMp3('/sounds/lizard-button.mp3');        return;
-      case 'yeahBoii':  playMp3('/sounds/yeah-boiii-i-i-i.mp3');    return;
-      case 'strikeout':  playMp3('/sounds/K Riff.mp3');              return;
-      case 'rally':      playMp3('/sounds/Rally.mp3');              return;
-      case 'stolenbase': playMp3('/sounds/stolenbase.mp3');         return;
+      case 'roar':      playMp3('sounds/roar.mp3');      return;
+      case 'horn':      playMp3('sounds/horn.mp3');      return;
+      case 'organ':     playMp3('sounds/charge.mp3');    return;
+      case 'catch':     playMp3('sounds/catch.mp3');     return;
+      case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
+      case 'homerun':   playMp3('sounds/homerun.mp3');   return;
+      case 'nocrying':  playMp3('sounds/no_crying.mp3');           return;
+      case 'cricket':   playMp3('sounds/awkward-cricket.mp3');     return;
+      case 'prettyGood':playMp3('sounds/aye-thats-pretty-good.mp3'); return;
+      case 'bruh':      playMp3('sounds/bruh-sound-effect.mp3');   return;
+      case 'lizard':    playMp3('sounds/lizard-button.mp3');        return;
+      case 'yeahBoii':  playMp3('sounds/yeah-boiii-i-i-i.mp3');    return;
+      case 'strikeout':  playMp3('sounds/K Riff.mp3');              return;
+      case 'rally':      playMp3('sounds/Rally.mp3');              return;
+      case 'stolenbase': playMp3('sounds/stolenbase.mp3');         return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
