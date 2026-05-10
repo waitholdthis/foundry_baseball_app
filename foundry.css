@@ -531,6 +531,13 @@ html, body {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* fade bottom edge to hint more content below */
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent 100%);
 }
 .walkup-lib-btn {
   padding: 6px 14px;
