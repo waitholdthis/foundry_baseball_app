@@ -585,9 +585,9 @@
             <span class="sound-icon">⚡</span>
             <span>Rally</span>
           </button>
-          <button class="sound-btn" data-sound="walkoff" aria-label="Walk-off music">
-            <span class="sound-icon">🏆</span>
-            <span>Walk-Off</span>
+          <button class="sound-btn" data-sound="stolenbase" aria-label="Stolen base">
+            <span class="sound-icon">💨</span>
+            <span>Stolen Base</span>
           </button>
           <button class="sound-btn" data-sound="strikeout" aria-label="Strike 'em out riff">
             <span class="sound-icon">🔥</span>
@@ -921,6 +921,56 @@
       <rect x="58" y="117" width="8" height="8" fill="white" rx="1"/>
       <polygon points="100,156 96,161 96,166 104,166 104,161" fill="white"/>
     </svg>
+  </div>
+</div>
+
+<!-- Warm-up music overlay (shown after game setup, before game starts) -->
+<div class="warmup-overlay hidden" id="warmupOverlay" role="dialog" aria-modal="true" aria-label="Warm-up music">
+  <div class="warmup-card">
+    <div class="warmup-top">
+      <div class="warmup-icon">⚾</div>
+      <div class="warmup-title">WARM UP</div>
+      <div class="warmup-matchup" id="warmupMatchup">—</div>
+    </div>
+
+    <div class="warmup-now-playing" id="warmupNowPlaying" hidden>
+      <div class="warmup-np-label">NOW PLAYING</div>
+      <div class="warmup-np-name" id="warmupNpName">—</div>
+      <div class="dj-progress-wrap" style="margin-top:8px">
+        <div class="dj-progress-bar">
+          <div class="dj-progress-fill" id="warmupProgressFill"></div>
+        </div>
+        <div class="dj-time-row">
+          <span id="warmupTimeCurrent">0:00</span>
+          <span id="warmupTimeDuration">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warmup-transport">
+      <button class="dj-btn" id="warmupPrev" aria-label="Previous track">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </button>
+      <button class="dj-btn dj-play" id="warmupPlayPause" aria-label="Play / Pause">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button class="dj-btn" id="warmupNext" aria-label="Next track">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </button>
+    </div>
+
+    <div class="warmup-library-wrap">
+      <div class="warmup-lib-header">
+        <span class="dj-label" style="margin-bottom:0">LIBRARY</span>
+        <button class="btn-secondary" id="warmupUploadBtn" style="font-size:12px;padding:6px 12px">+ Upload</button>
+        <input id="warmupFileInput" type="file" accept="audio/*" multiple class="sr-only" aria-label="Upload warm-up tracks">
+      </div>
+      <div class="warmup-lib-btns" id="warmupLibBtns"></div>
+    </div>
+
+    <button class="btn-primary btn-full" id="warmupStartGame" style="margin-top:4px">Start Game →</button>
+    <button class="btn-ghost btn-full" id="warmupSkip" style="font-size:13px">Skip Warm Up</button>
   </div>
 </div>
 

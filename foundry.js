@@ -301,11 +301,13 @@ let pendingAudioName = '';
 
 /* ── Between-innings library (add entries here as you drop files in /BetweenInnings/) ── */
 const BETWEEN_INNINGS_LIBRARY = [
-  { name: 'Glory Days',    url: '/BetweenInnings/Glory Days.mp3' },
-  { name: 'Light Em Up',   url: '/BetweenInnings/Light Em Up.mp3' },
-  { name: 'North Carolina',url: '/BetweenInnings/North Carolina.mp3' },
-  { name: 'Swing',         url: '/BetweenInnings/Swing.mp3' },
-  { name: 'Tokyo Drift',   url: '/BetweenInnings/Tokyo Drift.mp3' },
+  { name: 'Big Girl Talk — CJ Beatty', url: '/BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3' },
+  { name: 'Glory Days',                url: '/BetweenInnings/Glory Days.mp3' },
+  { name: 'Light Em Up',               url: '/BetweenInnings/Light Em Up.mp3' },
+  { name: 'North Carolina',            url: '/BetweenInnings/North Carolina.mp3' },
+  { name: 'Row My Boat — CJ Beatty',   url: '/BetweenInnings/Row My Boat ft. CJ Beatty.mp3' },
+  { name: 'Swing',                     url: '/BetweenInnings/Swing.mp3' },
+  { name: 'Tokyo Drift',               url: '/BetweenInnings/Tokyo Drift.mp3' },
 ];
 
 /* ── Walk-up song library (add entries here as you drop files in /walkupsongs/) ── */
@@ -601,14 +603,153 @@ document.getElementById('gameSetupForm').addEventListener('submit', e => {
   const date = document.getElementById('gameDate').value;
   const field = document.getElementById('gameField').value.trim();
   const innings = parseInt(document.getElementById('gameInnings').value, 10);
-  S.game = newGameState(opp, date, field, selectedHA, innings);
-  S.lastOpponent = opp;
-  saveState();
   gameSetupOverlay.classList.add('hidden');
+  showWarmupOverlay({ opponent: opp, date, field, homeAway: selectedHA, innings });
+});
+
+/* ─── Warm-up Music ─────────────────────────────────────────────────── */
+let warmupAudio      = null;
+let warmupTracks     = [];   // { name, src }
+let warmupIdx        = 0;
+let warmupPending    = null; // game setup data waiting to start
+let warmupProgressId = null;
+
+function showWarmupOverlay(gameData) {
+  warmupPending = gameData;
+  const usName  = S.team?.name || 'Us';
+  document.getElementById('warmupMatchup').textContent = `${usName} vs ${gameData.opponent}`;
+  buildWarmupLibrary();
+  document.getElementById('warmupOverlay').classList.remove('hidden');
+}
+
+function buildWarmupLibrary() {
+  const container = document.getElementById('warmupLibBtns');
+  container.innerHTML = '';
+  warmupTracks = [
+    ...BETWEEN_INNINGS_LIBRARY.map(t => ({ name: t.name, src: t.url })),
+    ...WALKUP_LIBRARY.map(t => ({ name: t.name, src: t.file })),
+  ];
+  warmupTracks.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'walkup-lib-btn';
+    btn.textContent = t.name;
+    btn.addEventListener('click', () => playWarmupTrack(i));
+    container.appendChild(btn);
+  });
+}
+
+function playWarmupTrack(idx) {
+  stopWarmupAudio();
+  if (!warmupTracks.length) return;
+  warmupIdx = ((idx % warmupTracks.length) + warmupTracks.length) % warmupTracks.length;
+  const track = warmupTracks[warmupIdx];
+  warmupAudio = new Audio(track.src);
+  warmupAudio.volume = parseFloat(document.getElementById('masterVolume')?.value ?? 0.8);
+  warmupAudio.addEventListener('ended', () => playWarmupTrack(warmupIdx + 1));
+  warmupAudio.play().catch(() => {});
+  // UI — now playing
+  document.getElementById('warmupNpName').textContent = track.name;
+  document.getElementById('warmupNowPlaying').hidden = false;
+  // highlight active library btn
+  document.querySelectorAll('#warmupLibBtns .walkup-lib-btn').forEach((b, i) =>
+    b.classList.toggle('active', i === warmupIdx));
+  // show pause icon
+  warmupSetPlayIcon(false);
+  // progress ticker
+  clearInterval(warmupProgressId);
+  warmupProgressId = setInterval(warmupTickProgress, 250);
+}
+
+function stopWarmupAudio() {
+  clearInterval(warmupProgressId);
+  if (warmupAudio) { warmupAudio.pause(); warmupAudio = null; }
+  document.getElementById('warmupNowPlaying').hidden = true;
+  warmupSetPlayIcon(true);
+}
+
+function warmupSetPlayIcon(showPlay) {
+  const pp = document.getElementById('warmupPlayPause');
+  pp.querySelector('.icon-play').classList.toggle('hidden', !showPlay);
+  pp.querySelector('.icon-pause').classList.toggle('hidden', showPlay);
+}
+
+function warmupTickProgress() {
+  if (!warmupAudio) return;
+  const fill = document.getElementById('warmupProgressFill');
+  const cur  = document.getElementById('warmupTimeCurrent');
+  const dur  = document.getElementById('warmupTimeDuration');
+  const pct  = warmupAudio.duration ? (warmupAudio.currentTime / warmupAudio.duration) * 100 : 0;
+  fill.style.width = pct + '%';
+  cur.textContent  = fmtTime(warmupAudio.currentTime);
+  dur.textContent  = fmtTime(warmupAudio.duration || 0);
+}
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function launchGame() {
+  stopWarmupAudio();
+  document.getElementById('warmupOverlay').classList.add('hidden');
+  const d = warmupPending;
+  S.game = newGameState(d.opponent, d.date, d.field, d.homeAway, d.innings);
+  S.lastOpponent = d.opponent;
+  S.superVoice = { ...S.superVoice, enabled: true, paMode: true };
+  saveState();
   renderGameScreen();
+  syncSVUI();
   navigate('game');
   activateTab(weAreBatting() ? 'scorebook' : 'lineup');
+}
+
+document.getElementById('warmupPlayPause').addEventListener('click', () => {
+  if (!warmupAudio) {
+    playWarmupTrack(warmupIdx);
+    return;
+  }
+  if (warmupAudio.paused) {
+    warmupAudio.play();
+    warmupSetPlayIcon(false);
+    warmupProgressId = setInterval(warmupTickProgress, 250);
+  } else {
+    warmupAudio.pause();
+    warmupSetPlayIcon(true);
+    clearInterval(warmupProgressId);
+  }
 });
+
+document.getElementById('warmupPrev').addEventListener('click', () => playWarmupTrack(warmupIdx - 1));
+document.getElementById('warmupNext').addEventListener('click', () => playWarmupTrack(warmupIdx + 1));
+
+document.getElementById('warmupUploadBtn').addEventListener('click', () => {
+  document.getElementById('warmupFileInput').click();
+});
+
+document.getElementById('warmupFileInput').addEventListener('change', e => {
+  const files = [...e.target.files];
+  const startIdx = warmupTracks.length;
+  files.forEach(f => {
+    const src = URL.createObjectURL(f);
+    const name = f.name.replace(/\.[^.]+$/, '');
+    warmupTracks.push({ name, src });
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'walkup-lib-btn';
+    btn.textContent = name;
+    const idx = warmupTracks.length - 1;
+    btn.addEventListener('click', () => playWarmupTrack(idx));
+    document.getElementById('warmupLibBtns').appendChild(btn);
+  });
+  e.target.value = '';
+  if (files.length) playWarmupTrack(startIdx);
+});
+
+document.getElementById('warmupStartGame').addEventListener('click', launchGame);
+document.getElementById('warmupSkip').addEventListener('click', launchGame);
 
 /* ─────────────────────────────────────────────
    SCREEN 4 — GAME DAY
@@ -812,7 +953,10 @@ document.querySelectorAll('.outcome-btn').forEach(btn => {
 function recordPlay(result) {
   const g = S.game;
   if (!g) return;
-  if (!weAreBatting()) return; // fielding — use the fielding panel to track opponent outs/runs
+  if (!weAreBatting()) {
+    showToast('Opponent is batting — use the Fielding panel to track outs & runs');
+    return;
+  }
 
   const slot = g.lineupIndex % S.lineup.length;
   const pid  = S.lineup[slot];
@@ -871,10 +1015,10 @@ function recordPlay(result) {
   updateScoreBar();
   renderLineupRail();
   updateAtBatCard();
+  if (isHit) openSprayModal(ab.id);
   renderBoxScore('boxscoreTable', 'boxscoreHead', 'boxscoreBody');
   renderBattingStats('battingStatsBody');
   renderSeasonStats('seasonStatsBody');
-  if (isHit) openSprayModal(ab.id);
 }
 
 function advanceRunners(bases, prev) {
@@ -2227,6 +2371,9 @@ function playSound(type) {
       case 'bruh':      playMp3('/sounds/bruh-sound-effect.mp3');   return;
       case 'lizard':    playMp3('/sounds/lizard-button.mp3');        return;
       case 'yeahBoii':  playMp3('/sounds/yeah-boiii-i-i-i.mp3');    return;
+      case 'strikeout':  playMp3('/sounds/K Riff.mp3');              return;
+      case 'rally':      playMp3('/sounds/Rally.mp3');              return;
+      case 'stolenbase': playMp3('/sounds/stolenbase.mp3');         return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
@@ -2236,11 +2383,7 @@ function playSound(type) {
     gain.connect(masterGain || ctx.destination);
     gain.gain.value = vol;
 
-    switch (type) {
-      case 'rally':     playRallyDrum(ctx, gain);     break;
-      case 'walkoff':   playWalkOff(ctx, gain);       break;
-      case 'strikeout': playKRiff(ctx, gain);         break;
-    }
+    switch (type) { /* all sounds now have MP3s */ }
   } catch {}
 }
 

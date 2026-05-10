@@ -2072,6 +2072,96 @@ html, body {
 .bi-play-btn { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
 .bi-skip-btn { font-size: 13px; }
 
+/* ── Warm-up Music Overlay ── */
+.warmup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(2, 6, 23, 0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.warmup-overlay.hidden { display: none; }
+
+.warmup-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.warmup-top { text-align: center; }
+.warmup-icon { font-size: 32px; margin-bottom: 6px; }
+.warmup-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.warmup-matchup {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f7f7f4;
+}
+
+.warmup-now-playing {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.warmup-np-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.warmup-np-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f59e0b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.warmup-transport {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.warmup-library-wrap { min-height: 0; }
+.warmup-lib-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.warmup-lib-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.warmup-lib-btns .walkup-lib-btn.active {
+  background: #f59e0b;
+  color: #020617;
+  border-color: #f59e0b;
+}
+
 /* Landscape phone adjustments */
 @media (max-height: 500px) and (max-width: 767px) {
   .diamond-wrap { width: 140px; height: 140px; }
