@@ -934,6 +934,9 @@ function showHalfView() {
   const batting = weAreBatting();
   document.getElementById('battingView').classList.toggle('hidden', !batting);
   document.getElementById('fieldingView').classList.toggle('hidden', batting);
+  // On tablet all panels stay visible — disable scorebook inputs while fielding
+  document.querySelectorAll('.outcome-btn, .count-btn').forEach(btn => { btn.disabled = !batting; });
+  document.getElementById('atBatCard')?.classList.toggle('fielding-dimmed', !batting);
   if (!batting) updateFieldingView();
 }
 

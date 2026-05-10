@@ -899,6 +899,7 @@ html, body {
   gap: 0;
   padding: 0;
   overflow-y: auto;
+  position: relative;
 }
 .at-bat-header {
   display: flex;
@@ -2025,6 +2026,22 @@ html, body {
 @keyframes pulseGlow {
   0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.3); }
   50%       { box-shadow: 0 0 18px rgba(245,158,11,0.6); }
+}
+
+/* Scorebook dimmed while fielding (tablet: all columns visible simultaneously) */
+.at-bat-card.fielding-dimmed { opacity: 0.35; pointer-events: none; }
+.at-bat-card.fielding-dimmed::after {
+  content: 'YOUR TEAM IS FIELDING';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  pointer-events: none;
 }
 
 /* Between-innings prompt */
