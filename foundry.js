@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=23', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=24', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -342,6 +342,7 @@ const WALKUP_LIBRARY = [
   { name: 'Janelle Monáe — Beach',          file: 'walkupsongs/Janelle Monay Beach.mp3' },
   { name: 'Katseye — Gnarly',               file: 'walkupsongs/Katseye Gnarly.mp3' },
   { name: 'Katseye — Pink Up',              file: 'walkupsongs/Katseye Pink Up.mp3' },
+  { name: 'Last Of My Kind',                file: 'walkupsongs/Last Of My Kind.mp3' },
   { name: 'Metallica — Enter Sandman',      file: 'walkupsongs/Metallica - Enter Sandman.mp3' },
   { name: 'Forrest Frank — Never Get Used To This', file: 'walkupsongs/Forrest Frank - Never Get Used To This.mp3' },
   { name: 'Party In The USA',               file: 'walkupsongs/Party In The USA.mp3' },

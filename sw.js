@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v23';
+const CACHE = 'foundry-v24';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -52,6 +52,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Janelle Monay Beach.mp3',
   './walkupsongs/Katseye Gnarly.mp3',
   './walkupsongs/Katseye Pink Up.mp3',
+  './walkupsongs/Last Of My Kind.mp3',
   './walkupsongs/Metallica - Enter Sandman.mp3',
   './walkupsongs/Party In The USA.mp3',
   './walkupsongs/Pretty Girl Walk.mp3',
