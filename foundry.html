@@ -497,8 +497,8 @@
         <div id="svPanel" hidden>
           <div class="sv-field">
             <label class="sv-label" for="svTemplate">Announcement template</label>
-            <input type="text" id="svTemplate" class="sv-input" value="Now batting, number {number}, {name}" placeholder="Use {name} and {number}" aria-describedby="svTemplateHint">
-            <span id="svTemplateHint" class="sv-hint">Use <code>{name}</code> and <code>{number}</code></span>
+            <input type="text" id="svTemplate" class="sv-input" value="Now batting, {position}, number {number}, {name}" placeholder="Use {name}, {number}, {position}" aria-describedby="svTemplateHint">
+            <span id="svTemplateHint" class="sv-hint">Use <code>{name}</code>, <code>{number}</code>, <code>{position}</code></span>
           </div>
 
           <div class="sv-field">
@@ -553,7 +553,7 @@
             </div>
             <div class="sv-field">
               <label class="sv-label" for="svPaTemplate">PA Template</label>
-              <input type="text" id="svPaTemplate" class="sv-input" value="Now batting. Number {number}. {name}!" placeholder="Use {name} and {number}">
+              <input type="text" id="svPaTemplate" class="sv-input" value="Now batting. {position}. Number {number}. {name}!" placeholder="Use {name}, {number}, {position}">
             </div>
             <button type="button" class="btn-secondary btn-full" id="svPaPreset" style="margin-top:4px">Apply Announcer Preset (rate 0.75 · pitch 0.65)</button>
           </div>
@@ -901,6 +901,19 @@
       <rect x="58" y="117" width="8" height="8" fill="white" rx="1"/>
       <polygon points="100,156 96,161 96,166 104,166 104,161" fill="white"/>
     </svg>
+  </div>
+</div>
+
+<!-- Between-innings music prompt -->
+<div class="bi-prompt-overlay hidden" id="betweenInningsOverlay" role="dialog" aria-modal="true" aria-label="Between innings">
+  <div class="bi-prompt">
+    <div class="bi-prompt-icon">⚾</div>
+    <div class="bi-prompt-title">3 Outs — Half Inning Over</div>
+    <div class="bi-prompt-subtitle" id="biPromptSubtitle">Start the between-innings music?</div>
+    <div class="bi-prompt-actions">
+      <button class="btn-primary bi-play-btn" id="biPlayBtn">♪ Play Music</button>
+      <button class="btn-secondary bi-skip-btn" id="biSkipBtn">Skip →</button>
+    </div>
   </div>
 </div>
 

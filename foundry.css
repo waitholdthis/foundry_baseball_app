@@ -2027,6 +2027,48 @@ html, body {
   50%       { box-shadow: 0 0 18px rgba(245,158,11,0.6); }
 }
 
+/* Between-innings prompt */
+.bi-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 200ms ease;
+}
+.bi-prompt-overlay.hidden { display: none; }
+.bi-prompt {
+  background: var(--bg-surface);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  width: min(320px, 90vw);
+  text-align: center;
+  border: 1px solid rgba(245,158,11,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+.bi-prompt-icon { font-size: 36px; margin-bottom: 10px; }
+.bi-prompt-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+.bi-prompt-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.bi-prompt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bi-play-btn { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
+.bi-skip-btn { font-size: 13px; }
+
 /* Landscape phone adjustments */
 @media (max-height: 500px) and (max-width: 767px) {
   .diamond-wrap { width: 140px; height: 140px; }

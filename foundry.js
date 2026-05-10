@@ -25,13 +25,13 @@ const DEFAULT_STATE = {
   pitchTracking: { enabled: false, warnAt: 75, alarmAt: 100 },
   superVoice: {
     enabled: false,
-    template: 'Now batting, number {number}, {name}',
+    template: 'Now batting, {position}, number {number}, {name}',
     voiceURI: '',
     rate: 0.9,
     pitch: 0.9,
     beforeSong: true,
     paMode: false,
-    paTemplate: 'Now batting. Number {number}. {name}!',
+    paTemplate: 'Now batting. {position}. Number {number}. {name}!',
     elKey: '',
     elVoiceId: 'pNInz6obpgDQGcFmaJgB',
   },
@@ -859,7 +859,7 @@ function recordPlay(result) {
 
   // Check 3 outs
   if (g.outs >= 3) {
-    endHalfInning();
+    showBetweenInningsPrompt();
     return;
   }
 
@@ -923,7 +923,7 @@ function recordOpponentPlay(result) {
   } else { g.outs++; }
   if (result === 'DP') g.outs++;
 
-  if (g.outs >= 3) { endHalfInning(); return; }
+  if (g.outs >= 3) { showBetweenInningsPrompt(); return; }
 
   saveState();
   updateScoreBar();
@@ -970,7 +970,7 @@ document.getElementById('fieldingAddOut').addEventListener('click', () => {
   updateScoreBar();
   updateFieldingView();
   saveState();
-  if (g.outs >= 3) setTimeout(() => endHalfInning(), 500);
+  if (g.outs >= 3) setTimeout(() => showBetweenInningsPrompt(), 500);
 });
 
 document.getElementById('fieldingAddRun').addEventListener('click', () => {
@@ -982,6 +982,39 @@ document.getElementById('fieldingAddRun').addEventListener('click', () => {
   saveState();
   showToast('Opponent run scored');
 });
+
+function showBetweenInningsPrompt() {
+  const g = S.game;
+  const overlay = document.getElementById('betweenInningsOverlay');
+  const subtitle = document.getElementById('biPromptSubtitle');
+  const hasTracks = (S.playlist?.tracks?.length || 0) > 0;
+
+  if (!hasTracks || !overlay) {
+    endHalfInning();
+    return;
+  }
+
+  const nextHalf = g.half === 'top' ? 'bottom' : 'top';
+  const nextInning = nextHalf === 'top' ? g.inning + 1 : g.inning;
+  const halfWord = nextHalf === 'bottom' ? 'Bottom' : 'Top';
+  subtitle.textContent = `${halfWord} of ${nextInning} is next`;
+
+  overlay.classList.remove('hidden');
+
+  const playBtn = document.getElementById('biPlayBtn');
+  const skipBtn = document.getElementById('biSkipBtn');
+
+  function dismiss(playMusic) {
+    overlay.classList.add('hidden');
+    playBtn.replaceWith(playBtn.cloneNode(true));
+    skipBtn.replaceWith(skipBtn.cloneNode(true));
+    if (playMusic) startInningPlaylist();
+    endHalfInning();
+  }
+
+  document.getElementById('biPlayBtn').addEventListener('click', () => dismiss(true), { once: true });
+  document.getElementById('biSkipBtn').addEventListener('click', () => dismiss(false), { once: true });
+}
 
 function endHalfInning() {
   const g = S.game;
@@ -1035,7 +1068,6 @@ function endHalfInning() {
   const halfLabel = g.half === 'bottom' ? 'Bottom' : 'Top';
   const sideMsg = weAreBatting() ? 'Your team bats' : 'Your team fields';
   showToast(`${halfLabel} of ${g.inning} — ${sideMsg}`, 4000);
-  startInningPlaylist();
   showHalfView();
   activateTab(weAreBatting() ? 'scorebook' : 'lineup');
 }
@@ -1554,11 +1586,12 @@ async function announcePlayer(player) {
   const sv = S.superVoice || {};
 
   const template = sv.paMode
-    ? (sv.paTemplate || 'Now batting. Number {number}. {name}!')
-    : (sv.template   || 'Now batting, number {number}, {name}');
+    ? (sv.paTemplate || 'Now batting. {position}. Number {number}. {name}!')
+    : (sv.template   || 'Now batting, {position}, number {number}, {name}');
   const text = template
     .replace('{name}', player.name)
-    .replace('{number}', player.number);
+    .replace('{number}', player.number)
+    .replace('{position}', player.pos || '');
 
   // ElevenLabs path
   if (sv.paMode && sv.elKey) {
@@ -1704,7 +1737,7 @@ function syncSVUI() {
   if (toggle) toggle.checked = !!sv.enabled;
   if (panel)  panel.hidden   = !sv.enabled;
   const tmpl = document.getElementById('svTemplate');
-  if (tmpl) tmpl.value = sv.template || 'Now batting, number {number}, {name}';
+  if (tmpl) tmpl.value = sv.template || 'Now batting, {position}, number {number}, {name}';
   const rate = document.getElementById('svRate');
   if (rate) { rate.value = sv.rate ?? 0.9; document.getElementById('svRateVal').textContent = rate.value; }
   const pitch = document.getElementById('svPitch');
@@ -1717,7 +1750,7 @@ function syncSVUI() {
   if (paToggle) paToggle.checked = !!sv.paMode;
   if (paPanel)  paPanel.hidden   = !sv.paMode;
   const paTmpl = document.getElementById('svPaTemplate');
-  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting. Number {number}. {name}!';
+  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting. {position}. Number {number}. {name}!';
   const elKey = document.getElementById('svElKey');
   if (elKey) elKey.value = sv.elKey || '';
   const elVoice = document.getElementById('svElVoice');
