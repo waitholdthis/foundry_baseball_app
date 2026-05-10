@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=27', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=28', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -328,6 +328,7 @@ const BETWEEN_INNINGS_LIBRARY = [
   { name: 'Row My Boat — CJ Beatty',   url: 'BetweenInnings/Row My Boat ft. CJ Beatty.mp3' },
   { name: 'Swing',                     url: 'BetweenInnings/Swing.mp3' },
   { name: 'Tokyo Drift',               url: 'BetweenInnings/Tokyo Drift.mp3' },
+  { name: 'We Ready',                  url: 'BetweenInnings/We Ready.mp3' },
 ];
 
 /* ── Walk-up song library (add entries here as you drop files in walkupsongs/) ── */
@@ -356,6 +357,7 @@ const WALKUP_LIBRARY = [
   { name: 'Soda Pop',                       file: 'walkupsongs/Soda_Pop.mp3' },
   { name: 'Soulja Boy — Superman',          file: 'walkupsongs/Soulja Boy Superman.mp3' },
   { name: 'Taylor Swift — Fate of Ophelia', file: 'walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
+  { name: 'The Largest',                    file: 'walkupsongs/The Largest.mp3' },
   { name: '2Pac — All Eyez on Me (America)', file: 'walkupsongs/2Pac Americas.mp3' },
   { name: '2Pac — California Love',         file: 'walkupsongs/2Pac California.mp3' },
   { name: 'Up',                             file: 'walkupsongs/Up.mp3' },

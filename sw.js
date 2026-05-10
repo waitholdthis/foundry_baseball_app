@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v27';
+const CACHE = 'foundry-v28';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -25,6 +25,7 @@ const MEDIA_ASSETS = [
   './BetweenInnings/Row My Boat ft. CJ Beatty.mp3',
   './BetweenInnings/Swing.mp3',
   './BetweenInnings/Tokyo Drift.mp3',
+  './BetweenInnings/We Ready.mp3',
   './sounds/Angerdingus.mp3',
   './sounds/Homerun.mp3',
   './sounds/K Riff.mp3',
@@ -69,6 +70,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Soda_Pop.mp3',
   './walkupsongs/Soulja Boy Superman.mp3',
   './walkupsongs/Taylor Swift - The Fate of Ophelia.mp3',
+  './walkupsongs/The Largest.mp3',
   './walkupsongs/Up.mp3',
   './walkupsongs/Walk_Up_Centerfield.mp3',
 ];
