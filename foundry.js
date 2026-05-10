@@ -1582,16 +1582,37 @@ function playAudioAndWait(src) {
   });
 }
 
+const POSITION_SPOKEN = {
+  'P':  'Pitcher',
+  'C':  'Catcher',
+  '1B': 'First Baseman',
+  '2B': 'Second Baseman',
+  '3B': 'Third Baseman',
+  'SS': 'Shortstop',
+  'LF': 'Left Fielder',
+  'CF': 'Center Fielder',
+  'RF': 'Right Fielder',
+  'DH': 'Designated Hitter',
+  'UT': 'Utility',
+};
+
+const DEFAULT_SV_TEMPLATE    = 'Now batting, {position}, number {number}, {name}';
+const DEFAULT_PA_TEMPLATE    = 'Now batting. {position}. Number {number}. {name}!';
+
 async function announcePlayer(player) {
   const sv = S.superVoice || {};
 
-  const template = sv.paMode
-    ? (sv.paTemplate || 'Now batting. {position}. Number {number}. {name}!')
-    : (sv.template   || 'Now batting, {position}, number {number}, {name}');
-  const text = template
+  // Auto-migrate saved templates that pre-date the {position} token
+  let tmpl = sv.paMode ? sv.paTemplate : sv.template;
+  if (!tmpl || !tmpl.includes('{position}')) {
+    tmpl = sv.paMode ? DEFAULT_PA_TEMPLATE : DEFAULT_SV_TEMPLATE;
+  }
+
+  const posSpoken = POSITION_SPOKEN[player.pos] || player.pos || '';
+  const text = tmpl
     .replace('{name}', player.name)
     .replace('{number}', player.number)
-    .replace('{position}', player.pos || '');
+    .replace('{position}', posSpoken);
 
   // ElevenLabs path
   if (sv.paMode && sv.elKey) {
@@ -1737,7 +1758,7 @@ function syncSVUI() {
   if (toggle) toggle.checked = !!sv.enabled;
   if (panel)  panel.hidden   = !sv.enabled;
   const tmpl = document.getElementById('svTemplate');
-  if (tmpl) tmpl.value = sv.template || 'Now batting, {position}, number {number}, {name}';
+  if (tmpl) tmpl.value = (sv.template?.includes('{position}') ? sv.template : null) || DEFAULT_SV_TEMPLATE;
   const rate = document.getElementById('svRate');
   if (rate) { rate.value = sv.rate ?? 0.9; document.getElementById('svRateVal').textContent = rate.value; }
   const pitch = document.getElementById('svPitch');
@@ -1750,7 +1771,7 @@ function syncSVUI() {
   if (paToggle) paToggle.checked = !!sv.paMode;
   if (paPanel)  paPanel.hidden   = !sv.paMode;
   const paTmpl = document.getElementById('svPaTemplate');
-  if (paTmpl) paTmpl.value = sv.paTemplate || 'Now batting. {position}. Number {number}. {name}!';
+  if (paTmpl) paTmpl.value = (sv.paTemplate?.includes('{position}') ? sv.paTemplate : null) || DEFAULT_PA_TEMPLATE;
   const elKey = document.getElementById('svElKey');
   if (elKey) elKey.value = sv.elKey || '';
   const elVoice = document.getElementById('svElVoice');
