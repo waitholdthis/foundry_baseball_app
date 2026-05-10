@@ -299,9 +299,30 @@ const walkUpNameEl= document.getElementById('walkUpFileName');
 let pendingAudioBlob = null;
 let pendingAudioName = '';
 
+/* ── Between-innings library (add entries here as you drop files in /BetweenInnings/) ── */
+const BETWEEN_INNINGS_LIBRARY = [
+  { name: 'Glory Days',    url: '/BetweenInnings/Glory Days.mp3' },
+  { name: 'Light Em Up',   url: '/BetweenInnings/Light Em Up.mp3' },
+  { name: 'North Carolina',url: '/BetweenInnings/North Carolina.mp3' },
+  { name: 'Swing',         url: '/BetweenInnings/Swing.mp3' },
+  { name: 'Tokyo Drift',   url: '/BetweenInnings/Tokyo Drift.mp3' },
+];
+
 /* ── Walk-up song library (add entries here as you drop files in /walkupsongs/) ── */
 const WALKUP_LIBRARY = [
-  { name: 'Centerfield',  file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
+  { name: 'AC/DC — Thunderstruck',          file: '/walkupsongs/ACDC Thunderstruck.mp3' },
+  { name: 'Centerfield',                    file: '/walkupsongs/Walk_Up_Centerfield.mp3' },
+  { name: 'Janelle Monáe — Beach',          file: '/walkupsongs/Janelle Monay Beach.mp3' },
+  { name: 'Katseye — Pink Up',              file: '/walkupsongs/Katseye Pink Up.mp3' },
+  { name: 'Metallica — Enter Sandman',      file: '/walkupsongs/Metallica - Enter Sandman.mp3' },
+  { name: 'Never Get Used to This',         file: '/walkupsongs/Never_Get_Use_To_This.mp3' },
+  { name: 'Rihanna — What\'s My Name',      file: '/walkupsongs/Rihanna - What\'s My Name.mp3' },
+  { name: 'Saweetie — Best Friend',         file: '/walkupsongs/Saweetie - Best Friend.mp3' },
+  { name: 'Silent — Watch Me Whip',         file: '/walkupsongs/Silent Watch Me Whip.mp3' },
+  { name: 'Soda Pop',                       file: '/walkupsongs/Soda_Pop.mp3' },
+  { name: 'Soulja Boy — Superman',          file: '/walkupsongs/Soulja Boy Superman.mp3' },
+  { name: 'Taylor Swift — Fate of Ophelia', file: '/walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
+  { name: 'Up',                             file: '/walkupsongs/Up.mp3' },
 ];
 
 (function buildWalkUpLibrary() {
@@ -319,6 +340,28 @@ const WALKUP_LIBRARY = [
       document.getElementById('walkUpUrl').value = song.file;
       container.querySelectorAll('.walkup-lib-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+    });
+    container.appendChild(btn);
+  });
+})();
+
+(function buildBetweenInningsLibrary() {
+  const container = document.getElementById('plLibraryBtns');
+  const group = document.getElementById('plLibraryGroup');
+  if (!container || !BETWEEN_INNINGS_LIBRARY.length) { if (group) group.classList.add('hidden'); return; }
+  BETWEEN_INNINGS_LIBRARY.forEach(song => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'walkup-lib-btn';
+    btn.textContent = song.name;
+    btn.addEventListener('click', () => {
+      const already = (S.playlist?.tracks || []).some(t => t.url === song.url);
+      if (already) { showToast(`${song.name} already in playlist`); return; }
+      if (!S.playlist) S.playlist = { tracks: [], shuffle: false, autoPlay: true };
+      S.playlist.tracks.push({ name: song.name, url: song.url });
+      saveState();
+      renderPlaylistUI();
+      showToast(`Added: ${song.name}`);
     });
     container.appendChild(btn);
   });
@@ -1789,10 +1832,15 @@ function stopPlaylist() {
 }
 
 async function playPlaylistTrack(track, idx) {
-  const blob = await loadAudioBlob(track.key).catch(() => null);
-  if (!blob) return;
+  let url;
+  if (track.url) {
+    url = track.url;
+  } else {
+    const blob = await loadAudioBlob(track.key).catch(() => null);
+    if (!blob) return;
+    url = URL.createObjectURL(blob);
+  }
   stopPlaylist();
-  const url = URL.createObjectURL(blob);
   playlistAudio = new Audio(url);
   playlistAudio.volume = parseFloat(document.getElementById('masterVolume').value);
   plCurrentIdx = idx;
@@ -1854,7 +1902,7 @@ function renderPlaylistUI() {
     btn.addEventListener('click', async () => {
       const idx = parseInt(btn.dataset.idx, 10);
       const track = S.playlist.tracks[idx];
-      await deleteAudioBlob(track.key).catch(() => {});
+      if (track.key) await deleteAudioBlob(track.key).catch(() => {});
       S.playlist.tracks.splice(idx, 1);
       saveState();
       renderPlaylistUI();
