@@ -1520,7 +1520,6 @@ document.getElementById('masterVolume').addEventListener('input', e => {
 async function handleBatterChange(player) {
   if (currentWalkUpPid === player.id) return;
   currentWalkUpPid = player.id;
-  stopPlaylist(); // batter is up — stop between-innings music
 
   const sv = S.superVoice || {};
   const hasSong = !!(player.walkUpKey || player.walkUpUrl);
@@ -1650,6 +1649,7 @@ function setDJStatusBadge(playing) {
 }
 
 function playWalkUpSrc(src, player) {
+  stopPlaylist(); // walk-up starts — stop between-innings music
   stopWalkUp();
   walkUpAudio = new Audio(src);
   walkUpAudio.volume = parseFloat(document.getElementById('masterVolume').value);
