@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v29';
+const CACHE = 'foundry-v32';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -30,7 +30,7 @@ const MEDIA_ASSETS = [
   './sounds/Hi.mp3',
   './sounds/Homerun.mp3',
   './sounds/Hot Dog.mp3',
-  './sounds/K Riff.mp3',
+  './sounds/Wow.mp3',
   './sounds/Rally.mp3',
   './sounds/SoNervy.mp3',
   './sounds/Strikeout.mp3',
@@ -41,7 +41,7 @@ const MEDIA_ASSETS = [
   './sounds/charge.mp3',
   './sounds/foul-ball.mp3',
   './sounds/homerun.mp3',
-  './sounds/horn.mp3',
+  './sounds/hornV1.mp3',
   './sounds/lizard-button.mp3',
   './sounds/no_crying.mp3',
   './sounds/roar.mp3',
@@ -75,6 +75,9 @@ const MEDIA_ASSETS = [
   './walkupsongs/The Largest.mp3',
   './walkupsongs/Up.mp3',
   './walkupsongs/Walk_Up_Centerfield.mp3',
+  './walkupsongs/Heaven.mp3',
+  './walkupsongs/Is Win.mp3',
+  './walkupsongs/Narco.mp3',
 ];
 
 self.addEventListener('install', e => {

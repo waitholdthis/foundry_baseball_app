@@ -361,6 +361,9 @@ const WALKUP_LIBRARY = [
   { name: '2Pac — All Eyez on Me (America)', file: 'walkupsongs/2Pac Americas.mp3' },
   { name: '2Pac — California Love',         file: 'walkupsongs/2Pac California.mp3' },
   { name: 'Up',                             file: 'walkupsongs/Up.mp3' },
+  { name: 'Heaven',                         file: 'walkupsongs/Heaven.mp3' },
+  { name: 'Is Win',                         file: 'walkupsongs/Is Win.mp3' },
+  { name: 'Narco',                          file: 'walkupsongs/Narco.mp3' },
 ];
 
 (function buildWalkUpLibrary() {
@@ -2670,7 +2673,7 @@ function playSound(type) {
   try {
     switch (type) {
       case 'roar':      playMp3('sounds/roar.mp3');      return;
-      case 'horn':      playMp3('sounds/horn.mp3');      return;
+      case 'horn':      playMp3('sounds/hornV1.mp3');      return;
       case 'organ':     playMp3('sounds/charge.mp3');    return;
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
@@ -2687,7 +2690,7 @@ function playSound(type) {
       case 'bruh':      playMp3('sounds/bruh-sound-effect.mp3');   return;
       case 'lizard':    playMp3('sounds/lizard-button.mp3');        return;
       case 'yeahBoii':  playMp3('sounds/yeah-boiii-i-i-i.mp3');    return;
-      case 'strikeout':  playMp3('sounds/K Riff.mp3');              return;
+      case 'strikeout':  playMp3('sounds/Wow.mp3');              return;
       case 'rally':      playMp3('sounds/Rally.mp3');              return;
       case 'stolenbase': playMp3('sounds/stolenbase.mp3');         return;
     }
