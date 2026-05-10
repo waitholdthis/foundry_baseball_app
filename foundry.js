@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=20', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=21', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -596,7 +596,7 @@ document.getElementById('lineupReset').addEventListener('click', () => {
 
 /* Game Setup sheet */
 const gameSetupOverlay = document.getElementById('gameSetupOverlay');
-let selectedHA = 'home';
+let selectedOpponentHA = 'home';
 
 document.getElementById('startGameBtn').addEventListener('click', () => {
   syncLineupWithRoster();
@@ -619,7 +619,7 @@ document.querySelectorAll('[data-ha]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('[data-ha]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    selectedHA = btn.dataset.ha;
+    selectedOpponentHA = btn.dataset.ha;
   });
 });
 
@@ -634,8 +634,9 @@ document.getElementById('gameSetupForm').addEventListener('submit', e => {
   const date = document.getElementById('gameDate').value;
   const field = document.getElementById('gameField').value.trim();
   const innings = parseInt(document.getElementById('gameInnings').value, 10);
+  const ourHomeAway = selectedOpponentHA === 'home' ? 'away' : 'home';
   gameSetupOverlay.classList.add('hidden');
-  showWarmupOverlay({ opponent: opp, date, field, homeAway: selectedHA, innings });
+  showWarmupOverlay({ opponent: opp, date, field, homeAway: ourHomeAway, innings });
 });
 
 /* ─── Warm-up Music ─────────────────────────────────────────────────── */
@@ -728,9 +729,6 @@ function launchGame() {
   document.getElementById('warmupOverlay').classList.add('hidden');
   const d = warmupPending;
   S.game = newGameState(d.opponent, d.date, d.field, d.homeAway, d.innings);
-  if (d.homeAway === 'away') {
-    S.game.half = 'bottom';
-  }
   S.lastOpponent = d.opponent;
   S.superVoice = { ...S.superVoice, enabled: true, paMode: true };
   saveState();
