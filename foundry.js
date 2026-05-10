@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=26', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=27', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -334,7 +334,10 @@ const BETWEEN_INNINGS_LIBRARY = [
 const WALKUP_LIBRARY = [
   { name: 'AC/DC — Thunderstruck',          file: 'walkupsongs/ACDC Thunderstruck.mp3' },
   { name: 'A-O-K',                          file: 'walkupsongs/A-O-K.mp3' },
+  { name: 'Beautiful Things',               file: 'walkupsongs/Beautiful Things.mp3' },
   { name: 'Big Dawgs',                      file: 'walkupsongs/Big Dawgs.mp3' },
+  { name: 'Bring Em Out',                   file: 'walkupsongs/Bring Em Out.mp3' },
+  { name: 'Bully',                          file: 'walkupsongs/Bully.mp3' },
   { name: 'Centerfield',                    file: 'walkupsongs/Walk_Up_Centerfield.mp3' },
   { name: 'Crazy Train',                    file: 'walkupsongs/CrazyTrain.mp3' },
   { name: 'DMX — Ruff Ryders\' Anthem',     file: 'walkupsongs/DMX Ruff Ryders.mp3' },

@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v26';
+const CACHE = 'foundry-v27';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -48,7 +48,10 @@ const MEDIA_ASSETS = [
   './walkupsongs/2Pac California.mp3',
   './walkupsongs/A-O-K.mp3',
   './walkupsongs/ACDC Thunderstruck.mp3',
+  './walkupsongs/Beautiful Things.mp3',
   './walkupsongs/Big Dawgs.mp3',
+  './walkupsongs/Bring Em Out.mp3',
+  './walkupsongs/Bully.mp3',
   './walkupsongs/CrazyTrain.mp3',
   './walkupsongs/DMX Ruff Ryders.mp3',
   './walkupsongs/Eve - Who\'s That Girl.mp3',
