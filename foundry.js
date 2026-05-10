@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=25', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=26', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -1871,6 +1871,7 @@ let masterGain   = null;
 let currentWalkUpPid = null;
 let betweenInningsActive = false;
 let pendingWalkUpPlayer  = null;
+let shuffledWalkUpQueue = [];
 
 function getAudioCtx() {
   if (!soundCtx) {
@@ -1900,7 +1901,7 @@ async function handleBatterChange(player) {
 
 async function runBatterIntro(player) {
   const sv = S.superVoice || {};
-  const hasSong = !!(player.walkUpKey || player.walkUpUrl);
+  const walkUpChoice = getWalkUpChoice(player);
 
   if (sv.enabled) {
     if (sv.beforeSong) {
@@ -1910,15 +1911,51 @@ async function runBatterIntro(player) {
     }
   }
 
-  if (hasSong && currentWalkUpPid === player.id) {
+  if (walkUpChoice && currentWalkUpPid === player.id) {
     showToast(`♪ Walk-up queued — ${player.name}`);
-    if (player.walkUpKey) {
+    if (walkUpChoice.type === 'blob') {
       const blob = await loadAudioBlob(player.walkUpKey).catch(() => null);
-      if (blob && currentWalkUpPid === player.id) playWalkUpSrc(URL.createObjectURL(blob), player);
+      if (blob && currentWalkUpPid === player.id) playWalkUpSrc(URL.createObjectURL(blob), player, walkUpChoice.name);
     } else {
-      playWalkUpSrc(player.walkUpUrl, player);
+      playWalkUpSrc(walkUpChoice.src, player, walkUpChoice.name);
     }
   }
+}
+
+function hasCompletedFirstLineupCycle() {
+  const g = S.game;
+  return !!(g && S.lineup.length && g.lineupIndex >= S.lineup.length);
+}
+
+function refillShuffledWalkUpQueue() {
+  shuffledWalkUpQueue = [...WALKUP_LIBRARY];
+  for (let i = shuffledWalkUpQueue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledWalkUpQueue[i], shuffledWalkUpQueue[j]] = [shuffledWalkUpQueue[j], shuffledWalkUpQueue[i]];
+  }
+}
+
+function nextRandomWalkUpTrack() {
+  if (!WALKUP_LIBRARY.length) return null;
+  if (!shuffledWalkUpQueue.length) refillShuffledWalkUpQueue();
+  return shuffledWalkUpQueue.pop() || null;
+}
+
+function getWalkUpChoice(player) {
+  if (hasCompletedFirstLineupCycle()) {
+    const song = nextRandomWalkUpTrack();
+    if (song) return { type: 'url', src: song.file, name: song.name };
+  }
+  if (player.walkUpKey) return { type: 'blob', src: player.walkUpKey, name: player.walkUpName || 'Walk-Up Song' };
+  if (player.walkUpUrl) {
+    const librarySong = WALKUP_LIBRARY.find(song => song.file === player.walkUpUrl);
+    return { type: 'url', src: player.walkUpUrl, name: librarySong?.name || player.walkUpName || 'Walk-Up Song' };
+  }
+  return null;
+}
+
+function hasWalkUpChoice(player) {
+  return !!(player.walkUpKey || player.walkUpUrl || (hasCompletedFirstLineupCycle() && WALKUP_LIBRARY.length));
 }
 
 function getCurrentBatter() {
@@ -2048,7 +2085,7 @@ function setDJStatusBadge(playing) {
   badge.classList.toggle('playing', playing);
 }
 
-function playWalkUpSrc(src, player) {
+function playWalkUpSrc(src, player, songTitle) {
   betweenInningsActive = false; // walk-up is starting, clear deferred state
   pendingWalkUpPlayer  = null;
   stopPlaylist(); // stop between-innings music
@@ -2057,7 +2094,7 @@ function playWalkUpSrc(src, player) {
   walkUpAudio.volume = parseFloat(document.getElementById('masterVolume').value);
   walkUpAudio.play().catch(() => {});
 
-  document.getElementById('djSongTitle').textContent  = player.walkUpName || 'Walk-Up Song';
+  document.getElementById('djSongTitle').textContent  = songTitle || player.walkUpName || 'Walk-Up Song';
   document.getElementById('djPlayerName').textContent = player.name;
   setDJStatusBadge(true);
 
@@ -2105,7 +2142,7 @@ document.getElementById('djPlayPause').addEventListener('click', () => {
     const pid = S.lineup[g.lineupIndex % S.lineup.length];
     const p   = playerById(pid);
     if (!p) { showToast('No batter found'); return; }
-    if (!p.walkUpUrl && !p.walkUpKey) { showToast(`No walk-up song for ${p.name}`); return; }
+    if (!hasWalkUpChoice(p)) { showToast(`No walk-up song for ${p.name}`); return; }
     handleBatterChange(p);
     return;
   }
