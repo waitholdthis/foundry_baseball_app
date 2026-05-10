@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v17';
+const CACHE = 'foundry-v18';
 const ASSETS = [
   './foundry.html',
   './app.html',
@@ -17,9 +17,56 @@ const ASSETS = [
   './icons/icon-512.png',
 ];
 
+const MEDIA_ASSETS = [
+  './BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3',
+  './BetweenInnings/Glory Days.mp3',
+  './BetweenInnings/Light Em Up.mp3',
+  './BetweenInnings/North Carolina.mp3',
+  './BetweenInnings/Row My Boat ft. CJ Beatty.mp3',
+  './BetweenInnings/Swing.mp3',
+  './BetweenInnings/Tokyo Drift.mp3',
+  './sounds/K Riff.mp3',
+  './sounds/Rally.mp3',
+  './sounds/awkward-cricket.mp3',
+  './sounds/aye-thats-pretty-good.mp3',
+  './sounds/bruh-sound-effect.mp3',
+  './sounds/catch.mp3',
+  './sounds/charge.mp3',
+  './sounds/foul-ball.mp3',
+  './sounds/homerun.mp3',
+  './sounds/horn.mp3',
+  './sounds/lizard-button.mp3',
+  './sounds/no_crying.mp3',
+  './sounds/roar.mp3',
+  './sounds/stolenbase.mp3',
+  './sounds/yeah-boiii-i-i-i.mp3',
+  './walkupsongs/2Pac Americas.mp3',
+  './walkupsongs/2Pac California.mp3',
+  './walkupsongs/ACDC Thunderstruck.mp3',
+  './walkupsongs/CrazyTrain.mp3',
+  './walkupsongs/DMX Ruff Ryders.mp3',
+  './walkupsongs/Forrest Frank - Never Get Used To This.mp3',
+  './walkupsongs/Janelle Monay Beach.mp3',
+  './walkupsongs/Katseye Gnarly.mp3',
+  './walkupsongs/Katseye Pink Up.mp3',
+  './walkupsongs/Metallica - Enter Sandman.mp3',
+  './walkupsongs/Rihanna - What\'s My Name.mp3',
+  './walkupsongs/Saweetie - Best Friend.mp3',
+  './walkupsongs/Silent Watch Me Whip.mp3',
+  './walkupsongs/Soda_Pop.mp3',
+  './walkupsongs/Soulja Boy Superman.mp3',
+  './walkupsongs/Taylor Swift - The Fate of Ophelia.mp3',
+  './walkupsongs/Up.mp3',
+  './walkupsongs/Walk_Up_Centerfield.mp3',
+];
+
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => c.addAll(ASSETS).then(() =>
+        Promise.all(MEDIA_ASSETS.map(asset => c.add(asset).catch(() => null)))
+      ))
+      .then(() => self.skipWaiting())
   );
 });
 
