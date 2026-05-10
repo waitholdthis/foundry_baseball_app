@@ -2221,7 +2221,12 @@ function playSound(type) {
       case 'catch':     playMp3('/sounds/catch.mp3');     return;
       case 'foul':      playMp3('/sounds/foul-ball.mp3'); return;
       case 'homerun':   playMp3('/sounds/homerun.mp3');   return;
-      case 'nocrying':  playMp3('/sounds/no_crying.mp3'); return;
+      case 'nocrying':  playMp3('/sounds/no_crying.mp3');           return;
+      case 'cricket':   playMp3('/sounds/awkward-cricket.mp3');     return;
+      case 'prettyGood':playMp3('/sounds/aye-thats-pretty-good.mp3'); return;
+      case 'bruh':      playMp3('/sounds/bruh-sound-effect.mp3');   return;
+      case 'lizard':    playMp3('/sounds/lizard-button.mp3');        return;
+      case 'yeahBoii':  playMp3('/sounds/yeah-boiii-i-i-i.mp3');    return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
