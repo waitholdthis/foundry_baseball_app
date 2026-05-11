@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v34';
+const CACHE = 'foundry-v35';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -48,6 +48,13 @@ const MEDIA_ASSETS = [
   './sounds/roar.mp3',
   './sounds/stolenbase.mp3',
   './sounds/yeah-boiii-i-i-i.mp3',
+  './sounds/Coin.mp3',
+  './sounds/DogsOut.mp3',
+  './sounds/GotEm.mp3',
+  './sounds/Hockey.mp3',
+  './sounds/Jeopardy.mp3',
+  './sounds/Mommy.mp3',
+  './sounds/Organ.mp3',
   './walkupsongs/2Pac Americas.mp3',
   './walkupsongs/2Pac California.mp3',
   './walkupsongs/A-O-K.mp3',

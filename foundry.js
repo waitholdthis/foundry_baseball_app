@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=34', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=35', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -2693,6 +2693,13 @@ function playSound(type) {
       case 'strikeout':  playMp3('sounds/Wow.mp3');              return;
       case 'rally':      playMp3('sounds/Rally.mp3');              return;
       case 'stolenbase': playMp3('sounds/stolenbase.mp3');         return;
+      case 'coin':       playMp3('sounds/Coin.mp3');              return;
+      case 'dogsOut':    playMp3('sounds/DogsOut.mp3');           return;
+      case 'gotEm':      playMp3('sounds/GotEm.mp3');             return;
+      case 'hockey':     playMp3('sounds/Hockey.mp3');            return;
+      case 'jeopardy':   playMp3('sounds/Jeopardy.mp3');          return;
+      case 'mommy':      playMp3('sounds/Mommy.mp3');             return;
+      case 'organRiff':  playMp3('sounds/Organ.mp3');             return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
