@@ -1668,6 +1668,30 @@ html, body {
 .sound-btn:active { background: var(--bg-surface); transform: scale(0.94); border-color: var(--purple); }
 .sound-btn.playing { border-color: var(--purple); background: var(--purple-dim); }
 .sound-icon { font-size: 22px; line-height: 1; }
+.sfx-stop-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms, color 150ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.sfx-stop-btn.active {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-dim);
+}
+.sfx-stop-btn:active { transform: scale(0.97); }
 
 .dj-volume {
   display: flex;

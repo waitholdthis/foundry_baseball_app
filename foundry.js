@@ -657,6 +657,9 @@ document.getElementById('gameSetupForm').addEventListener('submit', e => {
   showWarmupOverlay({ opponent: opp, date, field, homeAway: ourHomeAway, innings });
 });
 
+/* ─── Soundboard active audio ───────────────────────────────────────── */
+let activeSfxAudio = null;
+
 /* ─── Warm-up Music ─────────────────────────────────────────────────── */
 let warmupAudio      = null;
 let warmupTracks     = [];   // { name, src }
@@ -2654,6 +2657,9 @@ document.getElementById('pitchSheetOverlay')?.addEventListener('click', e => {
   if (e.target === document.getElementById('pitchSheetOverlay')) closePitchSheet();
 });
 
+/* Soundboard — stop button */
+document.getElementById('sfxStopBtn')?.addEventListener('click', stopSfx);
+
 /* Soundboard — Web Audio API generated sounds */
 document.querySelectorAll('.sound-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -2664,9 +2670,21 @@ document.querySelectorAll('.sound-btn').forEach(btn => {
   });
 });
 
+function stopSfx() {
+  if (activeSfxAudio) {
+    activeSfxAudio.pause();
+    activeSfxAudio = null;
+  }
+  document.getElementById('sfxStopBtn')?.classList.remove('active');
+}
+
 function playMp3(src) {
+  stopSfx();
   const audio = new Audio(src);
   audio.volume = parseFloat(document.getElementById('masterVolume').value);
+  audio.addEventListener('ended', stopSfx);
+  activeSfxAudio = audio;
+  document.getElementById('sfxStopBtn')?.classList.add('active');
   audio.play().catch(() => {});
 }
 
