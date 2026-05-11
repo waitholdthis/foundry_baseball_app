@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=29', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=34', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -446,7 +446,7 @@ function openPlayerSheet(player) {
   }
   const currentUrl = player?.walkUpUrl || '';
   document.querySelectorAll('.walkup-lib-btn').forEach(b => {
-    b.classList.toggle('active', b.closest && WALKUP_LIBRARY.find(s => s.file === currentUrl && b.textContent === s.name) != null);
+    b.classList.toggle('active', WALKUP_LIBRARY.find(s => s.file === currentUrl && b.textContent === s.name) != null);
   });
   playerSheetOverlay.classList.remove('hidden');
   setTimeout(() => playerNameEl.focus(), 100);
