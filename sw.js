@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v36';
+const CACHE = 'foundry-v37';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -17,6 +17,7 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
 ];
+const APP_SHELL_PATHS = new Set(ASSETS.map(asset => new URL(asset, self.location.href).pathname));
 
 const MEDIA_ASSETS = [
   './BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3',
@@ -124,6 +125,20 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => cached))
+    );
+    return;
+  }
+
+  const isAppShell = e.request.mode === 'navigate' || APP_SHELL_PATHS.has(url.pathname);
+  if (isAppShell) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        if (res.ok) {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return res;
+      }).catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
     );
     return;
   }
