@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=40', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=41', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -30,6 +30,7 @@ const DEFAULT_STATE = {
     rate: 0.9,
     pitch: 0.9,
     beforeSong: true,
+    customText: '',
     paMode: false,
     paTemplate: 'Now batting. {position}. Number {number}. {name}!',
     elKey: '',
@@ -2056,6 +2057,38 @@ const POSITION_SPOKEN = {
 const DEFAULT_SV_TEMPLATE    = 'Now batting, {position}, number {number}, {name}';
 const DEFAULT_PA_TEMPLATE    = 'Now batting. {position}. Number {number}. {name}!';
 
+async function announceText(text) {
+  const sv = S.superVoice || {};
+  const line = String(text || '').trim();
+  if (!line) return;
+
+  if (sv.paMode && sv.elKey) {
+    try {
+      const src = await generateElevenLabsAudio(line, sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
+      await playAudioAndWait(src);
+      return;
+    } catch (err) {
+      showToast(`ElevenLabs error — falling back to TTS`);
+    }
+  }
+
+  // Web Speech fallback
+  if (!('speechSynthesis' in window)) return;
+  return new Promise(resolve => {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(line);
+    utter.rate  = sv.rate  ?? 0.9;
+    utter.pitch = sv.pitch ?? 0.9;
+    if (sv.voiceURI) {
+      const v = window.speechSynthesis.getVoices().find(v => v.voiceURI === sv.voiceURI);
+      if (v) utter.voice = v;
+    }
+    utter.onend  = () => resolve();
+    utter.onerror = () => resolve();
+    window.speechSynthesis.speak(utter);
+  });
+}
+
 async function announcePlayer(player) {
   const sv = S.superVoice || {};
 
@@ -2071,32 +2104,7 @@ async function announcePlayer(player) {
     .replace('{number}', player.number)
     .replace('{position}', posSpoken);
 
-  // ElevenLabs path
-  if (sv.paMode && sv.elKey) {
-    try {
-      const src = await generateElevenLabsAudio(text, sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
-      await playAudioAndWait(src);
-      return;
-    } catch (err) {
-      showToast(`ElevenLabs error — falling back to TTS`);
-    }
-  }
-
-  // Web Speech fallback
-  if (!('speechSynthesis' in window)) return;
-  return new Promise(resolve => {
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate  = sv.rate  ?? 0.9;
-    utter.pitch = sv.pitch ?? 0.9;
-    if (sv.voiceURI) {
-      const v = window.speechSynthesis.getVoices().find(v => v.voiceURI === sv.voiceURI);
-      if (v) utter.voice = v;
-    }
-    utter.onend  = () => resolve();
-    utter.onerror = () => resolve();
-    window.speechSynthesis.speak(utter);
-  });
+  return announceText(text);
 }
 
 function setDJStatusBadge(playing) {
@@ -2236,6 +2244,8 @@ function syncSVUI() {
   if (elKey) elKey.value = sv.elKey || '';
   const elVoice = document.getElementById('svElVoice');
   if (elVoice) elVoice.value = sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB';
+  const customText = document.getElementById('svCustomText');
+  if (customText) customText.value = sv.customText || '';
 }
 
 document.getElementById('svToggle')?.addEventListener('change', e => {
@@ -2269,6 +2279,18 @@ document.getElementById('svPitch')?.addEventListener('input', e => {
 document.getElementById('svBeforeSong')?.addEventListener('change', e => {
   S.superVoice = { ...S.superVoice, beforeSong: e.target.checked };
   saveState();
+});
+
+document.getElementById('svCustomText')?.addEventListener('input', e => {
+  S.superVoice = { ...S.superVoice, customText: e.target.value };
+  saveState();
+});
+
+document.getElementById('svCustomAnnounce')?.addEventListener('click', async () => {
+  const text = document.getElementById('svCustomText')?.value.trim();
+  if (!text) { showToast('Type a custom announcement first'); return; }
+  showToast('Announcing custom message');
+  await announceText(text);
 });
 
 /* ElevenLabs key + voice wiring */

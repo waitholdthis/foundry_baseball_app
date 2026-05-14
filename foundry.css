@@ -1424,6 +1424,11 @@ html, body {
   outline: none;
   border-color: var(--purple);
 }
+.sv-textarea {
+  min-height: 76px;
+  resize: vertical;
+  line-height: 1.4;
+}
 .sv-select {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
