@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v43';
+const CACHE = 'foundry-v44';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -57,7 +57,7 @@ const MEDIA_ASSETS = [
   './sounds/Mommy.mp3',
   './sounds/Organ.mp3',
   './walkupsongs/I Look Good.mp3',
-  './walkupsongs/Stay Fly.mp3',
+  './walkupsongs/Stay Fly.mp3?v=44',
   './walkupsongs/2Pac Americas.mp3',
   './walkupsongs/2Pac California.mp3',
   './walkupsongs/A-O-K.mp3',

@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=43', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=44', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -375,7 +375,7 @@ const WALKUP_LIBRARY = [
   { name: 'Narco',                          file: 'walkupsongs/Narco.mp3' },
   { name: 'Yeah',                           file: 'walkupsongs/Yeah.mp3' },
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
-  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3' },
+  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=44' },
 ];
 
 (function buildWalkUpLibrary() {
