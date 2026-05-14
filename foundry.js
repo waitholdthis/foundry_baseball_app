@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=44', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=45', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -375,7 +375,7 @@ const WALKUP_LIBRARY = [
   { name: 'Narco',                          file: 'walkupsongs/Narco.mp3' },
   { name: 'Yeah',                           file: 'walkupsongs/Yeah.mp3' },
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
-  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=44' },
+  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=45' },
 ];
 
 (function buildWalkUpLibrary() {
@@ -2724,7 +2724,7 @@ function playSound(type) {
   try {
     switch (type) {
       case 'roar':      playMp3('sounds/roar.mp3');      return;
-      case 'horn':      playMp3('sounds/hornV1.mp3');      return;
+      case 'horn':      playMp3('sounds/Woo.mp3?v=45');    return;
       case 'organ':     playMp3('sounds/charge.mp3');    return;
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;

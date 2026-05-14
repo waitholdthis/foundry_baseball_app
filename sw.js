@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v44';
+const CACHE = 'foundry-v45';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -43,7 +43,7 @@ const MEDIA_ASSETS = [
   './sounds/charge.mp3',
   './sounds/foul-ball.mp3',
   './sounds/homerun.mp3',
-  './sounds/hornV1.mp3',
+  './sounds/Woo.mp3?v=45',
   './sounds/lizard-button.mp3',
   './sounds/no_crying.mp3',
   './sounds/roar.mp3',
@@ -57,7 +57,7 @@ const MEDIA_ASSETS = [
   './sounds/Mommy.mp3',
   './sounds/Organ.mp3',
   './walkupsongs/I Look Good.mp3',
-  './walkupsongs/Stay Fly.mp3?v=44',
+  './walkupsongs/Stay Fly.mp3?v=45',
   './walkupsongs/2Pac Americas.mp3',
   './walkupsongs/2Pac California.mp3',
   './walkupsongs/A-O-K.mp3',
