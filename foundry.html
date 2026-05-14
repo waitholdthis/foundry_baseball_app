@@ -161,8 +161,10 @@
           <input type="url" id="walkUpUrl" placeholder="https://example.com/song.mp3" autocomplete="off" spellcheck="false">
         </div>
         <div class="field-group" id="walkUpLibraryGroup">
-          <label class="dj-label">SONG LIBRARY</label>
-          <div class="walkup-library" id="walkUpLibrary"></div>
+          <label for="walkUpLibrary">Song Library</label>
+          <select class="walkup-library-select" id="walkUpLibrary">
+            <option value="">Select a library song</option>
+          </select>
         </div>
         <div class="sheet-actions">
           <button type="button" class="btn-ghost" id="cancelPlayer">Cancel</button>
@@ -1112,7 +1114,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script src="scorebook-export.js?v=46"></script>
-<script src="foundry.js?v=46"></script>
+<script src="scorebook-export.js?v=47"></script>
+<script src="foundry.js?v=47"></script>
 </body>
 </html>
