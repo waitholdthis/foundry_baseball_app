@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v58';
+const CACHE = 'foundry-v59';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -76,6 +76,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Never Get Used To This.mp3',
   './walkupsongs/Beach.mp3',
   './walkupsongs/Gnarly.mp3',
+  './walkupsongs/Hachet.mp3',
   './walkupsongs/Pinkie Up.mp3',
   './walkupsongs/Last Of My Kind.mp3',
   './walkupsongs/Lip Gloss.mp3',

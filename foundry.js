@@ -350,6 +350,7 @@ const WALKUP_LIBRARY = [
   { name: 'Who\'s That Girl',               file: 'walkupsongs/Who\'s That Girl.mp3' },
   { name: 'Beach',                          file: 'walkupsongs/Beach.mp3' },
   { name: 'Gnarly',                         file: 'walkupsongs/Gnarly.mp3' },
+  { name: 'Hachet',                         file: 'walkupsongs/Hachet.mp3' },
   { name: 'Pinkie Up',                      file: 'walkupsongs/Pinkie Up.mp3' },
   { name: 'Last Of My Kind',                file: 'walkupsongs/Last Of My Kind.mp3' },
   { name: 'Lip Gloss',                      file: 'walkupsongs/Lip Gloss.mp3' },
