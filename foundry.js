@@ -380,6 +380,7 @@ const WALKUP_LIBRARY = [
   { name: 'Yeah',                           file: 'walkupsongs/Yeah.mp3' },
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
   { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=54' },
+  { name: 'Work Out',                       file: 'walkupsongs/Work Out.mp3' },
 ];
 
 function mediaPath(src) {
@@ -1006,14 +1007,14 @@ function updateAtBatCard() {
   const onDeckSlot = (batterSlot + 1) % S.lineup.length;
   const onDeckP = playerById(S.lineup[onDeckSlot]);
   document.getElementById('djOnDeckName').textContent = onDeckP ? onDeckP.name : '—';
-  document.getElementById('djOnDeckSong').textContent = (onDeckP?.walkUpKey || onDeckP?.walkUpUrl) ? '♪ Walk-up loaded' : 'No walk-up';
+  document.getElementById('djOnDeckSong').textContent = (onDeckP && hasWalkUpChoice(onDeckP)) ? '♪ Walk-up loaded' : 'No walk-up';
 
   // SuperVoice + walk-up on batter change — only when our team is batting
   if (p && weAreBatting()) {
     if (betweenInningsActive) {
       pendingWalkUpPlayer = p;
     } else {
-      setTimeout(() => handleBatterChange(p), 200);
+      setTimeout(() => handleBatterChange(p, { armAudio: true }), 200);
     }
   }
 }
@@ -2031,11 +2032,14 @@ function getWalkUpChoice(player) {
     const librarySong = findLibrarySongByFile(player.walkUpUrl);
     return { type: 'url', src: librarySong?.file || player.walkUpUrl, name: librarySong?.name || player.walkUpName || 'Walk-Up Song' };
   }
+  // No personal song — fall back to a random library song so every batter gets something
+  const song = nextRandomWalkUpTrack();
+  if (song) return { type: 'url', src: song.file, name: song.name };
   return null;
 }
 
 function hasWalkUpChoice(player) {
-  return !!(player.walkUpKey || player.walkUpUrl || (hasCompletedFirstLineupCycle() && WALKUP_LIBRARY.length));
+  return !!(player.walkUpKey || player.walkUpUrl || WALKUP_LIBRARY.length);
 }
 
 function getCurrentBatter() {
