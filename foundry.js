@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=53', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=54', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -337,7 +337,7 @@ const WALKUP_LIBRARY = [
   { name: 'Thunderstruck',                  file: 'walkupsongs/Thunderstruck.mp3' },
   { name: 'A-O-K',                          file: 'walkupsongs/A-O-K.mp3' },
   { name: 'Baby',                           file: 'walkupsongs/Baby.mp3' },
-  { name: 'Batter Up',                      file: 'walkupsongs/Batter Up.mp3?v=53' },
+  { name: 'Batter Up',                      file: 'walkupsongs/Batter Up.mp3?v=54' },
   { name: 'Beautiful Things',               file: 'walkupsongs/Beautiful Things.mp3' },
   { name: 'Big Dawgs',                      file: 'walkupsongs/Big Dawgs.mp3' },
   { name: 'Bring Em Out',                   file: 'walkupsongs/Bring Em Out.mp3' },
@@ -353,14 +353,14 @@ const WALKUP_LIBRARY = [
   { name: 'Pinkie Up',                      file: 'walkupsongs/Pinkie Up.mp3' },
   { name: 'Last Of My Kind',                file: 'walkupsongs/Last Of My Kind.mp3' },
   { name: 'Lip Gloss',                      file: 'walkupsongs/Lip Gloss.mp3' },
-  { name: 'Low Rider',                      file: 'walkupsongs/Low Rider.mp3?v=53' },
+  { name: 'Low Rider',                      file: 'walkupsongs/Low Rider.mp3?v=54' },
   { name: 'Sandman',                        file: 'walkupsongs/Sandman.mp3' },
   { name: 'Never Get Used To This',         file: 'walkupsongs/Never Get Used To This.mp3' },
   { name: 'Party In The USA',               file: 'walkupsongs/Party In The USA.mp3' },
   { name: 'Pretty Girl Walk',               file: 'walkupsongs/Pretty Girl Walk.mp3' },
   { name: 'Shake It Off',                   file: 'walkupsongs/Shake It Off.mp3' },
   { name: 'Show',                           file: 'walkupsongs/Show.mp3' },
-  { name: 'Snowman',                        file: 'walkupsongs/Snowman.mp3?v=53' },
+  { name: 'Snowman',                        file: 'walkupsongs/Snowman.mp3?v=54' },
   { name: 'What\'s My Name',                file: 'walkupsongs/What\'s My Name.mp3' },
   { name: 'Best Friend',                    file: 'walkupsongs/Best Friend.mp3' },
   { name: 'Silent — Watch Me Whip',         file: 'walkupsongs/Silent Watch Me Whip.mp3' },
@@ -370,7 +370,7 @@ const WALKUP_LIBRARY = [
   { name: 'Taylor Swift — Fate of Ophelia', file: 'walkupsongs/Taylor Swift - The Fate of Ophelia.mp3' },
   { name: 'Tell Me Nothing',                file: 'walkupsongs/Tell Me Nothing.mp3' },
   { name: 'The Largest',                    file: 'walkupsongs/The Largest.mp3' },
-  { name: 'Turn Down',                      file: 'walkupsongs/Turn Down.mp3?v=53' },
+  { name: 'Turn Down',                      file: 'walkupsongs/Turn Down.mp3?v=54' },
   { name: '2Pac — All Eyez on Me (America)', file: 'walkupsongs/2Pac Americas.mp3' },
   { name: '2Pac — California Love',         file: 'walkupsongs/2Pac California.mp3' },
   { name: 'Up',                             file: 'walkupsongs/Up.mp3' },
@@ -379,7 +379,7 @@ const WALKUP_LIBRARY = [
   { name: 'Narco',                          file: 'walkupsongs/Narco.mp3' },
   { name: 'Yeah',                           file: 'walkupsongs/Yeah.mp3' },
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
-  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=53' },
+  { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=54' },
 ];
 
 function mediaPath(src) {
@@ -2194,6 +2194,7 @@ function setDJPlayIcon(playing) {
 }
 
 function playWalkUpSrc(src, player, songTitle, audioEl = null) {
+  const isArmedAudio = !!audioEl;
   betweenInningsActive = false; // walk-up is starting, clear deferred state
   pendingWalkUpPlayer  = null;
   stopPlaylist(); // stop between-innings music
@@ -2202,11 +2203,16 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null) {
   walkUpAudio.muted = false;
   try { walkUpAudio.currentTime = 0; } catch {}
   walkUpAudio.volume = parseFloat(document.getElementById('masterVolume').value);
-  walkUpAudio.play().catch(() => {
-    setDJPlayIcon(false);
-    setDJStatusBadge(false);
-    showToast('Tap the DJ play button to start walk-up audio');
-  });
+  if (isArmedAudio && !walkUpAudio.paused) {
+    setDJPlayIcon(true);
+    setDJStatusBadge(true);
+  } else {
+    walkUpAudio.play().catch(() => {
+      setDJPlayIcon(false);
+      setDJStatusBadge(false);
+      showToast('Tap the DJ play button to start walk-up audio');
+    });
+  }
   if (audioEl) armedWalkUp = null;
   else clearArmedWalkUp();
 
@@ -2807,7 +2813,7 @@ function playSound(type) {
   try {
     switch (type) {
       case 'roar':      playMp3('sounds/roar.mp3');      return;
-      case 'horn':      playMp3('sounds/Woo.mp3?v=53');    return;
+      case 'horn':      playMp3('sounds/Woo.mp3?v=54');    return;
       case 'organ':     playMp3('sounds/charge.mp3');    return;
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
