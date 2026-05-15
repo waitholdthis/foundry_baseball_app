@@ -381,6 +381,7 @@ const WALKUP_LIBRARY = [
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
   { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=54' },
   { name: 'Work Out',                       file: 'walkupsongs/Work Out.mp3' },
+  { name: 'Lace Em Up',                     file: 'walkupsongs/Lace Em Up.mp3' },
 ];
 
 function mediaPath(src) {
