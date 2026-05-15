@@ -7,7 +7,7 @@
 /* ─── PWA registration ─── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(new URL('sw.js?v=58', window.location.href), { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js?v=60', window.location.href), { scope: './' }).catch(() => {});
   });
 }
 
@@ -1963,14 +1963,48 @@ function getMasterVolume() {
 }
 
 function getWalkUpBedVolume() {
-  return Math.min(0.08, Math.max(0.015, getMasterVolume() * 0.06));
+  return Math.min(0.12, Math.max(0.025, getMasterVolume() * 0.16));
 }
 
 async function startWalkUpBed(armed) {
   if (!armed?.audio) return;
   await armed.ready;
+  if (armed.audio.paused) await armed.audio.play().catch(() => null);
   if (armed.audio.paused) return;
   armed.audio.volume = getWalkUpBedVolume();
+}
+
+async function createBlobWalkUpBed(blob, player, walkUpChoice) {
+  if (!blob) return null;
+  try {
+    clearArmedWalkUp();
+    const src = URL.createObjectURL(blob);
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+    audio.muted = false;
+    audio.volume = 0;
+    const ready = audio.play().catch(() => null);
+    const armed = { playerId: player.id, src, audio, ready, revokeSrc: true };
+    armedWalkUp = armed;
+    await startWalkUpBed(armed);
+    return armed;
+  } catch {
+    return null;
+  }
+}
+
+function fadeAudioVolume(audio, target, duration = 450) {
+  if (!audio) return;
+  const start = audio.volume;
+  const delta = target - start;
+  const startedAt = performance.now();
+  const step = now => {
+    if (!audio || audio !== walkUpAudio || audio.paused) return;
+    const t = Math.min(1, (now - startedAt) / duration);
+    audio.volume = start + delta * t;
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 
 function clearArmedWalkUp() {
@@ -1978,32 +2012,35 @@ function clearArmedWalkUp() {
     armedWalkUp = null;
     return;
   }
+  const src = armedWalkUp.revokeSrc ? armedWalkUp.src : null;
   armedWalkUp.audio.pause();
   armedWalkUp.audio.removeAttribute('src');
   armedWalkUp.audio.load();
+  if (src) URL.revokeObjectURL(src);
   armedWalkUp = null;
 }
 
 async function runBatterIntro(player, opts = {}) {
   const sv = S.superVoice || {};
   const walkUpChoice = getWalkUpChoice(player);
-  const armed = opts.armAudio ? armWalkUpAudio(player, walkUpChoice) : null;
+  const shouldStartIntroBed = !!(sv.enabled && sv.beforeSong);
+  const armed = (opts.armAudio || shouldStartIntroBed) ? armWalkUpAudio(player, walkUpChoice) : null;
+  let walkUpBed = armed;
+  let blobUrl = null;
   const blobPromise = walkUpChoice?.type === 'blob'
     ? loadAudioBlob(player.walkUpKey).catch(() => null)
     : null;
 
   if (sv.enabled) {
     if (sv.beforeSong) {
-      if (armed && armed.playerId === player.id && armed.src === walkUpChoice?.src) {
-        await startWalkUpBed(armed);
-      }
-      if (blobPromise) {
-        const [blob] = await Promise.all([blobPromise, announcePlayer(player)]);
+      if (walkUpChoice?.type === 'blob' && blobPromise) {
+        const blob = await blobPromise;
         if (blob && currentWalkUpPid === player.id) {
-          showToast(`♪ Walk-up queued — ${player.name}`);
-          playWalkUpSrc(URL.createObjectURL(blob), player, walkUpChoice.name);
+          walkUpBed = await createBlobWalkUpBed(blob, player, walkUpChoice);
+          blobUrl = walkUpBed?.src || URL.createObjectURL(blob);
         }
-        return;
+      } else if (walkUpBed && walkUpBed.playerId === player.id && walkUpBed.src === walkUpChoice?.src) {
+        await startWalkUpBed(walkUpBed);
       }
       await announcePlayer(player);
     } else {
@@ -2014,11 +2051,23 @@ async function runBatterIntro(player, opts = {}) {
   if (walkUpChoice && currentWalkUpPid === player.id) {
     showToast(`♪ Walk-up queued — ${player.name}`);
     if (walkUpChoice.type === 'blob') {
-      const blob = await blobPromise;
-      if (blob && currentWalkUpPid === player.id) playWalkUpSrc(URL.createObjectURL(blob), player, walkUpChoice.name);
+      if (!blobUrl) {
+        const blob = await blobPromise;
+        if (blob) blobUrl = URL.createObjectURL(blob);
+      }
+      if (blobUrl && currentWalkUpPid === player.id) {
+        playWalkUpSrc(blobUrl, player, walkUpChoice.name, walkUpBed?.audio || null, {
+          restart: !sv.beforeSong,
+          fadeToFull: !!(sv.enabled && sv.beforeSong && walkUpBed?.audio),
+          revokeOnEnd: !!walkUpBed?.revokeSrc || !walkUpBed?.audio,
+        });
+      }
     } else {
-      if (armed && armed.playerId === player.id && armed.src === walkUpChoice.src) await armed.ready;
-      playWalkUpSrc(walkUpChoice.src, player, walkUpChoice.name, armed?.audio || null, { restart: !sv.beforeSong });
+      if (walkUpBed && walkUpBed.playerId === player.id && walkUpBed.src === walkUpChoice.src) await walkUpBed.ready;
+      playWalkUpSrc(walkUpChoice.src, player, walkUpChoice.name, walkUpBed?.audio || null, {
+        restart: !sv.beforeSong,
+        fadeToFull: !!(sv.enabled && sv.beforeSong && walkUpBed?.audio),
+      });
     }
   }
 }
@@ -2229,7 +2278,9 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
   if (shouldRestart) {
     try { walkUpAudio.currentTime = 0; } catch {}
   }
-  walkUpAudio.volume = getMasterVolume();
+  const fullVolume = getMasterVolume();
+  const shouldFadeToFull = !!(opts.fadeToFull && isArmedAudio && !walkUpAudio.paused);
+  if (!shouldFadeToFull) walkUpAudio.volume = fullVolume;
   if (isArmedAudio && !walkUpAudio.paused) {
     setDJPlayIcon(true);
     setDJStatusBadge(true);
@@ -2240,6 +2291,7 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
       showToast('Tap the DJ play button to start walk-up audio');
     });
   }
+  if (shouldFadeToFull) fadeAudioVolume(walkUpAudio, fullVolume);
   if (audioEl) armedWalkUp = null;
   else clearArmedWalkUp();
 
@@ -2264,6 +2316,7 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
     setDJPlayIcon(false);
     fill.style.width = '0%';
     setDJStatusBadge(false);
+    if (opts.revokeOnEnd) URL.revokeObjectURL(src);
   });
 }
 
