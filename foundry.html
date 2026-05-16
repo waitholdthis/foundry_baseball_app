@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css?v=65">
+  <link rel="stylesheet" href="foundry.css?v=66">
 </head>
 <body>
 
@@ -884,10 +884,10 @@
   <div class="sheet-overlay hidden" id="subSheetOverlay" role="dialog" aria-modal="true" aria-labelledby="subSheetTitle">
     <div class="sheet" id="subSheet">
       <div class="sheet-handle"></div>
-      <h2 class="sheet-title" id="subSheetTitle">Substitution</h2>
-      <p class="sheet-desc">Replacing: <strong id="subOutName">—</strong></p>
+      <h2 class="sheet-title" id="subSheetTitle">Edit Lineup Slot</h2>
+      <p class="sheet-desc">Lineup player: <strong id="subOutName">—</strong></p>
       <div class="field-group">
-        <label for="subPosition">Incoming Position</label>
+        <label for="subPosition">Position</label>
         <select id="subPosition">
           <option value="P">P — Pitcher</option>
           <option value="C">C — Catcher</option>
@@ -902,6 +902,8 @@
           <option value="UT">UT — Utility</option>
         </select>
       </div>
+      <button class="btn-secondary btn-full" id="saveLineupPosition" type="button">Save Position Change</button>
+      <div class="sub-section-label">Substitute From Bench</div>
       <div class="sub-list" id="subList" role="list" aria-label="Available bench players"></div>
       <button class="btn-ghost btn-full" id="cancelSub" style="margin-top:12px">Cancel</button>
     </div>
@@ -1118,6 +1120,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="scorebook-export.js?v=58"></script>
-<script src="foundry-v65.js"></script>
+<script src="foundry-v66.js"></script>
 </body>
 </html>
