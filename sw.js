@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v68';
+const CACHE = 'foundry-v69';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -17,6 +17,7 @@ const ASSETS = [
   './foundry-v66.js',
   './foundry-v67.js',
   './foundry-v68.js',
+  './foundry-v69.js',
   './scorebook-export.js',
   './manifest.json',
   './icons/icon.svg',
