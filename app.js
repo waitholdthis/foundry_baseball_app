@@ -10,7 +10,7 @@
 (function initPwaInstall() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register(new URL("sw.js?v=64", window.location.href), { scope: "./" }).catch(() => {});
+      navigator.serviceWorker.register(new URL("sw.js?v=65", window.location.href), { scope: "./" }).catch(() => {});
     });
   }
 

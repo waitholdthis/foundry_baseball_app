@@ -576,7 +576,11 @@ html, body {
   min-height: 60px;
   cursor: grab;
   user-select: none;
+  touch-action: none;
   transition: background 150ms, box-shadow 150ms, transform 150ms;
+}
+.lineup-list.drag-active {
+  overflow: hidden;
 }
 .lineup-item.dragging {
   background: var(--bg-elevated);
