@@ -1015,6 +1015,29 @@ html, body {
   white-space: nowrap;
   min-height: 36px;
 }
+.at-bat-nav-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: stretch;
+  gap: 6px;
+  padding: 12px 12px 0;
+}
+.at-bat-nav-btn {
+  min-height: 58px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--text-1);
+  font-size: 28px;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.at-bat-nav-btn:active {
+  border-color: var(--amber);
+  color: var(--amber);
+  transform: scale(0.96);
+}
 .at-bat-name {
   width: 100%;
   background: none;
@@ -1025,7 +1048,7 @@ html, body {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  padding: 14px 16px 4px;
+  padding: 2px 4px 4px;
   line-height: 1.1;
   overflow-wrap: anywhere;
   cursor: pointer;

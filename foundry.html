@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css?v=69">
+  <link rel="stylesheet" href="foundry.css?v=70">
 </head>
 <body>
 
@@ -394,7 +394,11 @@
           </div>
           <button class="undo-btn" id="undoBtn" aria-label="Undo last play">↩ UNDO</button>
         </div>
-        <button class="at-bat-name at-bat-replay" id="atBatReplay" type="button" aria-label="Replay current batter announcement">—</button>
+        <div class="at-bat-nav-row">
+          <button class="at-bat-nav-btn" id="prevBatterBtn" type="button" aria-label="Previous batter">‹</button>
+          <button class="at-bat-name at-bat-replay" id="atBatReplay" type="button" aria-label="Replay current batter announcement">—</button>
+          <button class="at-bat-nav-btn" id="nextBatterBtn" type="button" aria-label="Next batter">›</button>
+        </div>
         <div class="at-bat-meta" id="atBatMeta">— · —</div>
         <div class="at-bat-fallback-row">
           <button class="btn-secondary at-bat-announce-btn" id="atBatAnnounceBtn" type="button">Announce Batter</button>
@@ -1143,6 +1147,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="scorebook-export.js?v=58"></script>
-<script src="foundry-v69.js"></script>
+<script src="foundry-v70.js"></script>
 </body>
 </html>
