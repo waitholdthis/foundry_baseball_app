@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css?v=66">
+  <link rel="stylesheet" href="foundry.css?v=67">
 </head>
 <body>
 
@@ -283,10 +283,16 @@
       </div>
     </div>
     <!-- Outs dots -->
-    <div class="outs-row" aria-label="Outs" role="status">
-      <span class="out-dot" id="out1" aria-label="Out 1"></span>
-      <span class="out-dot" id="out2" aria-label="Out 2"></span>
-      <span class="out-dot" id="out3" aria-label="Out 3"></span>
+    <div class="outs-wrap">
+      <button class="outs-row" id="outsAdjustBtn" type="button" aria-label="Adjust outs">
+        <span class="out-dot" id="out1" aria-label="Out 1"></span>
+        <span class="out-dot" id="out2" aria-label="Out 2"></span>
+        <span class="out-dot" id="out3" aria-label="Out 3"></span>
+      </button>
+      <div class="score-adjuster outs-adjuster" id="outsAdjuster" hidden>
+        <button class="adj-btn" id="adjOutMinus" aria-label="Subtract out">−</button>
+        <button class="adj-btn" id="adjOutPlus" aria-label="Add out">+</button>
+      </div>
     </div>
   </div>
 
@@ -1120,6 +1126,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="scorebook-export.js?v=58"></script>
-<script src="foundry-v66.js"></script>
+<script src="foundry-v67.js"></script>
 </body>
 </html>

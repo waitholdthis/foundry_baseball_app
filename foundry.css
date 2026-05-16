@@ -742,11 +742,22 @@ html, body {
   text-transform: uppercase;
   line-height: 1.4;
 }
+.outs-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0 2px;
+  position: relative;
+}
 .outs-row {
   display: flex;
   justify-content: center;
   gap: 8px;
-  padding: 6px 0 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .out-dot {
   width: 20px; height: 20px;
@@ -759,6 +770,9 @@ html, body {
 .out-dot.filled {
   background: var(--amber);
   border-color: var(--amber);
+}
+.outs-adjuster {
+  margin-top: 6px;
 }
 
 /* Tab bar */
