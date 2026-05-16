@@ -574,23 +574,14 @@ html, body {
   border-radius: 12px;
   padding: 12px 14px;
   min-height: 60px;
-  cursor: grab;
+  cursor: pointer;
   user-select: none;
-  touch-action: none;
   transition: background 150ms, box-shadow 150ms, transform 150ms;
 }
-.lineup-list.drag-active {
-  overflow: hidden;
-}
-.lineup-item.dragging {
+.lineup-item:active {
   background: var(--bg-elevated);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  opacity: 0.9;
-  transform: scale(1.02);
-  cursor: grabbing;
-  z-index: 10;
+  transform: scale(0.99);
 }
-.lineup-item.drag-over { border-color: var(--amber); }
 .lineup-slot {
   font-size: 18px;
   font-weight: 800;
@@ -603,31 +594,32 @@ html, body {
 .lineup-item-info { flex: 1; }
 .lineup-item-name { font-size: 15px; font-weight: 600; }
 .lineup-item-detail { font-size: 12px; color: var(--text-2); }
-.lineup-move-btns {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex-shrink: 0;
-}
-.lineup-move-btn {
-  width: 36px; height: 36px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  color: var(--text-2);
-  cursor: pointer;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.lineup-move-btn:active { background: var(--border); }
 .lineup-drag-handle {
   color: var(--border);
   font-size: 18px;
-  cursor: grab;
+  cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
+}
+.lineup-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.lineup-slot-choice {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.lineup-slot-choice.active {
+  border-color: var(--amber);
+  background: var(--amber-dim);
+  color: var(--amber);
 }
 
 /* ════════════════════════════════════
