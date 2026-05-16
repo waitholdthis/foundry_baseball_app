@@ -7,8 +7,8 @@
 
 "use strict";
 
-/* ── Demo game data ── */
-const GAME = {
+/* ── Demo game data, used only if the exporter is opened standalone ── */
+const DEMO_GAME = {
   home: "Foundry Ballers",
   away: "River Dogs",
   date: "May 9, 2026",
@@ -52,6 +52,58 @@ const GAME = {
     [null,          {r:"K", b:0}, {r:"G1",b:0},   null,          null,         null,          null,         null,         null        ],
   ],
 };
+
+function padScorebookArray(values, length, fallback = 0) {
+  const arr = Array.isArray(values) ? values.slice(0, length) : [];
+  while (arr.length < length) arr.push(fallback);
+  return arr.map(v => Number(v) || 0);
+}
+
+function normalizeScorebookGame(data) {
+  const src = data || DEMO_GAME;
+  const inningCount = Math.max(
+    9,
+    Number(src.totalInnings) || 0,
+    Array.isArray(src.innings) ? src.innings.length : 0,
+    Array.isArray(src.awayInnings) ? src.awayInnings.length : 0
+  );
+  const lineup = Array.isArray(src.lineup) ? src.lineup : [];
+  const atBats = lineup.map((_, i) => {
+    const row = Array.isArray(src.atBats?.[i]) ? src.atBats[i].slice(0, inningCount) : [];
+    while (row.length < inningCount) row.push(null);
+    return row;
+  });
+  const homeHits = padScorebookArray(src.hits, inningCount);
+  const awayHits = padScorebookArray(src.awayHits, inningCount);
+
+  if (!Array.isArray(src.hits) || !Array.isArray(src.awayHits)) {
+    atBats.forEach(row => {
+      row.forEach((ab, idx) => {
+        if (!ab || !['1B', '2B', '3B', 'HR'].includes(ab.r)) return;
+        if (src.ourTeamRole === 'away') awayHits[idx]++;
+        else homeHits[idx]++;
+      });
+    });
+  }
+
+  return {
+    ...src,
+    home: src.home || 'Home',
+    away: src.away || 'Away',
+    date: src.date || new Date().toLocaleDateString(),
+    field: src.field || '',
+    innings: padScorebookArray(src.innings, inningCount),
+    awayInnings: padScorebookArray(src.awayInnings, inningCount),
+    hits: homeHits,
+    awayHits,
+    errors: padScorebookArray(src.errors, inningCount),
+    awayErrors: padScorebookArray(src.awayErrors, inningCount),
+    lineup,
+    pitching: Array.isArray(src.pitching) ? src.pitching : [],
+    atBats,
+    inningCount,
+  };
+}
 
 /* ── Color palette (matches Foundry design tokens) ── */
 const C = {
@@ -127,9 +179,10 @@ function drawCell(doc, x, y, cw, ch, ab) {
 }
 
 /* ── Main PDF generator ── */
-function generateScorebookPDF() {
+function generateScorebookPDF(gameData) {
   if (!window.jspdf) { alert("PDF library not loaded."); return; }
 
+  const GAME = normalizeScorebookGame(gameData);
   const { jsPDF } = window.jspdf;
   // Page 1: landscape 792 × 612 pt
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'letter' });
@@ -459,7 +512,7 @@ function generateScorebookPDF() {
   doc.text('FOUNDRY · foundry.app', mg, H - 9);
   doc.text('Exported ' + GAME.date + '  ·  Page 2 of 2', W - mg, H - 9, { align: 'right' });
 
-  doc.save('Foundry_Scorebook_' + GAME.date.replace(/\s/g, '_') + '.pdf');
+  doc.save('Foundry_Scorebook_' + String(GAME.date).replace(/\s/g, '_') + '.pdf');
 }
 
 /* ── Button wiring ── */
@@ -475,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateScorebookPDF();
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Download Sample Scorebook';
+        btn.textContent = 'Download Scorebook';
       }
     }, 60);
   });
