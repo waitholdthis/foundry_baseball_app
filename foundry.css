@@ -1161,6 +1161,12 @@ html, body {
   letter-spacing: 0.04em;
 }
 .steal-btn:active { transform: scale(0.94); background: rgba(245,158,11,0.25); }
+.steal-btn.caught {
+  border-color: rgba(239,68,68,0.38);
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+}
+.steal-btn.caught:active { background: rgba(239,68,68,0.22); }
 
 /* Count strip */
 .recent-plays-strip {

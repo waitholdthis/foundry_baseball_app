@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css">
+  <link rel="stylesheet" href="foundry.css?v=64">
 </head>
 <body>
 
@@ -430,10 +430,13 @@
 
         <!-- Steal buttons -->
         <div class="steal-strip" id="stealStrip" role="group" aria-label="Steal base" hidden>
-          <span class="steal-label">STEAL</span>
+          <span class="steal-label">RUNNERS</span>
           <button class="steal-btn" id="stealBtn1" aria-label="Steal 2nd base">2nd</button>
           <button class="steal-btn" id="stealBtn2" aria-label="Steal 3rd base">3rd</button>
           <button class="steal-btn" id="stealBtn3" aria-label="Steal home">Home</button>
+          <button class="steal-btn caught" id="caughtStealBtn1" aria-label="Runner caught stealing 2nd base">CS 2nd</button>
+          <button class="steal-btn caught" id="caughtStealBtn2" aria-label="Runner caught stealing 3rd base">CS 3rd</button>
+          <button class="steal-btn caught" id="caughtStealBtn3" aria-label="Runner caught stealing home">CS Home</button>
         </div>
 
         <!-- Recent plays -->
@@ -1115,6 +1118,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="scorebook-export.js?v=58"></script>
-<script src="foundry-v63.js"></script>
+<script src="foundry-v64.js"></script>
 </body>
 </html>
