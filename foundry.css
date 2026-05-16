@@ -765,6 +765,11 @@ html, body {
 }
 .outs-adjuster {
   margin-top: 6px;
+  width: 132px;
+  max-width: calc(100vw - 32px);
+}
+.outs-adjuster .adj-btn {
+  min-width: 0;
 }
 
 /* Tab bar */
