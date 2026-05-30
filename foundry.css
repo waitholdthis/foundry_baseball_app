@@ -530,6 +530,16 @@ html, body {
   width: 100%;
   margin-top: 6px;
 }
+.lib-dropdown-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+.lib-dropdown-row .walkup-library-select {
+  flex: 1;
+  margin-top: 0;
+}
 .walkup-lib-btn {
   padding: 6px 14px;
   border-radius: 20px;

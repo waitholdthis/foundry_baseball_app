@@ -542,7 +542,10 @@
         <div id="plTrackList" class="pl-track-list"></div>
         <div class="walkup-lib-group" id="plLibraryGroup">
           <div class="walkup-lib-label">LIBRARY</div>
-          <div class="walkup-lib-btns" id="plLibraryBtns"></div>
+          <div class="lib-dropdown-row">
+            <select id="plLibrarySelect" class="walkup-library-select"><option value="">Select a song…</option></select>
+            <button class="btn-secondary" id="plLibraryAddBtn" style="font-size:13px;padding:6px 12px;white-space:nowrap">+ Add</button>
+          </div>
         </div>
         <button class="btn-secondary btn-full" id="plAddBtn" style="font-size:13px;padding:10px 16px" aria-label="Add tracks to playlist">+ Upload Track</button>
         <input id="plFileInput" type="file" accept="audio/*" multiple class="sr-only" aria-label="Choose audio files for playlist">
@@ -752,6 +755,46 @@
           <button class="sound-btn" data-sound="organRiff" aria-label="Organ">
             <span class="sound-icon">🎺</span>
             <span>Organ</span>
+          </button>
+          <button class="sound-btn" data-sound="kRiff" aria-label="K Riff">
+            <span class="sound-icon">🎶</span>
+            <span>K Riff</span>
+          </button>
+          <button class="sound-btn" data-sound="oneMoreStrike" aria-label="One more strike">
+            <span class="sound-icon">☝️</span>
+            <span>1 More Strike</span>
+          </button>
+          <button class="sound-btn" data-sound="strike1" aria-label="Strike 1">
+            <span class="sound-icon">1️⃣</span>
+            <span>Strike 1</span>
+          </button>
+          <button class="sound-btn" data-sound="strike2" aria-label="Strike 2">
+            <span class="sound-icon">2️⃣</span>
+            <span>Strike 2</span>
+          </button>
+          <button class="sound-btn" data-sound="strike3" aria-label="Strike 3">
+            <span class="sound-icon">3️⃣</span>
+            <span>Strike 3</span>
+          </button>
+          <button class="sound-btn" data-sound="strikeoutAirhorn" aria-label="Strikeout airhorn">
+            <span class="sound-icon">📢</span>
+            <span>K Airhorn</span>
+          </button>
+          <button class="sound-btn" data-sound="strikeoutWhistle" aria-label="Strikeout whistle">
+            <span class="sound-icon">🎵</span>
+            <span>K Whistle</span>
+          </button>
+          <button class="sound-btn" data-sound="wipe" aria-label="Wipe">
+            <span class="sound-icon">💧</span>
+            <span>Wipe</span>
+          </button>
+          <button class="sound-btn" data-sound="hornSfx" aria-label="Horn">
+            <span class="sound-icon">🔔</span>
+            <span>Horn</span>
+          </button>
+          <button class="sound-btn" data-sound="hornV1" aria-label="Horn V1">
+            <span class="sound-icon">🔊</span>
+            <span>Horn V1</span>
           </button>
         </div>
         <button id="sfxStopBtn" class="sfx-stop-btn" aria-label="Stop sound">
@@ -1120,7 +1163,10 @@
         <button class="btn-secondary" id="warmupUploadBtn" style="font-size:12px;padding:6px 12px">+ Upload</button>
         <input id="warmupFileInput" type="file" accept="audio/*" multiple class="sr-only" aria-label="Upload warm-up tracks">
       </div>
-      <div class="warmup-lib-btns" id="warmupLibBtns"></div>
+      <div class="lib-dropdown-row">
+        <select id="warmupLibSelect" class="walkup-library-select"><option value="">Select a song…</option></select>
+        <button class="btn-secondary" id="warmupLibPlayBtn" style="font-size:12px;padding:6px 12px;white-space:nowrap">▶ Play</button>
+      </div>
     </div>
 
     <div class="warmup-actions">

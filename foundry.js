@@ -322,11 +322,12 @@ let pendingAudioName = '';
 
 /* ── Between-innings library (add entries here as you drop files in BetweenInnings/) ── */
 const BETWEEN_INNINGS_LIBRARY = [
-  { name: 'Big Girl Talk — CJ Beatty', url: 'BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3' },
+  { name: 'Big Girl Talk',             url: 'BetweenInnings/Big Girl Talk.mp3' },
+  { name: 'Church Clap',               url: 'BetweenInnings/Church Clap.mp3' },
   { name: 'Glory Days',                url: 'BetweenInnings/Glory Days.mp3' },
   { name: 'Light Em Up',               url: 'BetweenInnings/Light Em Up.mp3' },
   { name: 'North Carolina',            url: 'BetweenInnings/North Carolina.mp3' },
-  { name: 'Row My Boat — CJ Beatty',   url: 'BetweenInnings/Row My Boat ft. CJ Beatty.mp3' },
+  { name: 'Row My Boat',               url: 'BetweenInnings/Row My Boat.mp3' },
   { name: 'Swing',                     url: 'BetweenInnings/Swing.mp3' },
   { name: 'Tokyo Drift',               url: 'BetweenInnings/Tokyo Drift.mp3' },
   { name: 'We Ready',                  url: 'BetweenInnings/We Ready.mp3' },
@@ -412,24 +413,27 @@ function findLibrarySongByFile(src) {
 })();
 
 (function buildBetweenInningsLibrary() {
-  const container = document.getElementById('plLibraryBtns');
+  const select = document.getElementById('plLibrarySelect');
   const group = document.getElementById('plLibraryGroup');
-  if (!container || !BETWEEN_INNINGS_LIBRARY.length) { if (group) group.classList.add('hidden'); return; }
-  BETWEEN_INNINGS_LIBRARY.forEach(song => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'walkup-lib-btn';
-    btn.textContent = song.name;
-    btn.addEventListener('click', () => {
-      const already = (S.playlist?.tracks || []).some(t => t.url === song.url);
-      if (already) { showToast(`${song.name} already in playlist`); return; }
-      if (!S.playlist) S.playlist = { tracks: [], shuffle: false, autoPlay: true };
-      S.playlist.tracks.push({ name: song.name, url: song.url });
-      saveState();
-      renderPlaylistUI();
-      showToast(`Added: ${song.name}`);
-    });
-    container.appendChild(btn);
+  if (!select || !BETWEEN_INNINGS_LIBRARY.length) { if (group) group.classList.add('hidden'); return; }
+  BETWEEN_INNINGS_LIBRARY.forEach((song, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = song.name;
+    select.appendChild(opt);
+  });
+  document.getElementById('plLibraryAddBtn').addEventListener('click', () => {
+    const idx = parseInt(select.value, 10);
+    if (isNaN(idx)) return;
+    const song = BETWEEN_INNINGS_LIBRARY[idx];
+    if (!song) return;
+    const already = (S.playlist?.tracks || []).some(t => t.url === song.url);
+    if (already) { showToast(`${song.name} already in playlist`); return; }
+    if (!S.playlist) S.playlist = { tracks: [], shuffle: false, autoPlay: true };
+    S.playlist.tracks.push({ name: song.name, url: song.url });
+    saveState();
+    renderPlaylistUI();
+    showToast(`Added: ${song.name}`);
   });
 })();
 
@@ -696,19 +700,17 @@ function showWarmupOverlay(gameData) {
 }
 
 function buildWarmupLibrary() {
-  const container = document.getElementById('warmupLibBtns');
-  container.innerHTML = '';
+  const select = document.getElementById('warmupLibSelect');
+  select.innerHTML = '<option value="">Select a song…</option>';
   warmupTracks = [
     ...BETWEEN_INNINGS_LIBRARY.map(t => ({ name: t.name, src: t.url })),
     ...WALKUP_LIBRARY.map(t => ({ name: t.name, src: t.file })),
   ];
   warmupTracks.forEach((t, i) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'walkup-lib-btn';
-    btn.textContent = t.name;
-    btn.addEventListener('click', () => playWarmupTrack(i));
-    container.appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = t.name;
+    select.appendChild(opt);
   });
 }
 
@@ -724,9 +726,9 @@ function playWarmupTrack(idx) {
   // UI — now playing
   document.getElementById('warmupNpName').textContent = track.name;
   document.getElementById('warmupNowPlaying').hidden = false;
-  // highlight active library btn
-  document.querySelectorAll('#warmupLibBtns .walkup-lib-btn').forEach((b, i) =>
-    b.classList.toggle('active', i === warmupIdx));
+  // reflect active track in dropdown
+  const warmupSel = document.getElementById('warmupLibSelect');
+  if (warmupSel) warmupSel.value = warmupIdx;
   // show pause icon
   warmupSetPlayIcon(false);
   // progress ticker
@@ -807,20 +809,25 @@ document.getElementById('warmupUploadBtn').addEventListener('click', () => {
 document.getElementById('warmupFileInput').addEventListener('change', e => {
   const files = [...e.target.files];
   const startIdx = warmupTracks.length;
+  const warmupSel = document.getElementById('warmupLibSelect');
   files.forEach(f => {
     const src = URL.createObjectURL(f);
     const name = f.name.replace(/\.[^.]+$/, '');
     warmupTracks.push({ name, src });
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'walkup-lib-btn';
-    btn.textContent = name;
     const idx = warmupTracks.length - 1;
-    btn.addEventListener('click', () => playWarmupTrack(idx));
-    document.getElementById('warmupLibBtns').appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = name;
+    warmupSel.appendChild(opt);
   });
   e.target.value = '';
   if (files.length) playWarmupTrack(startIdx);
+});
+
+document.getElementById('warmupLibPlayBtn').addEventListener('click', () => {
+  const sel = document.getElementById('warmupLibSelect');
+  const idx = parseInt(sel.value, 10);
+  if (!isNaN(idx)) playWarmupTrack(idx);
 });
 
 document.getElementById('warmupStartGame').addEventListener('click', launchGame);
@@ -3049,7 +3056,17 @@ function playSound(type) {
       case 'hockey':     playMp3('sounds/Hockey.mp3');            return;
       case 'jeopardy':   playMp3('sounds/Jeopardy.mp3');          return;
       case 'mommy':      playMp3('sounds/Mommy.mp3');             return;
-      case 'organRiff':  playMp3('sounds/Organ.mp3');             return;
+      case 'organRiff':       playMp3('sounds/Organ.mp3');              return;
+      case 'kRiff':           playMp3('sounds/K Riff.mp3');            return;
+      case 'oneMoreStrike':   playMp3('sounds/OneMoreStrike.mp3');      return;
+      case 'strike1':         playMp3('sounds/Strike1.mp3');            return;
+      case 'strike2':         playMp3('sounds/Strike2.mp3');            return;
+      case 'strike3':         playMp3('sounds/Strike3.mp3');            return;
+      case 'strikeoutAirhorn':playMp3('sounds/StrikeOutAirhorn.mp3');   return;
+      case 'strikeoutWhistle':playMp3('sounds/StrikeOutWhistle.mp3');   return;
+      case 'wipe':            playMp3('sounds/Wipe.mp3');               return;
+      case 'hornSfx':         playMp3('sounds/horn.mp3');               return;
+      case 'hornV1':          playMp3('sounds/hornV1.mp3');             return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
