@@ -143,9 +143,11 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then(clients => Promise.all(clients.map(client => client.navigate(client.url))))
   );
 });
 
@@ -173,7 +175,7 @@ self.addEventListener('fetch', e => {
   const isAppShell = e.request.mode === 'navigate' || APP_SHELL_PATHS.has(url.pathname);
   if (isAppShell) {
     e.respondWith(
-      fetch(e.request).then(res => {
+      fetch(new Request(e.request, { cache: 'no-cache' })).then(res => {
         if (res.ok) {
           const clone = res.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
