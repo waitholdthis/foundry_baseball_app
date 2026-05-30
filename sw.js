@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v73';
+const CACHE = 'foundry-v74';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -22,6 +22,7 @@ const ASSETS = [
   './foundry-v71.js',
   './foundry-v72.js',
   './foundry-v73.js',
+  './foundry-v74.js',
   './scorebook-export.js',
   './scorebook-export-v60.js',
   './manifest.json',
@@ -32,11 +33,12 @@ const ASSETS = [
 const APP_SHELL_PATHS = new Set(ASSETS.map(asset => new URL(asset, self.location.href).pathname));
 
 const MEDIA_ASSETS = [
-  './BetweenInnings/BiG GiRL TaLK -CJ Beatty.mp3',
+  './BetweenInnings/Big Girl Talk.mp3',
+  './BetweenInnings/Church Clap.mp3',
   './BetweenInnings/Glory Days.mp3',
   './BetweenInnings/Light Em Up.mp3',
   './BetweenInnings/North Carolina.mp3',
-  './BetweenInnings/Row My Boat ft. CJ Beatty.mp3',
+  './BetweenInnings/Row My Boat.mp3',
   './BetweenInnings/Swing.mp3',
   './BetweenInnings/Tokyo Drift.mp3',
   './BetweenInnings/We Ready.mp3',
@@ -68,6 +70,16 @@ const MEDIA_ASSETS = [
   './sounds/Jeopardy.mp3',
   './sounds/Mommy.mp3',
   './sounds/Organ.mp3',
+  './sounds/K Riff.mp3',
+  './sounds/OneMoreStrike.mp3',
+  './sounds/Strike1.mp3',
+  './sounds/Strike2.mp3',
+  './sounds/Strike3.mp3',
+  './sounds/StrikeOutAirhorn.mp3',
+  './sounds/StrikeOutWhistle.mp3',
+  './sounds/Wipe.mp3',
+  './sounds/horn.mp3',
+  './sounds/hornV1.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',
