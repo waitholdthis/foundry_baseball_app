@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v74';
+const CACHE = 'foundry-v75';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -92,8 +92,10 @@ const MEDIA_ASSETS = [
   './walkupsongs/Big Dawgs.mp3',
   './walkupsongs/Bring Em Out.mp3',
   './walkupsongs/Bully.mp3',
+  './walkupsongs/Coming In Hot.mp3',
   './walkupsongs/CrazyTrain.mp3',
   './walkupsongs/DMX Ruff Ryders.mp3',
+  './walkupsongs/Einsteen.mp3',
   './walkupsongs/Fireball.mp3',
   './walkupsongs/Fool.mp3',
   './walkupsongs/Who\'s That Girl.mp3',
@@ -116,6 +118,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Silent Watch Me Whip.mp3',
   './walkupsongs/Soda_Pop.mp3',
   './walkupsongs/Soulja Boy Superman.mp3',
+  './walkupsongs/Space.mp3',
   './walkupsongs/Swag.mp3',
   './walkupsongs/Taylor Swift - The Fate of Ophelia.mp3',
   './walkupsongs/Tell Me Nothing.mp3',
