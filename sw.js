@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v75';
+const CACHE = 'foundry-v76';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -49,6 +49,7 @@ const MEDIA_ASSETS = [
   './sounds/Wow.mp3',
   './sounds/Rally.mp3',
   './sounds/SoNervy.mp3',
+  './sounds/scubbaaa.mp3',
   './sounds/Strikeout.mp3',
   './sounds/awkward-cricket.mp3',
   './sounds/aye-thats-pretty-good.mp3',

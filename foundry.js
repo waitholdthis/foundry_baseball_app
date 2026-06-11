@@ -3041,6 +3041,7 @@ function playSound(type) {
       case 'homerunCall': playMp3('sounds/Homerun.mp3'); return;
       case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
       case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
+      case 'scubbaa':    playMp3('sounds/scubbaaa.mp3');   return;
       case 'angerDingus': playMp3('sounds/Angerdingus.mp3'); return;
       case 'hi':        playMp3('sounds/Hi.mp3');        return;
       case 'hotDog':    playMp3('sounds/Hot Dog.mp3');   return;
