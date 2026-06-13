@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v78';
+const CACHE = 'foundry-v79';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -91,6 +91,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/2Pac California.mp3',
   './walkupsongs/A-O-K.mp3',
   './walkupsongs/Baby.mp3',
+  './walkupsongs/Barbie.mp3',
   './walkupsongs/Batter Up.mp3?v=58',
   './walkupsongs/Thunderstruck.mp3',
   './walkupsongs/Beautiful Things.mp3',
@@ -129,6 +130,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Soda_Pop.mp3',
   './walkupsongs/Soulja Boy Superman.mp3',
   './walkupsongs/Space.mp3',
+  './walkupsongs/Superpowers.mp3',
   './walkupsongs/Swag.mp3',
   './walkupsongs/Taylor Swift - The Fate of Ophelia.mp3',
   './walkupsongs/Tell Me Nothing.mp3',

@@ -338,6 +338,7 @@ const WALKUP_LIBRARY = [
   { name: 'Thunderstruck',                  file: 'walkupsongs/Thunderstruck.mp3' },
   { name: 'A-O-K',                          file: 'walkupsongs/A-O-K.mp3' },
   { name: 'Baby',                           file: 'walkupsongs/Baby.mp3' },
+  { name: 'Barbie',                         file: 'walkupsongs/Barbie.mp3' },
   { name: 'Batter Up',                      file: 'walkupsongs/Batter Up.mp3?v=58' },
   { name: 'Beautiful Things',               file: 'walkupsongs/Beautiful Things.mp3' },
   { name: 'Big Dawgs',                      file: 'walkupsongs/Big Dawgs.mp3' },
@@ -390,6 +391,7 @@ const WALKUP_LIBRARY = [
   { name: 'Yeah',                           file: 'walkupsongs/Yeah.mp3' },
   { name: 'I Look Good',                    file: 'walkupsongs/I Look Good.mp3' },
   { name: 'Stay Fly',                       file: 'walkupsongs/Stay Fly.mp3?v=58' },
+  { name: 'Superpowers',                    file: 'walkupsongs/Superpowers.mp3' },
   { name: 'Work Out',                       file: 'walkupsongs/Work Out.mp3?v=58' },
   { name: 'Lace Em Up',                     file: 'walkupsongs/Lace Em Up.mp3?v=58' },
 ];
