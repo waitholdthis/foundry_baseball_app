@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v76';
+const CACHE = 'foundry-v78';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -50,6 +50,10 @@ const MEDIA_ASSETS = [
   './sounds/Rally.mp3',
   './sounds/SoNervy.mp3',
   './sounds/scubbaaa.mp3',
+  './sounds/Dun Dun.mp3',
+  './sounds/Emotional.mp3',
+  './sounds/Error.mp3',
+  './sounds/Fail.mp3',
   './sounds/Strikeout.mp3',
   './sounds/awkward-cricket.mp3',
   './sounds/aye-thats-pretty-good.mp3',
@@ -96,6 +100,9 @@ const MEDIA_ASSETS = [
   './walkupsongs/Coming In Hot.mp3',
   './walkupsongs/CrazyTrain.mp3',
   './walkupsongs/DMX Ruff Ryders.mp3',
+  './walkupsongs/Doo Wop.mp3',
+  './walkupsongs/Drop1.mp3',
+  './walkupsongs/Drop2.mp3',
   './walkupsongs/Einsteen.mp3',
   './walkupsongs/Fireball.mp3',
   './walkupsongs/Fool.mp3',
@@ -108,6 +115,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Last Of My Kind.mp3',
   './walkupsongs/Lip Gloss.mp3',
   './walkupsongs/Low Rider.mp3?v=58',
+  './walkupsongs/Macarena.mp3',
   './walkupsongs/Sandman.mp3',
   './walkupsongs/Party In The USA.mp3',
   './walkupsongs/Pretty Girl Walk.mp3',
@@ -115,6 +123,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Show.mp3',
   './walkupsongs/Snowman.mp3?v=58',
   './walkupsongs/What\'s My Name.mp3',
+  './walkupsongs/Wobble.mp3',
   './walkupsongs/Best Friend.mp3',
   './walkupsongs/Silent Watch Me Whip.mp3',
   './walkupsongs/Soda_Pop.mp3',

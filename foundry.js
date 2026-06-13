@@ -347,6 +347,9 @@ const WALKUP_LIBRARY = [
   { name: 'Coming In Hot',                  file: 'walkupsongs/Coming In Hot.mp3' },
   { name: 'Crazy Train',                    file: 'walkupsongs/CrazyTrain.mp3' },
   { name: 'DMX — Ruff Ryders\' Anthem',     file: 'walkupsongs/DMX Ruff Ryders.mp3' },
+  { name: 'Doo Wop',                        file: 'walkupsongs/Doo Wop.mp3' },
+  { name: 'Drop 1',                         file: 'walkupsongs/Drop1.mp3' },
+  { name: 'Drop 2',                         file: 'walkupsongs/Drop2.mp3' },
   { name: 'Einsteen',                       file: 'walkupsongs/Einsteen.mp3' },
   { name: 'Fireball',                       file: 'walkupsongs/Fireball.mp3' },
   { name: 'Fool',                           file: 'walkupsongs/Fool.mp3' },
@@ -358,6 +361,7 @@ const WALKUP_LIBRARY = [
   { name: 'Last Of My Kind',                file: 'walkupsongs/Last Of My Kind.mp3' },
   { name: 'Lip Gloss',                      file: 'walkupsongs/Lip Gloss.mp3' },
   { name: 'Low Rider',                      file: 'walkupsongs/Low Rider.mp3?v=58' },
+  { name: 'Macarena',                       file: 'walkupsongs/Macarena.mp3' },
   { name: 'Sandman',                        file: 'walkupsongs/Sandman.mp3' },
   { name: 'Never Get Used To This',         file: 'walkupsongs/Never Get Used To This.mp3' },
   { name: 'Party In The USA',               file: 'walkupsongs/Party In The USA.mp3' },
@@ -366,6 +370,7 @@ const WALKUP_LIBRARY = [
   { name: 'Show',                           file: 'walkupsongs/Show.mp3' },
   { name: 'Snowman',                        file: 'walkupsongs/Snowman.mp3?v=58' },
   { name: 'What\'s My Name',                file: 'walkupsongs/What\'s My Name.mp3' },
+  { name: 'Wobble',                         file: 'walkupsongs/Wobble.mp3' },
   { name: 'Best Friend',                    file: 'walkupsongs/Best Friend.mp3' },
   { name: 'Silent — Watch Me Whip',         file: 'walkupsongs/Silent Watch Me Whip.mp3' },
   { name: 'Soda Pop',                       file: 'walkupsongs/Soda_Pop.mp3' },
@@ -3042,6 +3047,10 @@ function playSound(type) {
       case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
       case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
       case 'scubbaa':    playMp3('sounds/scubbaaa.mp3');   return;
+      case 'dunDun':     playMp3('sounds/Dun Dun.mp3');   return;
+      case 'emotional':  playMp3('sounds/Emotional.mp3'); return;
+      case 'error':      playMp3('sounds/Error.mp3');     return;
+      case 'fail':       playMp3('sounds/Fail.mp3');      return;
       case 'angerDingus': playMp3('sounds/Angerdingus.mp3'); return;
       case 'hi':        playMp3('sounds/Hi.mp3');        return;
       case 'hotDog':    playMp3('sounds/Hot Dog.mp3');   return;
