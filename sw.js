@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v79';
+const CACHE = 'foundry-v80';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -85,6 +85,14 @@ const MEDIA_ASSETS = [
   './sounds/Wipe.mp3',
   './sounds/horn.mp3',
   './sounds/hornV1.mp3',
+  './sounds/Dadada.mp3',
+  './sounds/Duel of Fate.mp3',
+  './sounds/Focus Dude.mp3',
+  './sounds/Hamilton.mp3',
+  './sounds/Imperial March.mp3',
+  './sounds/Mine Mine.mp3',
+  './sounds/My Shot.mp3',
+  './sounds/Non-Stop.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',
@@ -137,6 +145,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/The Largest.mp3',
   './walkupsongs/Turn Down.mp3?v=58',
   './walkupsongs/Up.mp3',
+  './walkupsongs/Whisper.mp3',
   './walkupsongs/Walk_Up_Centerfield.mp3',
   './walkupsongs/Heaven.mp3',
   './walkupsongs/Is Win.mp3',

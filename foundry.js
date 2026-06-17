@@ -385,6 +385,7 @@ const WALKUP_LIBRARY = [
   { name: '2Pac — All Eyez on Me (America)', file: 'walkupsongs/2Pac Americas.mp3' },
   { name: '2Pac — California Love',         file: 'walkupsongs/2Pac California.mp3' },
   { name: 'Up',                             file: 'walkupsongs/Up.mp3' },
+  { name: 'Whisper',                        file: 'walkupsongs/Whisper.mp3' },
   { name: 'Heaven',                         file: 'walkupsongs/Heaven.mp3' },
   { name: 'Is Win',                         file: 'walkupsongs/Is Win.mp3' },
   { name: 'Narco',                          file: 'walkupsongs/Narco.mp3' },
@@ -3082,6 +3083,14 @@ function playSound(type) {
       case 'wipe':            playMp3('sounds/Wipe.mp3');               return;
       case 'hornSfx':         playMp3('sounds/horn.mp3');               return;
       case 'hornV1':          playMp3('sounds/hornV1.mp3');             return;
+      case 'dadada':          playMp3('sounds/Dadada.mp3');             return;
+      case 'duelOfFate':      playMp3('sounds/Duel of Fate.mp3');       return;
+      case 'focusDude':       playMp3('sounds/Focus Dude.mp3');         return;
+      case 'hamilton':        playMp3('sounds/Hamilton.mp3');           return;
+      case 'imperialMarch':   playMp3('sounds/Imperial March.mp3');     return;
+      case 'mineMine':        playMp3('sounds/Mine Mine.mp3');          return;
+      case 'myShot':          playMp3('sounds/My Shot.mp3');            return;
+      case 'nonStop':         playMp3('sounds/Non-Stop.mp3');           return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
