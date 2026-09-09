@@ -395,6 +395,12 @@ const WALKUP_LIBRARY = [
   { name: 'Superpowers',                    file: 'walkupsongs/Superpowers.mp3' },
   { name: 'Work Out',                       file: 'walkupsongs/Work Out.mp3?v=58' },
   { name: 'Lace Em Up',                     file: 'walkupsongs/Lace Em Up.mp3?v=58' },
+  { name: 'All Gas No Quit',                file: 'walkupsongs/All Gas No Quit.mp3' },
+  { name: 'Love Me',                        file: 'walkupsongs/Love Me.mp3' },
+  { name: 'My Life Be Like',                file: 'walkupsongs/My Life Be Like.mp3' },
+  { name: 'Return of the Mack',             file: 'walkupsongs/Return Mack.mp3' },
+  { name: 'Thunderstruck — Blaire',         file: 'walkupsongs/Thunderstruck Blaire.mp3' },
+  { name: 'Walking On Sunshine',            file: 'walkupsongs/Walking On Sunshine.mp3' },
 ];
 
 function mediaPath(src) {
@@ -3091,6 +3097,7 @@ function playSound(type) {
       case 'mineMine':        playMp3('sounds/Mine Mine.mp3');          return;
       case 'myShot':          playMp3('sounds/My Shot.mp3');            return;
       case 'nonStop':         playMp3('sounds/Non-Stop.mp3');           return;
+      case 'noNoNo':          playMp3('sounds/No No No.mp3');           return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();

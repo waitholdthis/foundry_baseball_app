@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v80';
+const CACHE = 'foundry-v82';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -93,6 +93,7 @@ const MEDIA_ASSETS = [
   './sounds/Mine Mine.mp3',
   './sounds/My Shot.mp3',
   './sounds/Non-Stop.mp3',
+  './sounds/No No No.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',
@@ -153,6 +154,12 @@ const MEDIA_ASSETS = [
   './walkupsongs/Yeah.mp3',
   './walkupsongs/Work Out.mp3?v=58',
   './walkupsongs/Lace Em Up.mp3?v=58',
+  './walkupsongs/All Gas No Quit.mp3',
+  './walkupsongs/Love Me.mp3',
+  './walkupsongs/My Life Be Like.mp3',
+  './walkupsongs/Return Mack.mp3',
+  './walkupsongs/Thunderstruck Blaire.mp3',
+  './walkupsongs/Walking On Sunshine.mp3',
 ];
 
 self.addEventListener('install', e => {
