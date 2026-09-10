@@ -401,6 +401,8 @@ const WALKUP_LIBRARY = [
   { name: 'Return of the Mack',             file: 'walkupsongs/Return Mack.mp3' },
   { name: 'Thunderstruck — Blaire',         file: 'walkupsongs/Thunderstruck Blaire.mp3' },
   { name: 'Walking On Sunshine',            file: 'walkupsongs/Walking On Sunshine.mp3' },
+  { name: 'Get Silly',                      file: 'walkupsongs/Get Silly.mp3' },
+  { name: 'Teenage Dirtbag',                file: 'walkupsongs/Teenage Dirtbag.mp3' },
 ];
 
 function mediaPath(src) {

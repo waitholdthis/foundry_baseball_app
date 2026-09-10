@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v82';
+const CACHE = 'foundry-v83';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -160,6 +160,8 @@ const MEDIA_ASSETS = [
   './walkupsongs/Return Mack.mp3',
   './walkupsongs/Thunderstruck Blaire.mp3',
   './walkupsongs/Walking On Sunshine.mp3',
+  './walkupsongs/Get Silly.mp3',
+  './walkupsongs/Teenage Dirtbag.mp3',
 ];
 
 self.addEventListener('install', e => {
