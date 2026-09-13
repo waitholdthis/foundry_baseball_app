@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v83';
+const CACHE = 'foundry-v84';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -61,7 +61,7 @@ const MEDIA_ASSETS = [
   './sounds/catch.mp3',
   './sounds/charge.mp3',
   './sounds/foul-ball.mp3',
-  './sounds/homerun.mp3',
+  './sounds/homerun1.mp3',
   './sounds/Woo.mp3?v=58',
   './sounds/lizard-button.mp3',
   './sounds/no_crying.mp3',
@@ -94,6 +94,7 @@ const MEDIA_ASSETS = [
   './sounds/My Shot.mp3',
   './sounds/Non-Stop.mp3',
   './sounds/No No No.mp3',
+  './sounds/Not Like Us.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',
@@ -162,6 +163,8 @@ const MEDIA_ASSETS = [
   './walkupsongs/Walking On Sunshine.mp3',
   './walkupsongs/Get Silly.mp3',
   './walkupsongs/Teenage Dirtbag.mp3',
+  './walkupsongs/Dai Dai.mp3',
+  './walkupsongs/My Little Pony.mp3',
 ];
 
 self.addEventListener('install', e => {

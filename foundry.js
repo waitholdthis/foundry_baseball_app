@@ -403,6 +403,8 @@ const WALKUP_LIBRARY = [
   { name: 'Walking On Sunshine',            file: 'walkupsongs/Walking On Sunshine.mp3' },
   { name: 'Get Silly',                      file: 'walkupsongs/Get Silly.mp3' },
   { name: 'Teenage Dirtbag',                file: 'walkupsongs/Teenage Dirtbag.mp3' },
+  { name: 'Dai Dai',                        file: 'walkupsongs/Dai Dai.mp3' },
+  { name: 'My Little Pony',                 file: 'walkupsongs/My Little Pony.mp3' },
 ];
 
 function mediaPath(src) {
@@ -3053,7 +3055,7 @@ function playSound(type) {
       case 'organ':     playMp3('sounds/charge.mp3');    return;
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
-      case 'homerun':   playMp3('sounds/homerun.mp3');   return;
+      case 'homerun':   playMp3('sounds/homerun1.mp3');  return;
       case 'homerunCall': playMp3('sounds/Homerun.mp3'); return;
       case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
       case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
@@ -3100,6 +3102,7 @@ function playSound(type) {
       case 'myShot':          playMp3('sounds/My Shot.mp3');            return;
       case 'nonStop':         playMp3('sounds/Non-Stop.mp3');           return;
       case 'noNoNo':          playMp3('sounds/No No No.mp3');           return;
+      case 'notLikeUs':       playMp3('sounds/Not Like Us.mp3');        return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
