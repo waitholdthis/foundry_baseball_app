@@ -18,7 +18,7 @@ const STORAGE_KEY = 'foundry_v1';
 
 const DEFAULT_STATE = {
   team: null,          // {name, sport, field}
-  players: [],         // [{id, name, number, pos, bats, throws, walkUpKey}]
+  players: [],         // [{id, name, number, pos, bats, throws, walkUpKey, announcement}]
   lineup: [],          // [playerId, ...] — current batting order
   game: null,          // see newGameState()
   completedGames: [],  // archived game summaries
@@ -494,6 +494,7 @@ function openPlayerSheet(player) {
     walkUpNameEl.textContent = 'No file';
     document.getElementById('walkUpUrl').value = '';
   }
+  document.getElementById('playerAnnouncement').value = player?.announcement || '';
   const currentUrl = player?.walkUpUrl || '';
   const walkUpLibraryEl = document.getElementById('walkUpLibrary');
   if (walkUpLibraryEl) {
@@ -507,6 +508,15 @@ function openPlayerSheet(player) {
 function closePlayerSheet() {
   playerSheetOverlay.classList.add('hidden');
 }
+
+document.getElementById('previewAnnouncement')?.addEventListener('click', () => {
+  announcePlayer({
+    name:   playerNameEl.value.trim() || 'Player',
+    number: playerNumEl.value.trim() || '0',
+    pos:    playerPosEl.value,
+    announcement: document.getElementById('playerAnnouncement').value,
+  });
+});
 
 playerForm.addEventListener('submit', async e => {
   e.preventDefault();
@@ -537,6 +547,7 @@ playerForm.addEventListener('submit', async e => {
 
   const urlInput = document.getElementById('walkUpUrl').value.trim();
   player.walkUpUrl = urlInput || null;
+  player.announcement = document.getElementById('playerAnnouncement').value.trim() || null;
 
   syncLineupWithRoster();
   saveState();
@@ -2395,17 +2406,21 @@ async function announceText(text) {
 async function announcePlayer(player) {
   const sv = S.superVoice || {};
 
-  // Auto-migrate saved templates that pre-date the {position} token
-  let tmpl = sv.paMode ? sv.paTemplate : sv.template;
-  if (!tmpl || !tmpl.includes('{position}')) {
-    tmpl = sv.paMode ? DEFAULT_PA_TEMPLATE : DEFAULT_SV_TEMPLATE;
+  // A player's own announcement takes priority over the team template
+  let tmpl = String(player.announcement || '').trim();
+  if (!tmpl) {
+    // Auto-migrate saved templates that pre-date the {position} token
+    tmpl = sv.paMode ? sv.paTemplate : sv.template;
+    if (!tmpl || !tmpl.includes('{position}')) {
+      tmpl = sv.paMode ? DEFAULT_PA_TEMPLATE : DEFAULT_SV_TEMPLATE;
+    }
   }
 
   const posSpoken = POSITION_SPOKEN[player.pos] || player.pos || '';
   const text = tmpl
-    .replace('{name}', player.name)
-    .replace('{number}', player.number)
-    .replace('{position}', posSpoken);
+    .replaceAll('{name}', String(player.name))
+    .replaceAll('{number}', String(player.number))
+    .replaceAll('{position}', posSpoken);
 
   return announceText(text);
 }

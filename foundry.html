@@ -166,6 +166,12 @@
             <option value="">Select a library song</option>
           </select>
         </div>
+        <div class="field-group">
+          <label for="playerAnnouncement">Custom Announcement <span class="field-optional">(optional)</span></label>
+          <textarea id="playerAnnouncement" rows="2" maxlength="160" placeholder="Now batting, number 1, left field, Penny, the Punisher!" aria-describedby="playerAnnouncementHint"></textarea>
+          <span class="field-hint" id="playerAnnouncementHint">Leave blank to use the team announcement. <code>{name}</code>, <code>{number}</code> and <code>{position}</code> fill in automatically.</span>
+          <button type="button" class="btn-secondary" id="previewAnnouncement">▶ Preview</button>
+        </div>
         <div class="sheet-actions">
           <button type="button" class="btn-ghost" id="cancelPlayer">Cancel</button>
           <button type="submit" class="btn-primary">Save Player</button>
