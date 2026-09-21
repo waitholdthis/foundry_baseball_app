@@ -405,6 +405,8 @@ const WALKUP_LIBRARY = [
   { name: 'Teenage Dirtbag',                file: 'walkupsongs/Teenage Dirtbag.mp3' },
   { name: 'Dai Dai',                        file: 'walkupsongs/Dai Dai.mp3' },
   { name: 'My Little Pony',                 file: 'walkupsongs/My Little Pony.mp3' },
+  { name: 'Whip My Hair',                   file: 'walkupsongs/Whip My Hair.mp3' },
+  { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
 ];
 
 function mediaPath(src) {
@@ -3118,6 +3120,9 @@ function playSound(type) {
       case 'nonStop':         playMp3('sounds/Non-Stop.mp3');           return;
       case 'noNoNo':          playMp3('sounds/No No No.mp3');           return;
       case 'notLikeUs':       playMp3('sounds/Not Like Us.mp3');        return;
+      case 'andysComing':     playMp3('sounds/Andys Coming.mp3');       return;
+      case 'gotThatFeelin':   playMp3('sounds/Got That Feelin.mp3');    return;
+      case 'nothingToSee':    playMp3('sounds/Nothing To See.mp3');     return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
