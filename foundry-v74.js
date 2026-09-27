@@ -2062,6 +2062,8 @@ let activeAnnouncementDone = null;
 
 function getAudioCtx() {
   if (!soundCtx) {
+    // 'playback' keeps Web Audio audible with the iOS silent switch on
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {}
     soundCtx  = new (window.AudioContext || window.webkitAudioContext)();
     masterGain = soundCtx.createGain();
     masterGain.connect(soundCtx.destination);
@@ -2069,9 +2071,45 @@ function getAudioCtx() {
   return soundCtx;
 }
 
+// Keep the AudioContext unlocked so walk-up ducking works when a batter comes up
+document.addEventListener('pointerdown', () => {
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state !== 'running') ctx.resume().catch(() => {});
+  } catch {}
+}, { passive: true });
+
+/* iOS ignores audio.volume, so route walk-up songs through a GainNode when we
+   safely can (same-origin or blob). Cross-origin sources without CORS would go
+   silent through Web Audio, so those keep using element volume. */
+function routeThroughGain(audio, src) {
+  try {
+    const url = new URL(src, location.href);
+    if (url.protocol !== 'blob:' && url.origin !== location.origin) return;
+    const ctx = getAudioCtx();
+    if (ctx.state !== 'running') { ctx.resume().catch(() => {}); return; }
+    const gain = ctx.createGain();
+    ctx.createMediaElementSource(audio).connect(gain);
+    gain.connect(ctx.destination);
+    audio.volume = 1;
+    audio._gain = gain;
+  } catch {}
+}
+
+function setAudioLevel(audio, v) {
+  if (!audio) return;
+  if (audio._gain) audio._gain.gain.value = v;
+  else audio.volume = v;
+}
+
+function getAudioLevel(audio) {
+  if (!audio) return 0;
+  return audio._gain ? audio._gain.gain.value : audio.volume;
+}
+
 function setVolume(v) {
   if (masterGain) masterGain.gain.setTargetAtTime(v, soundCtx.currentTime, 0.05);
-  if (walkUpAudio) walkUpAudio.volume = v;
+  if (walkUpAudio) setAudioLevel(walkUpAudio, v);
   if (playlistAudio) playlistAudio.volume = v;
 }
 
@@ -2095,7 +2133,8 @@ function armWalkUpAudio(player, walkUpChoice) {
     const audio = new Audio(walkUpChoice.src);
     audio.preload = 'auto';
     audio.muted = false;
-    audio.volume = 0;
+    routeThroughGain(audio, walkUpChoice.src);
+    setAudioLevel(audio, 0);
     const ready = audio.play().catch(() => null);
     armedWalkUp = { playerId: player.id, src: walkUpChoice.src, audio, ready };
     return armedWalkUp;
@@ -2108,8 +2147,12 @@ function getMasterVolume() {
   return parseFloat(document.getElementById('masterVolume')?.value || '1');
 }
 
+// Quiet music under the announcer, then a lead-in before the voice starts
+const WALKUP_BED_LEAD_IN_MS = 1500;
+const WALKUP_BED_FADE_UP_MS = 1200;
+
 function getWalkUpBedVolume() {
-  return Math.min(0.12, Math.max(0.025, getMasterVolume() * 0.16));
+  return Math.min(0.2, Math.max(0.04, getMasterVolume() * 0.2));
 }
 
 async function startWalkUpBed(armed) {
@@ -2117,7 +2160,7 @@ async function startWalkUpBed(armed) {
   await armed.ready;
   if (armed.audio.paused) await armed.audio.play().catch(() => null);
   if (armed.audio.paused) return;
-  armed.audio.volume = getWalkUpBedVolume();
+  setAudioLevel(armed.audio, getWalkUpBedVolume());
 }
 
 async function createBlobWalkUpBed(blob, player, walkUpChoice) {
@@ -2128,7 +2171,8 @@ async function createBlobWalkUpBed(blob, player, walkUpChoice) {
     const audio = new Audio(src);
     audio.preload = 'auto';
     audio.muted = false;
-    audio.volume = 0;
+    routeThroughGain(audio, src);
+    setAudioLevel(audio, 0);
     const ready = audio.play().catch(() => null);
     const armed = { playerId: player.id, src, audio, ready, revokeSrc: true };
     armedWalkUp = armed;
@@ -2141,13 +2185,13 @@ async function createBlobWalkUpBed(blob, player, walkUpChoice) {
 
 function fadeAudioVolume(audio, target, duration = 450) {
   if (!audio) return;
-  const start = audio.volume;
+  const start = getAudioLevel(audio);
   const delta = target - start;
   const startedAt = performance.now();
   const step = now => {
     if (!audio || audio !== walkUpAudio || audio.paused) return;
     const t = Math.min(1, (now - startedAt) / duration);
-    audio.volume = start + delta * t;
+    setAudioLevel(audio, start + delta * t);
     if (t < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -2171,7 +2215,9 @@ async function runBatterIntro(player, opts = {}) {
   const isCurrentIntro = () => seq === batterIntroSeq && currentWalkUpPid === player.id;
   const sv = S.superVoice || {};
   const walkUpChoice = getWalkUpChoice(player);
-  const shouldStartIntroBed = !!(sv.enabled && sv.beforeSong);
+  // Older saved states lack beforeSong — treat missing as on, matching the checkbox default
+  const beforeSong = sv.beforeSong !== false;
+  const shouldStartIntroBed = !!(sv.enabled && beforeSong);
   const armed = (opts.armAudio || shouldStartIntroBed) ? armWalkUpAudio(player, walkUpChoice) : null;
   let walkUpBed = armed;
   let blobUrl = null;
@@ -2180,7 +2226,7 @@ async function runBatterIntro(player, opts = {}) {
     : null;
 
   if (sv.enabled) {
-    if (sv.beforeSong) {
+    if (beforeSong) {
       if (walkUpChoice?.type === 'blob' && blobPromise) {
         const blob = await blobPromise;
         if (blob && isCurrentIntro()) {
@@ -2189,6 +2235,9 @@ async function runBatterIntro(player, opts = {}) {
         }
       } else if (walkUpBed && walkUpBed.playerId === player.id && walkUpBed.src === walkUpChoice?.src) {
         await startWalkUpBed(walkUpBed);
+      }
+      if (walkUpBed?.audio && !walkUpBed.audio.paused) {
+        await new Promise(r => setTimeout(r, WALKUP_BED_LEAD_IN_MS));
       }
       await announcePlayer(player);
     } else {
@@ -2205,8 +2254,8 @@ async function runBatterIntro(player, opts = {}) {
       }
       if (blobUrl && isCurrentIntro()) {
         playWalkUpSrc(blobUrl, player, walkUpChoice.name, walkUpBed?.audio || null, {
-          restart: !sv.beforeSong,
-          fadeToFull: !!(sv.enabled && sv.beforeSong && walkUpBed?.audio),
+          restart: !beforeSong,
+          fadeToFull: !!(sv.enabled && beforeSong && walkUpBed?.audio),
           revokeOnEnd: !!walkUpBed?.revokeSrc || !walkUpBed?.audio,
         });
       }
@@ -2214,8 +2263,8 @@ async function runBatterIntro(player, opts = {}) {
       if (walkUpBed && walkUpBed.playerId === player.id && walkUpBed.src === walkUpChoice.src) await walkUpBed.ready;
       if (!isCurrentIntro()) return;
       playWalkUpSrc(walkUpChoice.src, player, walkUpChoice.name, walkUpBed?.audio || null, {
-        restart: !sv.beforeSong,
-        fadeToFull: !!(sv.enabled && sv.beforeSong && walkUpBed?.audio),
+        restart: !beforeSong,
+        fadeToFull: !!(sv.enabled && beforeSong && walkUpBed?.audio),
       });
     }
   }
@@ -2455,7 +2504,7 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
   }
   const fullVolume = getMasterVolume();
   const shouldFadeToFull = !!(opts.fadeToFull && isArmedAudio && !walkUpAudio.paused);
-  if (!shouldFadeToFull) walkUpAudio.volume = fullVolume;
+  if (!shouldFadeToFull) setAudioLevel(walkUpAudio, fullVolume);
   if (isArmedAudio && !walkUpAudio.paused) {
     setDJPlayIcon(true);
     setDJStatusBadge(true);
@@ -2466,7 +2515,7 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
       showToast('Tap the DJ play button to start walk-up audio');
     });
   }
-  if (shouldFadeToFull) fadeAudioVolume(walkUpAudio, fullVolume);
+  if (shouldFadeToFull) fadeAudioVolume(walkUpAudio, fullVolume, WALKUP_BED_FADE_UP_MS);
   if (audioEl) armedWalkUp = null;
   else clearArmedWalkUp();
 
@@ -2541,10 +2590,11 @@ document.getElementById('djReplay').addEventListener('click', () => {
 
 document.getElementById('djFade').addEventListener('click', () => {
   if (!walkUpAudio) return;
-  let vol = walkUpAudio.volume;
+  let vol = getAudioLevel(walkUpAudio);
   const fade = setInterval(() => {
+    if (!walkUpAudio) { clearInterval(fade); return; }
     vol = Math.max(0, vol - 0.05);
-    walkUpAudio.volume = vol;
+    setAudioLevel(walkUpAudio, vol);
     if (vol <= 0) { clearInterval(fade); stopWalkUp(); }
   }, 100);
 });
