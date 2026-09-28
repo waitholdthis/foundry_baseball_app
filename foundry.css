@@ -2628,3 +2628,23 @@ input[type="range"] {
 .score-inning-block {
   padding-top: 4px;
 }
+
+/* Hot keys — one tap plays a random sound for the moment */
+.hotkey-grid { margin-bottom: 14px; }
+.hotkey-btn {
+  position: relative;
+  border-color: var(--purple);
+}
+.hotkey-num {
+  display: none;
+  position: absolute;
+  top: 4px;
+  left: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+/* Number shortcuts only matter with a keyboard */
+@media (hover: hover) and (pointer: fine) {
+  .hotkey-num { display: block; }
+}
