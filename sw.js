@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v88';
+const CACHE = 'foundry-v89';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -98,6 +98,12 @@ const MEDIA_ASSETS = [
   './sounds/Andys Coming.mp3',
   './sounds/Got That Feelin.mp3',
   './sounds/Nothing To See.mp3',
+  './sounds/Outside.mp3',
+  './sounds/Seven Nation Army.mp3',
+  './sounds/Tactical Nuke.mp3',
+  './sounds/The Addams Family.mp3',
+  './sounds/Titantic Flute.mp3',
+  './sounds/Tomahawk.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',

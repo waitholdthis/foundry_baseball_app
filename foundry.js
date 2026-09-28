@@ -3173,6 +3173,12 @@ function playSound(type) {
       case 'andysComing':     playMp3('sounds/Andys Coming.mp3');       return;
       case 'gotThatFeelin':   playMp3('sounds/Got That Feelin.mp3');    return;
       case 'nothingToSee':    playMp3('sounds/Nothing To See.mp3');     return;
+      case 'outside':         playMp3('sounds/Outside.mp3');            return;
+      case 'sevenNation':     playMp3('sounds/Seven Nation Army.mp3');  return;
+      case 'tacticalNuke':    playMp3('sounds/Tactical Nuke.mp3');      return;
+      case 'addamsFamily':    playMp3('sounds/The Addams Family.mp3');  return;
+      case 'titanicFlute':    playMp3('sounds/Titantic Flute.mp3');     return;
+      case 'tomahawk':        playMp3('sounds/Tomahawk.mp3');           return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
