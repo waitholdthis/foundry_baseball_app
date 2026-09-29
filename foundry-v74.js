@@ -219,7 +219,7 @@ setupForm.addEventListener('submit', e => {
   e.preventDefault();
   const name = teamNameEl.value.trim();
   if (!name) { teamNameEl.focus(); return; }
-  S.team = { name, sport: selectedSport, field: homeFieldEl.value.trim() };
+  S.team = { name, sport: selectedSport, field: homeFieldEl.value.trim(), walkUpLibrary: setupWalkUpLibrary };
   saveState();
   renderRosterScreen();
   navigate('roster');
@@ -409,31 +409,96 @@ const WALKUP_LIBRARY = [
   { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
 ];
 
+/* ── Braves walk-up library (add entries here as you drop files in walkupsongs-braves/) ── */
+const BRAVES_WALKUP_LIBRARY = [
+  { name: 'Thriller (Aiden)',               file: 'walkupsongs-braves/Aiden_Thriller.mp3' },
+  { name: 'Been By Now (Bennet)',           file: 'walkupsongs-braves/Bennet_Been_By_Now.mp3' },
+  { name: 'Rollin (Clyde)',                 file: 'walkupsongs-braves/Clyde_Rollin.mp3' },
+  { name: 'Astronaut (Daniel)',             file: 'walkupsongs-braves/Daniel_Astronaut.mp3' },
+  { name: 'Hustlin (James)',                file: 'walkupsongs-braves/James_Hustlin.mp3' },
+  { name: 'Human (Michael)',                file: 'walkupsongs-braves/Michael_Human.mp3' },
+  { name: 'Up (Nixon)',                     file: 'walkupsongs-braves/Nixon_Up.mp3' },
+  { name: 'Duck (Phinn)',                   file: 'walkupsongs-braves/Phinn_Duck.mp3' },
+];
+
+/* Each team picks one library (S.team.walkUpLibrary). It drives the player
+   song dropdown and every random pick, so teams never hear each other's songs. */
+const WALKUP_LIBRARIES = {
+  original: { label: 'Original', songs: WALKUP_LIBRARY },
+  braves:   { label: 'Braves',   songs: BRAVES_WALKUP_LIBRARY },
+};
+const DEFAULT_WALKUP_LIBRARY = 'original';
+
+function activeWalkUpLibraryId() {
+  const id = S.team?.walkUpLibrary;
+  return WALKUP_LIBRARIES[id] ? id : DEFAULT_WALKUP_LIBRARY;
+}
+
+function activeWalkUpLibrary() {
+  return WALKUP_LIBRARIES[activeWalkUpLibraryId()].songs;
+}
+
 function mediaPath(src) {
   return String(src || '').split('?')[0];
 }
 
 function findLibrarySongByFile(src) {
   const path = mediaPath(src);
-  return WALKUP_LIBRARY.find(song => mediaPath(song.file) === path) || null;
+  return Object.values(WALKUP_LIBRARIES).flatMap(lib => lib.songs)
+    .find(song => mediaPath(song.file) === path) || null;
 }
 
-(function buildWalkUpLibrary() {
+function renderWalkUpLibrarySelect() {
   const select = document.getElementById('walkUpLibrary');
-  if (!WALKUP_LIBRARY.length) {
-    document.getElementById('walkUpLibraryGroup').classList.add('hidden');
-    return;
-  }
-  WALKUP_LIBRARY.forEach(song => {
+  const songs = activeWalkUpLibrary();
+  document.getElementById('walkUpLibraryGroup').classList.toggle('hidden', !songs.length);
+  select.innerHTML = '<option value="">Select a library song</option>';
+  songs.forEach(song => {
     const option = document.createElement('option');
     option.value = song.file;
     option.textContent = song.name;
     select.appendChild(option);
   });
-  select.addEventListener('change', () => {
-    document.getElementById('walkUpUrl').value = select.value;
+}
+
+document.getElementById('walkUpLibrary').addEventListener('change', e => {
+  document.getElementById('walkUpUrl').value = e.target.value;
+});
+
+/* Library pickers (setup screen + DJ panel) share one set of buttons per group */
+let setupWalkUpLibrary = activeWalkUpLibraryId();
+
+function renderWalkUpLibraryPickers() {
+  const current = S.team ? activeWalkUpLibraryId() : setupWalkUpLibrary;
+  document.querySelectorAll('.walkup-lib-picker').forEach(group => {
+    group.innerHTML = '';
+    Object.entries(WALKUP_LIBRARIES).forEach(([id, lib]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'seg-btn' + (id === current ? ' active' : '');
+      btn.textContent = lib.label;
+      btn.setAttribute('aria-pressed', String(id === current));
+      btn.addEventListener('click', () => setWalkUpLibrary(id));
+      group.appendChild(btn);
+    });
   });
-})();
+}
+
+function setWalkUpLibrary(id) {
+  if (!WALKUP_LIBRARIES[id]) return;
+  setupWalkUpLibrary = id;
+  if (S.team && S.team.walkUpLibrary !== id) {
+    S.team = { ...S.team, walkUpLibrary: id };
+    shuffledWalkUpQueue = []; // reshuffle from the new library
+    saveState();
+    showToast(`Walk-up library: ${WALKUP_LIBRARIES[id].label}`);
+  }
+  renderWalkUpLibrarySelect();
+  renderWalkUpLibraryPickers();
+}
+
+renderWalkUpLibrarySelect();
+renderWalkUpLibraryPickers();
 
 (function buildBetweenInningsLibrary() {
   const select = document.getElementById('plLibrarySelect');
@@ -498,6 +563,7 @@ function openPlayerSheet(player) {
   }
   document.getElementById('playerAnnouncement').value = player?.announcement || '';
   const currentUrl = player?.walkUpUrl || '';
+  renderWalkUpLibrarySelect(); // library may have changed since last open
   const walkUpLibraryEl = document.getElementById('walkUpLibrary');
   if (walkUpLibraryEl) {
     const librarySong = findLibrarySongByFile(currentUrl);
@@ -738,7 +804,7 @@ function buildWarmupLibrary() {
   select.innerHTML = '<option value="">Select a song…</option>';
   warmupTracks = [
     ...BETWEEN_INNINGS_LIBRARY.map(t => ({ name: t.name, src: t.url })),
-    ...WALKUP_LIBRARY.map(t => ({ name: t.name, src: t.file })),
+    ...activeWalkUpLibrary().map(t => ({ name: t.name, src: t.file })),
   ];
   warmupTracks.forEach((t, i) => {
     const opt = document.createElement('option');
@@ -2276,7 +2342,7 @@ function hasCompletedFirstLineupCycle() {
 }
 
 function refillShuffledWalkUpQueue() {
-  shuffledWalkUpQueue = [...WALKUP_LIBRARY];
+  shuffledWalkUpQueue = [...activeWalkUpLibrary()];
   for (let i = shuffledWalkUpQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledWalkUpQueue[i], shuffledWalkUpQueue[j]] = [shuffledWalkUpQueue[j], shuffledWalkUpQueue[i]];
@@ -2284,7 +2350,7 @@ function refillShuffledWalkUpQueue() {
 }
 
 function nextRandomWalkUpTrack() {
-  if (!WALKUP_LIBRARY.length) return null;
+  if (!activeWalkUpLibrary().length) return null;
   if (!shuffledWalkUpQueue.length) refillShuffledWalkUpQueue();
   return shuffledWalkUpQueue.pop() || null;
 }
@@ -2306,7 +2372,7 @@ function getWalkUpChoice(player) {
 }
 
 function hasWalkUpChoice(player) {
-  return !!(player.walkUpKey || player.walkUpUrl || WALKUP_LIBRARY.length);
+  return !!(player.walkUpKey || player.walkUpUrl || activeWalkUpLibrary().length);
 }
 
 function getCurrentBatter() {

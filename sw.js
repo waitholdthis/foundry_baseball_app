@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v90';
+const CACHE = 'foundry-v91';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -104,6 +104,14 @@ const MEDIA_ASSETS = [
   './sounds/The Addams Family.mp3',
   './sounds/Titantic Flute.mp3',
   './sounds/Tomahawk.mp3',
+  './walkupsongs-braves/Aiden_Thriller.mp3',
+  './walkupsongs-braves/Bennet_Been_By_Now.mp3',
+  './walkupsongs-braves/Clyde_Rollin.mp3',
+  './walkupsongs-braves/Daniel_Astronaut.mp3',
+  './walkupsongs-braves/James_Hustlin.mp3',
+  './walkupsongs-braves/Michael_Human.mp3',
+  './walkupsongs-braves/Nixon_Up.mp3',
+  './walkupsongs-braves/Phinn_Duck.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',
@@ -204,6 +212,7 @@ self.addEventListener('fetch', e => {
   const isMedia = url.pathname.includes('/audio/')
     || url.pathname.includes('/sounds/')
     || url.pathname.includes('/walkupsongs/')
+    || url.pathname.includes('/walkupsongs-braves/')
     || url.pathname.includes('/BetweenInnings/');
 
   if (isMedia) {

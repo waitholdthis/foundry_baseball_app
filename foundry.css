@@ -1760,7 +1760,8 @@ html, body {
 }
 .sfx-stop-btn:active { transform: scale(0.97); }
 
-.dj-volume {
+.dj-volume,
+.dj-walkup-lib {
   display: flex;
   flex-direction: column;
   gap: 8px;

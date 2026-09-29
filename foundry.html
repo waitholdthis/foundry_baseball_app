@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css?v=75">
+  <link rel="stylesheet" href="foundry.css?v=76">
 </head>
 <body>
 
@@ -63,6 +63,10 @@
       <div class="field-group">
         <label for="homeField">Home Field <span class="field-optional">(optional)</span></label>
         <input id="homeField" type="text" placeholder="e.g. Memorial Park" maxlength="60">
+      </div>
+      <div class="field-group">
+        <label>Walk-Up Songs</label>
+        <div class="seg-control walkup-lib-picker" role="group" aria-label="Walk-up song library"></div>
       </div>
       <button type="submit" class="btn-primary btn-full">Create Team →</button>
     </form>
@@ -955,6 +959,11 @@
       <div class="dj-volume">
         <label for="masterVolume" class="dj-label">VOLUME</label>
         <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.8" aria-label="Master volume">
+      </div>
+
+      <div class="dj-walkup-lib">
+        <div class="dj-label">WALK-UP LIBRARY</div>
+        <div class="seg-control seg-sm walkup-lib-picker" role="group" aria-label="Walk-up song library"></div>
       </div>
     </div>
 
