@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v93';
+const CACHE = 'foundry-v94';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -113,6 +113,17 @@ const MEDIA_ASSETS = [
   './walkupsongs/Michael_Human.mp3',
   './walkupsongs/Nixon_Up.mp3',
   './walkupsongs/Phinn_Duck.mp3',
+  './walkupsongs/Random_Beautiful.mp3',
+  './walkupsongs/Random_Billie_Jean.mp3',
+  './walkupsongs/Random_Einstein.mp3',
+  './walkupsongs/Random_Fox.mp3',
+  './walkupsongs/Random_Gummy_Bear.mp3',
+  './walkupsongs/Random_Hakuna.mp3',
+  './walkupsongs/Random_Lava.mp3',
+  './walkupsongs/Random_Move_It.mp3',
+  './walkupsongs/Random_Mystical.mp3',
+  './walkupsongs/Random_Snowman.mp3',
+  './walkupsongs/Random_Tiger.mp3',
   './walkupsongs/I Look Good.mp3',
   './walkupsongs/Stay Fly.mp3?v=58',
   './walkupsongs/2Pac Americas.mp3',

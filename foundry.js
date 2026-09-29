@@ -420,6 +420,18 @@ const BRAVES_WALKUP_LIBRARY = [
   { name: 'Human (Michael)',                file: 'walkupsongs/Michael_Human.mp3' },
   { name: 'Up (Nixon)',                     file: 'walkupsongs/Nixon_Up.mp3' },
   { name: 'Duck (Phinn)',                   file: 'walkupsongs/Phinn_Duck.mp3' },
+  // Random rotation: players without a song, and everyone after the first time through the order
+  { name: 'Beautiful',                      file: 'walkupsongs/Random_Beautiful.mp3', random: true },
+  { name: 'Billie Jean',                    file: 'walkupsongs/Random_Billie_Jean.mp3', random: true },
+  { name: 'Einstein',                       file: 'walkupsongs/Random_Einstein.mp3', random: true },
+  { name: 'Fox',                            file: 'walkupsongs/Random_Fox.mp3', random: true },
+  { name: 'Gummy Bear',                     file: 'walkupsongs/Random_Gummy_Bear.mp3', random: true },
+  { name: 'Hakuna',                         file: 'walkupsongs/Random_Hakuna.mp3', random: true },
+  { name: 'Lava',                           file: 'walkupsongs/Random_Lava.mp3', random: true },
+  { name: 'Move It',                        file: 'walkupsongs/Random_Move_It.mp3', random: true },
+  { name: 'Mystical',                       file: 'walkupsongs/Random_Mystical.mp3', random: true },
+  { name: 'Snowman',                        file: 'walkupsongs/Random_Snowman.mp3', random: true },
+  { name: 'Tiger',                          file: 'walkupsongs/Random_Tiger.mp3', random: true },
 ];
 
 /* Each team picks one library (S.team.walkUpLibrary). It drives the player
@@ -2343,8 +2355,15 @@ function hasCompletedFirstLineupCycle() {
   return !!(g && S.lineup.length && g.lineupIndex >= S.lineup.length);
 }
 
+// Songs marked random: true form the rotation; libraries without any use every song
+function randomWalkUpPool() {
+  const songs = activeWalkUpLibrary();
+  const pool = songs.filter(song => song.random);
+  return pool.length ? pool : songs;
+}
+
 function refillShuffledWalkUpQueue() {
-  shuffledWalkUpQueue = [...activeWalkUpLibrary()];
+  shuffledWalkUpQueue = [...randomWalkUpPool()];
   for (let i = shuffledWalkUpQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledWalkUpQueue[i], shuffledWalkUpQueue[j]] = [shuffledWalkUpQueue[j], shuffledWalkUpQueue[i]];
@@ -2352,7 +2371,7 @@ function refillShuffledWalkUpQueue() {
 }
 
 function nextRandomWalkUpTrack() {
-  if (!activeWalkUpLibrary().length) return null;
+  if (!randomWalkUpPool().length) return null;
   if (!shuffledWalkUpQueue.length) refillShuffledWalkUpQueue();
   return shuffledWalkUpQueue.pop() || null;
 }
