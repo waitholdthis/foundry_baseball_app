@@ -519,6 +519,32 @@ function setWalkUpLibrary(id) {
 renderWalkUpLibrarySelect();
 renderWalkUpLibraryPickers();
 
+/* After the first time through the order: random songs (default) or keep each player's song */
+function randomAfterFirstCycle() {
+  return S.team?.walkUpAfterFirstCycle !== 'keep';
+}
+
+function renderWalkUpCyclePicker() {
+  const current = randomAfterFirstCycle() ? 'random' : 'keep';
+  document.querySelectorAll('#walkUpCyclePicker [data-cycle]').forEach(btn => {
+    const on = btn.dataset.cycle === current;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+}
+
+document.querySelectorAll('#walkUpCyclePicker [data-cycle]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!S.team) return;
+    S.team = { ...S.team, walkUpAfterFirstCycle: btn.dataset.cycle };
+    saveState();
+    renderWalkUpCyclePicker();
+    showToast(btn.dataset.cycle === 'keep' ? 'Players keep their songs all game' : 'Random songs after the first time through');
+  });
+});
+
+renderWalkUpCyclePicker();
+
 (function buildBetweenInningsLibrary() {
   const select = document.getElementById('plLibrarySelect');
   const group = document.getElementById('plLibraryGroup');
@@ -2382,7 +2408,7 @@ function nextRandomWalkUpTrack() {
 }
 
 function getWalkUpChoice(player) {
-  if (hasCompletedFirstLineupCycle()) {
+  if (hasCompletedFirstLineupCycle() && randomAfterFirstCycle()) {
     const song = nextRandomWalkUpTrack();
     if (song) return { type: 'url', src: song.file, name: song.name };
   }
