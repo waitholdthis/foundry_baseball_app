@@ -416,6 +416,7 @@ const BRAVES_WALKUP_LIBRARY = [
   { name: 'Rollin (Clyde)',                 file: 'walkupsongs/Clyde_Rollin.mp3' },
   { name: 'Astronaut (Daniel)',             file: 'walkupsongs/Daniel_Astronaut.mp3' },
   { name: 'Hustlin (James)',                file: 'walkupsongs/James_Hustlin.mp3' },
+  { name: 'Self Aware (Maximus)',           file: 'walkupsongs/Maximus_Self_Aware.mp3' },
   { name: 'Human (Michael)',                file: 'walkupsongs/Michael_Human.mp3' },
   { name: 'Up (Nixon)',                     file: 'walkupsongs/Nixon_Up.mp3' },
   { name: 'Duck (Phinn)',                   file: 'walkupsongs/Phinn_Duck.mp3' },

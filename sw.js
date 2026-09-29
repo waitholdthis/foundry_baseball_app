@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v92';
+const CACHE = 'foundry-v93';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -109,6 +109,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Clyde_Rollin.mp3',
   './walkupsongs/Daniel_Astronaut.mp3',
   './walkupsongs/James_Hustlin.mp3',
+  './walkupsongs/Maximus_Self_Aware.mp3',
   './walkupsongs/Michael_Human.mp3',
   './walkupsongs/Nixon_Up.mp3',
   './walkupsongs/Phinn_Duck.mp3',
