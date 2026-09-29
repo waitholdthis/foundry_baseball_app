@@ -409,16 +409,16 @@ const WALKUP_LIBRARY = [
   { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
 ];
 
-/* ── Braves walk-up library (add entries here as you drop files in walkupsongs-braves/) ── */
+/* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
 const BRAVES_WALKUP_LIBRARY = [
-  { name: 'Thriller (Aiden)',               file: 'walkupsongs-braves/Aiden_Thriller.mp3' },
-  { name: 'Been By Now (Bennet)',           file: 'walkupsongs-braves/Bennet_Been_By_Now.mp3' },
-  { name: 'Rollin (Clyde)',                 file: 'walkupsongs-braves/Clyde_Rollin.mp3' },
-  { name: 'Astronaut (Daniel)',             file: 'walkupsongs-braves/Daniel_Astronaut.mp3' },
-  { name: 'Hustlin (James)',                file: 'walkupsongs-braves/James_Hustlin.mp3' },
-  { name: 'Human (Michael)',                file: 'walkupsongs-braves/Michael_Human.mp3' },
-  { name: 'Up (Nixon)',                     file: 'walkupsongs-braves/Nixon_Up.mp3' },
-  { name: 'Duck (Phinn)',                   file: 'walkupsongs-braves/Phinn_Duck.mp3' },
+  { name: 'Thriller (Aiden)',               file: 'walkupsongs/Aiden_Thriller.mp3' },
+  { name: 'Been By Now (Bennet)',           file: 'walkupsongs/Bennet_Been_By_Now.mp3' },
+  { name: 'Rollin (Clyde)',                 file: 'walkupsongs/Clyde_Rollin.mp3' },
+  { name: 'Astronaut (Daniel)',             file: 'walkupsongs/Daniel_Astronaut.mp3' },
+  { name: 'Hustlin (James)',                file: 'walkupsongs/James_Hustlin.mp3' },
+  { name: 'Human (Michael)',                file: 'walkupsongs/Michael_Human.mp3' },
+  { name: 'Up (Nixon)',                     file: 'walkupsongs/Nixon_Up.mp3' },
+  { name: 'Duck (Phinn)',                   file: 'walkupsongs/Phinn_Duck.mp3' },
 ];
 
 /* Each team picks one library (S.team.walkUpLibrary). It drives the player
@@ -439,7 +439,8 @@ function activeWalkUpLibrary() {
 }
 
 function mediaPath(src) {
-  return String(src || '').split('?')[0];
+  // Braves songs moved from walkupsongs-braves/ into walkupsongs/; keep old saved picks working
+  return String(src || '').split('?')[0].replace('walkupsongs-braves/', 'walkupsongs/');
 }
 
 function findLibrarySongByFile(src) {
