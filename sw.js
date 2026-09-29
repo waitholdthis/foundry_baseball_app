@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v95';
+const CACHE = 'foundry-v96';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -114,7 +114,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Nixon_Up.mp3',
   './walkupsongs/Phinn_Duck.mp3',
   './walkupsongs/Thomas_Up_Down.mp3',
-  './walkupsongs/Willam_Crazy_Train.mp3',
+  './walkupsongs/William_Crazy_Train.mp3',
   './walkupsongs/Random_Beautiful.mp3',
   './walkupsongs/Random_Billie_Jean.mp3',
   './walkupsongs/Random_Einstein.mp3',

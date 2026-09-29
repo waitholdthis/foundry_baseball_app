@@ -421,7 +421,7 @@ const BRAVES_WALKUP_LIBRARY = [
   { name: 'Up (Nixon)',                     file: 'walkupsongs/Nixon_Up.mp3' },
   { name: 'Duck (Phinn)',                   file: 'walkupsongs/Phinn_Duck.mp3' },
   { name: 'Up Down (Thomas)',               file: 'walkupsongs/Thomas_Up_Down.mp3' },
-  { name: 'Crazy Train (Willam)',           file: 'walkupsongs/Willam_Crazy_Train.mp3' },
+  { name: 'Crazy Train (William)',          file: 'walkupsongs/William_Crazy_Train.mp3' },
   // Random rotation: players without a song, and everyone after the first time through the order
   { name: 'Beautiful',                      file: 'walkupsongs/Random_Beautiful.mp3', random: true },
   { name: 'Billie Jean',                    file: 'walkupsongs/Random_Billie_Jean.mp3', random: true },
@@ -455,8 +455,10 @@ function activeWalkUpLibrary() {
 }
 
 function mediaPath(src) {
-  // Braves songs moved from walkupsongs-braves/ into walkupsongs/; keep old saved picks working
-  return String(src || '').split('?')[0].replace('walkupsongs-braves/', 'walkupsongs/');
+  // Keep saved picks working after files moved or were renamed
+  return String(src || '').split('?')[0]
+    .replace('walkupsongs-braves/', 'walkupsongs/')
+    .replace('walkupsongs/Willam_Crazy_Train.mp3', 'walkupsongs/William_Crazy_Train.mp3');
 }
 
 function findLibrarySongByFile(src) {
