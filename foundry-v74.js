@@ -3240,7 +3240,7 @@ document.querySelectorAll('.sound-btn[data-sound]').forEach(btn => {
    never the same one twice in a row. Edit the pools to taste. */
 const HOTKEY_POOLS = {
   strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3'],
-  bigHit:     ['homerun1.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3'],
+  bigHit:     ['homerun1.mp3', 'Jackpot.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3'],
   walk:       ['Hi.mp3', 'Coin.mp3', 'Focus Dude.mp3', 'SoNervy.mp3', 'Nothing To See.mp3', 'awkward-cricket.mp3'],
   foul:       ['foul-ball.mp3', 'No No No.mp3', 'bruh-sound-effect.mp3', 'lizard-button.mp3', 'Dun Dun.mp3'],
   steal:      ['stolenbase.mp3', 'Mine Mine.mp3', 'Non-Stop.mp3', 'My Shot.mp3', 'Coin.mp3'],
@@ -3308,7 +3308,7 @@ function playSound(type) {
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
       case 'homerun':   playMp3('sounds/homerun1.mp3');  return;
-      case 'homerunCall': playMp3('sounds/Homerun.mp3'); return;
+      case 'jackpot':   playMp3('sounds/Jackpot.mp3');   return;
       case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
       case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
       case 'scubbaa':    playMp3('sounds/scubbaaa.mp3');   return;
