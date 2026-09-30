@@ -3247,7 +3247,7 @@ const HOTKEY_POOLS = {
   error:      ['Error.mp3', 'Fail.mp3', 'Titantic Flute.mp3', 'no_crying.mp3', 'Emotional.mp3', 'Dun Dun.mp3'],
   rally:      ['Rally.mp3', 'charge.mp3', 'Organ.mp3', 'Tomahawk.mp3', 'Dadada.mp3', 'Hockey.mp3', 'DogsOut.mp3', 'Hamilton.mp3'],
   moundVisit: ['Jeopardy.mp3', 'Imperial March.mp3', 'Duel of Fate.mp3', 'The Addams Family.mp3', 'Andys Coming.mp3', 'awkward-cricket.mp3', 'Focus Dude.mp3'],
-  umpire:     ['Angerdingus.mp3', 'Outside.mp3', 'No No No.mp3', 'Mommy.mp3', 'bruh-sound-effect.mp3', 'SoNervy.mp3'],
+  umpire:     ['Angerdingus.mp3', 'Just A Bit Outside.mp3', 'No No No.mp3', 'Mommy.mp3', 'bruh-sound-effect.mp3', 'SoNervy.mp3'],
 };
 const lastHotkeySound = {};
 
@@ -3358,7 +3358,7 @@ function playSound(type) {
       case 'andysComing':     playMp3('sounds/Andys Coming.mp3');       return;
       case 'gotThatFeelin':   playMp3('sounds/Got That Feelin.mp3');    return;
       case 'nothingToSee':    playMp3('sounds/Nothing To See.mp3');     return;
-      case 'outside':         playMp3('sounds/Outside.mp3');            return;
+      case 'bitOutside':      playMp3('sounds/Just A Bit Outside.mp3'); return;
       case 'sevenNation':     playMp3('sounds/Seven Nation Army.mp3');  return;
       case 'tacticalNuke':    playMp3('sounds/Tactical Nuke.mp3');      return;
       case 'addamsFamily':    playMp3('sounds/The Addams Family.mp3');  return;

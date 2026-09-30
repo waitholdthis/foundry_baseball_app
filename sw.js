@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v98';
+const CACHE = 'foundry-v99';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -98,7 +98,7 @@ const MEDIA_ASSETS = [
   './sounds/Andys Coming.mp3',
   './sounds/Got That Feelin.mp3',
   './sounds/Nothing To See.mp3',
-  './sounds/Outside.mp3',
+  './sounds/Just A Bit Outside.mp3',
   './sounds/Seven Nation Army.mp3',
   './sounds/Tactical Nuke.mp3',
   './sounds/The Addams Family.mp3',
