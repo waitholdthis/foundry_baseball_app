@@ -2178,8 +2178,25 @@ function getAudioCtx() {
     soundCtx  = new (window.AudioContext || window.webkitAudioContext)();
     masterGain = soundCtx.createGain();
     masterGain.connect(soundCtx.destination);
+    soundCtx.addEventListener('statechange', () => {
+      if (walkUpAudio && !walkUpAudio.paused) ensureWalkUpAudible();
+    });
   }
   return soundCtx;
+}
+
+/* iOS can suspend Web Audio (announcer speech, calls, screen lock), which
+   silences a song routed through a GainNode. Try to resume; if that fails,
+   restart the song as a plain element so the batter always gets music. */
+async function ensureWalkUpAudible() {
+  const audio = walkUpAudio;
+  if (!audio?._gain || !soundCtx || soundCtx.state === 'running') return;
+  await soundCtx.resume().catch(() => {});
+  await new Promise(r => setTimeout(r, 250));
+  if (audio !== walkUpAudio || audio.paused || soundCtx.state === 'running') return;
+  const replay = audio._replay;
+  if (!replay) return;
+  playWalkUpSrc(replay.src, replay.player, replay.songTitle, null, { ...replay.opts, restart: true, fadeToFull: false });
 }
 
 // Keep the AudioContext unlocked so walk-up ducking works when a batter comes up
@@ -2636,6 +2653,8 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
   if (shouldFadeToFull) fadeAudioVolume(walkUpAudio, fullVolume, WALKUP_BED_FADE_UP_MS);
   if (audioEl) armedWalkUp = null;
   else clearArmedWalkUp();
+  walkUpAudio._replay = { src, player, songTitle, opts };
+  ensureWalkUpAudible();
 
   document.getElementById('djSongTitle').textContent  = songTitle || player.walkUpName || 'Walk-Up Song';
   document.getElementById('djPlayerName').textContent = player.name;
@@ -2646,15 +2665,16 @@ function playWalkUpSrc(src, player, songTitle, audioEl = null, opts = {}) {
   const dur  = document.getElementById('djTimeDuration');
   setDJPlayIcon(true);
 
-  walkUpAudio.addEventListener('timeupdate', () => {
-    if (!walkUpAudio.duration) return;
-    const pct = (walkUpAudio.currentTime / walkUpAudio.duration) * 100;
+  const audio = walkUpAudio;
+  audio.addEventListener('timeupdate', () => {
+    if (audio !== walkUpAudio || !audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
     fill.style.width = `${pct}%`;
-    cur.textContent  = fmtTime(walkUpAudio.currentTime);
-    dur.textContent  = fmtTime(walkUpAudio.duration);
+    cur.textContent  = fmtTime(audio.currentTime);
+    dur.textContent  = fmtTime(audio.duration);
   });
 
-  walkUpAudio.addEventListener('ended', () => {
+  audio.addEventListener('ended', () => {
     setDJPlayIcon(false);
     fill.style.width = '0%';
     setDJStatusBadge(false);
@@ -2691,6 +2711,7 @@ document.getElementById('djPlayPause').addEventListener('click', () => {
   }
   if (walkUpAudio.paused) {
     walkUpAudio.play();
+    ensureWalkUpAudible();
     setDJPlayIcon(true);
     setDJStatusBadge(true);
   } else {
@@ -2704,6 +2725,7 @@ document.getElementById('djReplay').addEventListener('click', () => {
   if (!walkUpAudio) return;
   walkUpAudio.currentTime = 0;
   walkUpAudio.play();
+  ensureWalkUpAudible();
 });
 
 document.getElementById('djFade').addEventListener('click', () => {
