@@ -413,6 +413,7 @@ const WALKUP_LIBRARY = [
 const BRAVES_WALKUP_LIBRARY = [
   { name: 'Thriller (Aiden)',               file: 'walkupsongs/Aiden_Thriller.mp3' },
   { name: 'Been By Now (Bennet)',           file: 'walkupsongs/Bennet_Been_By_Now.mp3' },
+  { name: 'Monaco (Chase)',                 file: 'walkupsongs/Chase_Monaco.mp3' },
   { name: 'Rollin (Clyde)',                 file: 'walkupsongs/Clyde_Rollin.mp3' },
   { name: 'Astronaut (Daniel)',             file: 'walkupsongs/Daniel_Astronaut.mp3' },
   { name: 'Hustlin (James)',                file: 'walkupsongs/James_Hustlin.mp3' },

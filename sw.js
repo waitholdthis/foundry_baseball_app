@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v100';
+const CACHE = 'foundry-v101';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -106,6 +106,7 @@ const MEDIA_ASSETS = [
   './sounds/Tomahawk.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
+  './walkupsongs/Chase_Monaco.mp3',
   './walkupsongs/Clyde_Rollin.mp3',
   './walkupsongs/Daniel_Astronaut.mp3',
   './walkupsongs/James_Hustlin.mp3',
