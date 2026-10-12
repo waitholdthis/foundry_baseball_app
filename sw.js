@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v101';
+const CACHE = 'foundry-v102';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -200,6 +200,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/My Little Pony.mp3',
   './walkupsongs/Whip My Hair.mp3',
   './walkupsongs/Whos That Girl.mp3',
+  './walkupsongs/Dora The Explorer.mp3',
 ];
 
 self.addEventListener('install', e => {

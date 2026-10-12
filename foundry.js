@@ -407,6 +407,7 @@ const WALKUP_LIBRARY = [
   { name: 'My Little Pony',                 file: 'walkupsongs/My Little Pony.mp3' },
   { name: 'Whip My Hair',                   file: 'walkupsongs/Whip My Hair.mp3' },
   { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
+  { name: 'Dora The Explorer',              file: 'walkupsongs/Dora The Explorer.mp3' },
 ];
 
 /* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
