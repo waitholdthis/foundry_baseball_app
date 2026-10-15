@@ -3379,6 +3379,7 @@ function playSound(type) {
       case 'moveIt':          playMp3('sounds/Move It.mp3');            return;
       case 'shave':           playMp3('sounds/Shave.mp3');              return;
       case 'seventhInning':   playMp3('sounds/7th Inning.mp3');         return;
+      case 'thunderstruck':   playMp3('sounds/Thunderstruck.mp3');      return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();

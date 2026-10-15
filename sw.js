@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v104';
+const CACHE = 'foundry-v105';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -116,6 +116,7 @@ const MEDIA_ASSETS = [
   './sounds/Move It.mp3',
   './sounds/Shave.mp3',
   './sounds/7th Inning.mp3',
+  './sounds/Thunderstruck.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
   './walkupsongs/Aiden_Win.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
