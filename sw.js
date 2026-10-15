@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v102';
+const CACHE = 'foundry-v103';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -40,6 +40,7 @@ const MEDIA_ASSETS = [
   './BetweenInnings/North Carolina.mp3',
   './BetweenInnings/Row My Boat.mp3',
   './BetweenInnings/Swing.mp3',
+  './BetweenInnings/The Hey Song.mp3',
   './BetweenInnings/Tokyo Drift.mp3',
   './BetweenInnings/We Ready.mp3',
   './sounds/Angerdingus.mp3',
@@ -104,7 +105,18 @@ const MEDIA_ASSETS = [
   './sounds/The Addams Family.mp3',
   './sounds/Titantic Flute.mp3',
   './sounds/Tomahawk.mp3',
+  './sounds/Bad Boys.mp3',
+  './sounds/Braves Homerun.mp3',
+  './sounds/Go Team.mp3',
+  './sounds/HooYaa.mp3',
+  './sounds/I Like It.mp3',
+  './sounds/Jaws.mp3',
+  './sounds/Losing Horn.mp3',
+  './sounds/Mario Fail.mp3',
+  './sounds/Move It.mp3',
+  './sounds/Shave.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
+  './walkupsongs/Aiden_Win.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
   './walkupsongs/Chase_Monaco.mp3',
   './walkupsongs/Clyde_Rollin.mp3',

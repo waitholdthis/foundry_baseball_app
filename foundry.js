@@ -329,6 +329,7 @@ const BETWEEN_INNINGS_LIBRARY = [
   { name: 'North Carolina',            url: 'BetweenInnings/North Carolina.mp3' },
   { name: 'Row My Boat',               url: 'BetweenInnings/Row My Boat.mp3' },
   { name: 'Swing',                     url: 'BetweenInnings/Swing.mp3' },
+  { name: 'The Hey Song',              url: 'BetweenInnings/The Hey Song.mp3' },
   { name: 'Tokyo Drift',               url: 'BetweenInnings/Tokyo Drift.mp3' },
   { name: 'We Ready',                  url: 'BetweenInnings/We Ready.mp3' },
 ];
@@ -413,6 +414,7 @@ const WALKUP_LIBRARY = [
 /* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
 const BRAVES_WALKUP_LIBRARY = [
   { name: 'Thriller (Aiden)',               file: 'walkupsongs/Aiden_Thriller.mp3' },
+  { name: 'Win (Aiden)',                    file: 'walkupsongs/Aiden_Win.mp3' },
   { name: 'Been By Now (Bennet)',           file: 'walkupsongs/Bennet_Been_By_Now.mp3' },
   { name: 'Monaco (Chase)',                 file: 'walkupsongs/Chase_Monaco.mp3' },
   { name: 'Rollin (Clyde)',                 file: 'walkupsongs/Clyde_Rollin.mp3' },
@@ -3366,6 +3368,16 @@ function playSound(type) {
       case 'addamsFamily':    playMp3('sounds/The Addams Family.mp3');  return;
       case 'titanicFlute':    playMp3('sounds/Titantic Flute.mp3');     return;
       case 'tomahawk':        playMp3('sounds/Tomahawk.mp3');           return;
+      case 'badBoys':         playMp3('sounds/Bad Boys.mp3');           return;
+      case 'bravesHomerun':   playMp3('sounds/Braves Homerun.mp3');     return;
+      case 'goTeam':          playMp3('sounds/Go Team.mp3');            return;
+      case 'hooYaa':          playMp3('sounds/HooYaa.mp3');             return;
+      case 'iLikeIt':         playMp3('sounds/I Like It.mp3');          return;
+      case 'jaws':            playMp3('sounds/Jaws.mp3');               return;
+      case 'losingHorn':      playMp3('sounds/Losing Horn.mp3');        return;
+      case 'marioFail':       playMp3('sounds/Mario Fail.mp3');         return;
+      case 'moveIt':          playMp3('sounds/Move It.mp3');            return;
+      case 'shave':           playMp3('sounds/Shave.mp3');              return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
