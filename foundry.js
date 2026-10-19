@@ -409,6 +409,7 @@ const WALKUP_LIBRARY = [
   { name: 'Whip My Hair',                   file: 'walkupsongs/Whip My Hair.mp3' },
   { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
   { name: 'Dora The Explorer',              file: 'walkupsongs/Dora The Explorer.mp3' },
+  { name: 'Tip Toeing',                      file: 'walkupsongs/Tip Toeing.mp3' },
 ];
 
 /* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
@@ -3380,6 +3381,7 @@ function playSound(type) {
       case 'shave':           playMp3('sounds/Shave.mp3');              return;
       case 'seventhInning':   playMp3('sounds/7th Inning.mp3');         return;
       case 'thunderstruck':   playMp3('sounds/Thunderstruck.mp3');      return;
+      case 'stayingAlive':    playMp3('sounds/Staying Alive.mp3');      return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();

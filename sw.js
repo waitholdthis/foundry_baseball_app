@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v105';
+const CACHE = 'foundry-v106';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -117,6 +117,7 @@ const MEDIA_ASSETS = [
   './sounds/Shave.mp3',
   './sounds/7th Inning.mp3',
   './sounds/Thunderstruck.mp3',
+  './sounds/Staying Alive.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
   './walkupsongs/Aiden_Win.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
@@ -215,6 +216,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Whip My Hair.mp3',
   './walkupsongs/Whos That Girl.mp3',
   './walkupsongs/Dora The Explorer.mp3',
+  './walkupsongs/Tip Toeing.mp3',
 ];
 
 self.addEventListener('install', e => {
