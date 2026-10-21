@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v108';
+const CACHE = 'foundry-v109';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -142,6 +142,10 @@ const MEDIA_ASSETS = [
   './sounds/Transformers.mp3',
   './sounds/Wind.mp3',
   './sounds/Wingman.mp3',
+  './sounds/Avada Kadevra.mp3',
+  './sounds/Bazinga.mp3',
+  './sounds/Expectro Patronum.mp3',
+  './sounds/Youre A Wizard.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
   './walkupsongs/Aiden_Win.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
