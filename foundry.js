@@ -3245,9 +3245,9 @@ document.querySelectorAll('.sound-btn[data-sound]').forEach(btn => {
 /* Hot keys — each plays a random sound from its pool (files in sounds/),
    never the same one twice in a row. Edit the pools to taste. */
 const HOTKEY_POOLS = {
-  strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3', 'Bowling.mp3', 'Another One.mp3', 'Mail.mp3', 'Avada Kadevra.mp3', 'Bazinga.mp3'],
+  strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3', 'Bowling.mp3', 'Another One.mp3', 'Avada Kadevra.mp3', 'Bazinga.mp3'],
   bigHit:     ['homerun1.mp3', 'Jackpot.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3', 'Mariners HR.mp3', 'Braves Homerun.mp3', 'Fanfare.mp3', 'Champions.mp3', 'Another One.mp3', 'HooYaa.mp3', 'Youre A Wizard.mp3', 'Great Bambino.mp3', 'CheyHooo.mp3'],
-  walk:       ['Hi.mp3', 'Coin.mp3', 'Focus Dude.mp3', 'SoNervy.mp3', 'Nothing To See.mp3', 'awkward-cricket.mp3', 'Running.mp3', 'Iphone.mp3', 'Elevator.mp3', 'Tiki.mp3'],
+  walk:       ['Hi.mp3', 'Coin.mp3', 'Focus Dude.mp3', 'SoNervy.mp3', 'Nothing To See.mp3', 'awkward-cricket.mp3', 'Elevator.mp3', 'Tiki.mp3'],
   foul:       ['foul-ball.mp3', 'No No No.mp3', 'bruh-sound-effect.mp3', 'lizard-button.mp3', 'Dun Dun.mp3', 'Oh No.mp3', 'Airball.mp3', 'Alert.mp3'],
   steal:      ['stolenbase.mp3', 'Mine Mine.mp3', 'Non-Stop.mp3', 'My Shot.mp3', 'Coin.mp3', 'Running.mp3', 'Wind.mp3', 'Danger Zone.mp3', 'Wingman.mp3', 'Sus.mp3', 'Bad Boys.mp3', 'Bazinga.mp3', 'Bold Strategy.mp3'],
   error:      ['Error.mp3', 'Fail.mp3', 'Titantic Flute.mp3', 'no_crying.mp3', 'Emotional.mp3', 'Dun Dun.mp3', 'Oh No.mp3', 'Airball.mp3', 'Mario Fail.mp3', 'Losing Horn.mp3', 'Alert.mp3'],
