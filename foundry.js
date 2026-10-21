@@ -3263,8 +3263,8 @@ document.querySelectorAll('.sound-btn[data-sound]').forEach(btn => {
   });
 });
 
-/* Hot keys — each plays a random sound from its pool (files in sounds/),
-   never the same one twice in a row. Edit the pools to taste. */
+/* Hot keys — each plays its pool (files in sounds/) in shuffled order, so every
+   sound plays once before any repeats. Edit the pools to taste. */
 const HOTKEY_POOLS = {
   strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3', 'Bowling.mp3', 'Another One.mp3', 'Avada Kadevra.mp3', 'Bazinga.mp3'],
   bigHit:     ['homerun1.mp3', 'Jackpot.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3', 'Mariners HR.mp3', 'Braves Homerun.mp3', 'Fanfare.mp3', 'Champions.mp3', 'Another One.mp3', 'HooYaa.mp3', 'Youre A Wizard.mp3', 'Great Bambino.mp3', 'CheyHooo.mp3'],
@@ -3277,13 +3277,26 @@ const HOTKEY_POOLS = {
   umpire:     ['Angerdingus.mp3', 'Just A Bit Outside.mp3', 'No No No.mp3', 'Mommy.mp3', 'bruh-sound-effect.mp3', 'SoNervy.mp3', 'Sus.mp3', 'Rick Rolled.mp3', 'Alert.mp3', 'Oh No.mp3'],
   sideChange: ['Switch Sides.mp3', 'SportsCenter.mp3', 'Danger Zone.mp3', 'Transformers.mp3', 'Staying Alive.mp3', 'Move It.mp3', 'Thunderstruck.mp3', 'I Like It.mp3', 'Go Team.mp3', 'Elevator.mp3'],
 };
+const hotkeyQueues = {};
 const lastHotkeySound = {};
 
+function refillHotkeyQueue(key) {
+  const queue = [...HOTKEY_POOLS[key]];
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  // don't open a new cycle with the sound that just ended the last one
+  if (queue.length > 1 && queue[queue.length - 1] === lastHotkeySound[key]) {
+    [queue[0], queue[queue.length - 1]] = [queue[queue.length - 1], queue[0]];
+  }
+  hotkeyQueues[key] = queue;
+}
+
 function playHotkey(key) {
-  const pool = HOTKEY_POOLS[key];
-  if (!pool?.length) return;
-  const options = pool.length > 1 ? pool.filter(f => f !== lastHotkeySound[key]) : pool;
-  const file = options[Math.floor(Math.random() * options.length)];
+  if (!HOTKEY_POOLS[key]?.length) return;
+  if (!hotkeyQueues[key]?.length) refillHotkeyQueue(key);
+  const file = hotkeyQueues[key].pop();
   lastHotkeySound[key] = file;
   playMp3(`sounds/${file}`);
 }
