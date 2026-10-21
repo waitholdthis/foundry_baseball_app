@@ -3282,6 +3282,9 @@ document.addEventListener('keydown', e => {
   const t = e.target;
   if (t?.isContentEditable || t?.closest?.('input, textarea, select')) return;
   if (!/^[0-9]$/.test(e.key)) return;
+  // only on the game screen, and not while a sheet/dialog is open
+  if (!document.getElementById('screen-game')?.classList.contains('active')) return;
+  if (document.querySelector('[aria-modal="true"]:not(.hidden)')) return;
   const btn = hotkeyBtns[(Number(e.key) + 9) % 10];
   if (!btn) return;
   e.preventDefault();
