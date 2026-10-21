@@ -407,7 +407,6 @@ const WALKUP_LIBRARY = [
   { name: 'Dai Dai',                        file: 'walkupsongs/Dai Dai.mp3' },
   { name: 'My Little Pony',                 file: 'walkupsongs/My Little Pony.mp3' },
   { name: 'Whip My Hair',                   file: 'walkupsongs/Whip My Hair.mp3' },
-  { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
   { name: 'Dora The Explorer',              file: 'walkupsongs/Dora The Explorer.mp3' },
   { name: 'Tip Toeing',                      file: 'walkupsongs/Tip Toeing.mp3' },
   { name: 'Player Number One',              file: 'walkupsongs/Player Number One.mp3' },
@@ -464,7 +463,8 @@ function mediaPath(src) {
   // Keep saved picks working after files moved or were renamed
   return String(src || '').split('?')[0]
     .replace('walkupsongs-braves/', 'walkupsongs/')
-    .replace('walkupsongs/Willam_Crazy_Train.mp3', 'walkupsongs/William_Crazy_Train.mp3');
+    .replace('walkupsongs/Willam_Crazy_Train.mp3', 'walkupsongs/William_Crazy_Train.mp3')
+    .replace('walkupsongs/Whos That Girl.mp3', "walkupsongs/Who's That Girl.mp3");
 }
 
 function findLibrarySongByFile(src) {

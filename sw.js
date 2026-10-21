@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v112';
+const CACHE = 'foundry-v113';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -246,7 +246,6 @@ const MEDIA_ASSETS = [
   './walkupsongs/Dai Dai.mp3',
   './walkupsongs/My Little Pony.mp3',
   './walkupsongs/Whip My Hair.mp3',
-  './walkupsongs/Whos That Girl.mp3',
   './walkupsongs/Dora The Explorer.mp3',
   './walkupsongs/Tip Toeing.mp3',
   './walkupsongs/Player Number One.mp3',
