@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v106';
+const CACHE = 'foundry-v107';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -118,6 +118,30 @@ const MEDIA_ASSETS = [
   './sounds/7th Inning.mp3',
   './sounds/Thunderstruck.mp3',
   './sounds/Staying Alive.mp3',
+  './sounds/Airball.mp3',
+  './sounds/Alert.mp3',
+  './sounds/Another One.mp3',
+  './sounds/Bowling.mp3',
+  './sounds/Champions.mp3',
+  './sounds/Danger Zone.mp3',
+  './sounds/Dora.mp3',
+  './sounds/Elevator.mp3',
+  './sounds/Fanfare.mp3',
+  './sounds/Iphone.mp3',
+  './sounds/Jeff.mp3',
+  './sounds/Mail.mp3',
+  './sounds/Mariners HR.mp3',
+  './sounds/Oh No.mp3',
+  './sounds/Pokemon.mp3',
+  './sounds/Rick Rolled.mp3',
+  './sounds/Running.mp3',
+  './sounds/SportsCenter.mp3',
+  './sounds/Sus.mp3',
+  './sounds/Switch Sides.mp3',
+  './sounds/Tiki.mp3',
+  './sounds/Transformers.mp3',
+  './sounds/Wind.mp3',
+  './sounds/Wingman.mp3',
   './walkupsongs/Aiden_Thriller.mp3',
   './walkupsongs/Aiden_Win.mp3',
   './walkupsongs/Bennet_Been_By_Now.mp3',
@@ -217,6 +241,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Whos That Girl.mp3',
   './walkupsongs/Dora The Explorer.mp3',
   './walkupsongs/Tip Toeing.mp3',
+  './walkupsongs/Player Number One.mp3',
 ];
 
 self.addEventListener('install', e => {

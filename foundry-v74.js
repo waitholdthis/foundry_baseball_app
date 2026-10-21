@@ -410,6 +410,7 @@ const WALKUP_LIBRARY = [
   { name: "Who's That Girl",                file: 'walkupsongs/Whos That Girl.mp3' },
   { name: 'Dora The Explorer',              file: 'walkupsongs/Dora The Explorer.mp3' },
   { name: 'Tip Toeing',                      file: 'walkupsongs/Tip Toeing.mp3' },
+  { name: 'Player Number One',              file: 'walkupsongs/Player Number One.mp3' },
 ];
 
 /* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
@@ -3382,6 +3383,30 @@ function playSound(type) {
       case 'seventhInning':   playMp3('sounds/7th Inning.mp3');         return;
       case 'thunderstruck':   playMp3('sounds/Thunderstruck.mp3');      return;
       case 'stayingAlive':    playMp3('sounds/Staying Alive.mp3');      return;
+      case 'airball':         playMp3('sounds/Airball.mp3');            return;
+      case 'alert':           playMp3('sounds/Alert.mp3');              return;
+      case 'anotherOne':      playMp3('sounds/Another One.mp3');        return;
+      case 'bowling':         playMp3('sounds/Bowling.mp3');            return;
+      case 'champions':       playMp3('sounds/Champions.mp3');          return;
+      case 'dangerZone':      playMp3('sounds/Danger Zone.mp3');        return;
+      case 'dora':            playMp3('sounds/Dora.mp3');               return;
+      case 'elevator':        playMp3('sounds/Elevator.mp3');           return;
+      case 'fanfare':         playMp3('sounds/Fanfare.mp3');            return;
+      case 'iphone':          playMp3('sounds/Iphone.mp3');             return;
+      case 'jeff':            playMp3('sounds/Jeff.mp3');               return;
+      case 'mail':            playMp3('sounds/Mail.mp3');               return;
+      case 'marinersHR':      playMp3('sounds/Mariners HR.mp3');        return;
+      case 'ohNo':            playMp3('sounds/Oh No.mp3');              return;
+      case 'pokemon':         playMp3('sounds/Pokemon.mp3');            return;
+      case 'rickRolled':      playMp3('sounds/Rick Rolled.mp3');        return;
+      case 'running':         playMp3('sounds/Running.mp3');            return;
+      case 'sportsCenter':    playMp3('sounds/SportsCenter.mp3');       return;
+      case 'sus':             playMp3('sounds/Sus.mp3');                return;
+      case 'switchSides':     playMp3('sounds/Switch Sides.mp3');       return;
+      case 'tiki':            playMp3('sounds/Tiki.mp3');               return;
+      case 'transformers':    playMp3('sounds/Transformers.mp3');       return;
+      case 'wind':            playMp3('sounds/Wind.mp3');               return;
+      case 'wingman':         playMp3('sounds/Wingman.mp3');            return;
     }
     // synthesized fallbacks for sounds without MP3s
     const ctx  = getAudioCtx();
