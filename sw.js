@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v113';
+const CACHE = 'foundry-v114';
 const ASSETS = [
   './index.html',
   './foundry.html',

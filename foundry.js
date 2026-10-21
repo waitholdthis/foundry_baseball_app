@@ -2424,13 +2424,34 @@ function refillShuffledWalkUpQueue() {
   }
 }
 
+// Library songs already played this half-inning, so random picks never repeat within an inning
+let inningWalkUpSongs = { key: null, files: new Set() };
+
+function songsPlayedThisInning() {
+  const g = S.game;
+  const key = g ? `${g.inning}-${g.half}` : null;
+  if (inningWalkUpSongs.key !== key) inningWalkUpSongs = { key, files: new Set() };
+  return inningWalkUpSongs.files;
+}
+
 function nextRandomWalkUpTrack() {
   if (!randomWalkUpPool().length) return null;
+  const played = songsPlayedThisInning();
+  const freshIndex = () => shuffledWalkUpQueue.findLastIndex(song => !played.has(mediaPath(song.file)));
   if (!shuffledWalkUpQueue.length) refillShuffledWalkUpQueue();
-  return shuffledWalkUpQueue.pop() || null;
+  let i = freshIndex();
+  if (i < 0) { refillShuffledWalkUpQueue(); i = freshIndex(); }
+  if (i < 0) i = shuffledWalkUpQueue.length - 1; // more batters than songs: a repeat is unavoidable
+  return shuffledWalkUpQueue.splice(i, 1)[0] || null;
 }
 
 function getWalkUpChoice(player) {
+  const choice = pickWalkUpChoice(player);
+  if (choice?.type === 'url') songsPlayedThisInning().add(mediaPath(choice.src));
+  return choice;
+}
+
+function pickWalkUpChoice(player) {
   if (hasCompletedFirstLineupCycle() && randomAfterFirstCycle()) {
     const song = nextRandomWalkUpTrack();
     if (song) return { type: 'url', src: song.file, name: song.name };
