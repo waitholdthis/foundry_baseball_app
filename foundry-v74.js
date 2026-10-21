@@ -3245,15 +3245,16 @@ document.querySelectorAll('.sound-btn[data-sound]').forEach(btn => {
 /* Hot keys — each plays a random sound from its pool (files in sounds/),
    never the same one twice in a row. Edit the pools to taste. */
 const HOTKEY_POOLS = {
-  strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3'],
-  bigHit:     ['homerun1.mp3', 'Jackpot.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3'],
-  walk:       ['Hi.mp3', 'Coin.mp3', 'Focus Dude.mp3', 'SoNervy.mp3', 'Nothing To See.mp3', 'awkward-cricket.mp3'],
-  foul:       ['foul-ball.mp3', 'No No No.mp3', 'bruh-sound-effect.mp3', 'lizard-button.mp3', 'Dun Dun.mp3'],
-  steal:      ['stolenbase.mp3', 'Mine Mine.mp3', 'Non-Stop.mp3', 'My Shot.mp3', 'Coin.mp3'],
-  error:      ['Error.mp3', 'Fail.mp3', 'Titantic Flute.mp3', 'no_crying.mp3', 'Emotional.mp3', 'Dun Dun.mp3'],
-  rally:      ['Rally.mp3', 'charge.mp3', 'Organ.mp3', 'Tomahawk.mp3', 'Dadada.mp3', 'Hockey.mp3', 'DogsOut.mp3', 'Hamilton.mp3'],
-  moundVisit: ['Jeopardy.mp3', 'Imperial March.mp3', 'Duel of Fate.mp3', 'The Addams Family.mp3', 'Andys Coming.mp3', 'awkward-cricket.mp3', 'Focus Dude.mp3'],
-  umpire:     ['Angerdingus.mp3', 'Just A Bit Outside.mp3', 'No No No.mp3', 'Mommy.mp3', 'bruh-sound-effect.mp3', 'SoNervy.mp3'],
+  strikeout:  ['Strikeout.mp3', 'K Riff.mp3', 'StrikeOutAirhorn.mp3', 'StrikeOutWhistle.mp3', 'Strike3.mp3', 'Wow.mp3', 'Wipe.mp3', 'GotEm.mp3', 'Tactical Nuke.mp3', 'Bowling.mp3', 'Another One.mp3', 'Mail.mp3'],
+  bigHit:     ['homerun1.mp3', 'Jackpot.mp3', 'roar.mp3', 'Woo.mp3?v=58', 'yeah-boiii-i-i-i.mp3', 'Seven Nation Army.mp3', 'Not Like Us.mp3', 'Got That Feelin.mp3', 'aye-thats-pretty-good.mp3', 'horn.mp3', 'hornV1.mp3', 'DogsOut.mp3', 'Mariners HR.mp3', 'Braves Homerun.mp3', 'Fanfare.mp3', 'Champions.mp3', 'Another One.mp3', 'HooYaa.mp3'],
+  walk:       ['Hi.mp3', 'Coin.mp3', 'Focus Dude.mp3', 'SoNervy.mp3', 'Nothing To See.mp3', 'awkward-cricket.mp3', 'Running.mp3', 'Iphone.mp3', 'Elevator.mp3', 'Tiki.mp3'],
+  foul:       ['foul-ball.mp3', 'No No No.mp3', 'bruh-sound-effect.mp3', 'lizard-button.mp3', 'Dun Dun.mp3', 'Oh No.mp3', 'Airball.mp3', 'Alert.mp3'],
+  steal:      ['stolenbase.mp3', 'Mine Mine.mp3', 'Non-Stop.mp3', 'My Shot.mp3', 'Coin.mp3', 'Running.mp3', 'Wind.mp3', 'Danger Zone.mp3', 'Wingman.mp3', 'Sus.mp3', 'Bad Boys.mp3'],
+  error:      ['Error.mp3', 'Fail.mp3', 'Titantic Flute.mp3', 'no_crying.mp3', 'Emotional.mp3', 'Dun Dun.mp3', 'Oh No.mp3', 'Airball.mp3', 'Mario Fail.mp3', 'Losing Horn.mp3', 'Alert.mp3'],
+  rally:      ['Rally.mp3', 'charge.mp3', 'Organ.mp3', 'Tomahawk.mp3', 'Dadada.mp3', 'Hockey.mp3', 'DogsOut.mp3', 'Hamilton.mp3', 'Champions.mp3', 'Pokemon.mp3', 'Transformers.mp3', 'Thunderstruck.mp3', 'Go Team.mp3', 'Staying Alive.mp3'],
+  moundVisit: ['Jeopardy.mp3', 'Imperial March.mp3', 'Duel of Fate.mp3', 'The Addams Family.mp3', 'Andys Coming.mp3', 'awkward-cricket.mp3', 'Focus Dude.mp3', 'Elevator.mp3', 'Jeff.mp3', 'Iphone.mp3', 'Mail.mp3', 'Jaws.mp3', 'Tiki.mp3'],
+  umpire:     ['Angerdingus.mp3', 'Just A Bit Outside.mp3', 'No No No.mp3', 'Mommy.mp3', 'bruh-sound-effect.mp3', 'SoNervy.mp3', 'Sus.mp3', 'Rick Rolled.mp3', 'Alert.mp3', 'Oh No.mp3'],
+  sideChange: ['Switch Sides.mp3', 'SportsCenter.mp3', 'Danger Zone.mp3', 'Transformers.mp3', 'Staying Alive.mp3', 'Move It.mp3', 'Thunderstruck.mp3', 'I Like It.mp3', 'Go Team.mp3', 'Elevator.mp3'],
 };
 const lastHotkeySound = {};
 
@@ -3275,13 +3276,13 @@ hotkeyBtns.forEach(btn => {
   });
 });
 
-/* Number keys 1–9 fire the hot keys in on-screen order */
+/* Number keys 1–9 and 0 fire the hot keys in on-screen order */
 document.addEventListener('keydown', e => {
   if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
   const t = e.target;
   if (t?.isContentEditable || t?.closest?.('input, textarea, select')) return;
-  if (!/^[1-9]$/.test(e.key)) return;
-  const btn = hotkeyBtns[Number(e.key) - 1];
+  if (!/^[0-9]$/.test(e.key)) return;
+  const btn = hotkeyBtns[(Number(e.key) + 9) % 10];
   if (!btn) return;
   e.preventDefault();
   btn.click();
