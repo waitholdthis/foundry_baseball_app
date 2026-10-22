@@ -1,6 +1,6 @@
 /* Foundry Service Worker — offline-first */
 
-const CACHE = 'foundry-v115';
+const CACHE = 'foundry-v116';
 const ASSETS = [
   './index.html',
   './foundry.html',
@@ -161,6 +161,7 @@ const MEDIA_ASSETS = [
   './walkupsongs/Michael_Human.mp3',
   './walkupsongs/Nixon_Up.mp3',
   './walkupsongs/Phinn_Duck.mp3',
+  './walkupsongs/Phinn_Number_One.mp3',
   './walkupsongs/Thomas_Up_Down.mp3',
   './walkupsongs/William_Crazy_Train.mp3',
   './walkupsongs/Random_Beautiful.mp3',
@@ -248,7 +249,6 @@ const MEDIA_ASSETS = [
   './walkupsongs/Whip My Hair.mp3',
   './walkupsongs/Dora The Explorer.mp3',
   './walkupsongs/Tip Toeing.mp3',
-  './walkupsongs/Player Number One.mp3',
 ];
 
 self.addEventListener('install', e => {

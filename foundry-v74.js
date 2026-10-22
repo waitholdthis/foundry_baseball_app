@@ -409,7 +409,6 @@ const WALKUP_LIBRARY = [
   { name: 'Whip My Hair',                   file: 'walkupsongs/Whip My Hair.mp3' },
   { name: 'Dora The Explorer',              file: 'walkupsongs/Dora The Explorer.mp3' },
   { name: 'Tip Toeing',                      file: 'walkupsongs/Tip Toeing.mp3' },
-  { name: 'Player Number One',              file: 'walkupsongs/Player Number One.mp3' },
 ];
 
 /* ── Braves walk-up library (files live in walkupsongs/ too; only this list decides the team) ── */
@@ -425,6 +424,7 @@ const BRAVES_WALKUP_LIBRARY = [
   { name: 'Human (Michael)',                file: 'walkupsongs/Michael_Human.mp3' },
   { name: 'Up (Nixon)',                     file: 'walkupsongs/Nixon_Up.mp3' },
   { name: 'Duck (Phinn)',                   file: 'walkupsongs/Phinn_Duck.mp3' },
+  { name: 'Number One (Phinn)',             file: 'walkupsongs/Phinn_Number_One.mp3' },
   { name: 'Up Down (Thomas)',               file: 'walkupsongs/Thomas_Up_Down.mp3' },
   { name: 'Crazy Train (William)',          file: 'walkupsongs/William_Crazy_Train.mp3' },
   // Random rotation: players without a song, and everyone after the first time through the order
@@ -464,7 +464,8 @@ function mediaPath(src) {
   return String(src || '').split('?')[0]
     .replace('walkupsongs-braves/', 'walkupsongs/')
     .replace('walkupsongs/Willam_Crazy_Train.mp3', 'walkupsongs/William_Crazy_Train.mp3')
-    .replace('walkupsongs/Whos That Girl.mp3', "walkupsongs/Who's That Girl.mp3");
+    .replace('walkupsongs/Whos That Girl.mp3', "walkupsongs/Who's That Girl.mp3")
+    .replace('walkupsongs/Player Number One.mp3', 'walkupsongs/Phinn_Number_One.mp3');
 }
 
 function findLibrarySongByFile(src) {
